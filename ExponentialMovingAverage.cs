@@ -35,7 +35,7 @@
         public ExponentialMovingAverage(int period)
         {
             this.period = period;
-            this.smooth = 2 / ((decimal)1.0 + this.period);
+            this.smooth = 2m / (1 + this.period);
         }
 
         /// <summary>
