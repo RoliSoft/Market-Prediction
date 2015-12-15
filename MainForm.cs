@@ -72,6 +72,7 @@
 
                 chart.Series.Remove(chart.Series.First(x => x.Name == (string)comboBoxSeries.SelectedItem));
                 comboBoxSeries_SelectedIndexChanged(buttonLoad, e);
+                setChartBoundaries();
             }
             else
             {
@@ -110,9 +111,8 @@
                 chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == name));
                 chart.Series.Add(series);
             }
-
-            chart.ChartAreas[0].AxisY.Minimum = Math.Min(chart.ChartAreas[0].AxisY.Minimum, series.Points.FindMinByValue("Y1").GetValueByName("Y1"));
-            chart.ChartAreas[0].AxisY.Maximum = Math.Max(chart.ChartAreas[0].AxisY.Maximum, series.Points.FindMaxByValue("Y1").GetValueByName("Y1"));
+            
+            setChartBoundaries();
         }
 
         /// <summary>
@@ -140,8 +140,37 @@
                 chart.Series.Add(series);
             }
 
-            chart.ChartAreas[0].AxisY.Minimum = Math.Min(chart.ChartAreas[0].AxisY.Minimum, series.Points.FindMinByValue("Y1").GetValueByName("Y1"));
-            chart.ChartAreas[0].AxisY.Maximum = Math.Max(chart.ChartAreas[0].AxisY.Maximum, series.Points.FindMaxByValue("Y1").GetValueByName("Y1"));
+            setChartBoundaries();
+        }
+
+        /// <summary>
+        /// Sets the min/max boundaries for the chart.
+        /// </summary>
+        private void setChartBoundaries()
+        {
+            double min = double.MaxValue,
+                   max = double.MinValue;
+
+            if (chart.Series.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var series in chart.Series)
+            {
+                min = Math.Min(min, (series.Points.FindMinByValue("Y1")?.GetValueByName("Y1")).GetValueOrDefault(double.MaxValue));
+                max = Math.Max(max, (series.Points.FindMaxByValue("Y1")?.GetValueByName("Y1")).GetValueOrDefault(double.MinValue));
+            }
+
+            if (Math.Abs(min - double.MaxValue) > 0.01)
+            {
+                chart.ChartAreas[0].AxisY.Minimum = min;
+            }
+
+            if (Math.Abs(max - double.MinValue) > 0.01)
+            {
+                chart.ChartAreas[0].AxisY.Maximum = max;
+            }
         }
     }
 }
