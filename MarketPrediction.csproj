@@ -72,6 +72,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ExponentialMovingAverage.cs" />
+    <Compile Include="PercentagePriceOscillator.cs" />
     <Compile Include="MovingAverageConvergenceDivergence.cs" />
     <Compile Include="OandaReader.cs" />
     <Compile Include="Program.cs" />
