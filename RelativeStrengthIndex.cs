@@ -14,6 +14,11 @@
         private readonly int period;
 
         /// <summary>
+        /// The value of the strength index for the current day.
+        /// </summary>
+        private decimal strength;
+
+        /// <summary>
         /// The value of the previous index.
         /// </summary>
         private decimal previous = decimal.MinValue;
@@ -27,11 +32,6 @@
         /// The moving average of the indices on days with losses.
         /// </summary>
         private ExponentialMovingAverage lossAverage;
-
-        /// <summary>
-        /// The value of the strength index for the current day.
-        /// </summary>
-        private decimal strength;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MovingAverageConvergenceDivergence" /> class.
@@ -74,6 +74,15 @@
 
             var relativeStrength = gainAverage.GetValue() / lossAverage.GetValue();
             strength = 100 - (100 / (1 + relativeStrength));
+        }
+
+        /// <summary>
+        /// Determines whether this instance is ready.
+        /// </summary>
+        /// <returns><c>true</c> if this instance is ready; otherwise, <c>false</c>.</returns>
+        public bool IsReady()
+        {
+            return gainAverage.IsReady() && lossAverage.IsReady();
         }
 
         /// <summary>

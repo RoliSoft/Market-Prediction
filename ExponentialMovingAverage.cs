@@ -66,6 +66,15 @@
         }
 
         /// <summary>
+        /// Determines whether this instance is ready.
+        /// </summary>
+        /// <returns><c>true</c> if this instance is ready; otherwise, <c>false</c>.</returns>
+        public bool IsReady()
+        {
+            return iteration > period;
+        }
+
+        /// <summary>
         /// Gets the moving average for the current day.
         /// </summary>
         /// <returns>Moving average for the current day.</returns>

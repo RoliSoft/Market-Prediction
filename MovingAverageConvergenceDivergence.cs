@@ -43,9 +43,17 @@
         {
             slowAverage.AddIndex(value);
             fastAverage.AddIndex(value);
-
-            // TODO only when ready
+            
             signAverage.AddIndex(fastAverage.GetValue() - slowAverage.GetValue());
+        }
+
+        /// <summary>
+        /// Determines whether this instance is ready.
+        /// </summary>
+        /// <returns><c>true</c> if this instance is ready; otherwise, <c>false</c>.</returns>
+        public bool IsReady()
+        {
+            return slowAverage.IsReady() && fastAverage.IsReady() && signAverage.IsReady();
         }
 
         /// <summary>
