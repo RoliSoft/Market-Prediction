@@ -6,13 +6,13 @@
 
     class OandaReader
     {
-        public static Dictionary<string, Dictionary<DateTime, decimal>> ReadIndices(string filename)
+        public static Dictionary<string, SortedDictionary<DateTime, decimal>> ReadIndices(string filename)
         {
-            var indices = new Dictionary<string, Dictionary<DateTime, decimal>>
+            var indices = new Dictionary<string, SortedDictionary<DateTime, decimal>>
                 {
-                    { "EUR/USD", new Dictionary<DateTime, decimal>() },
-                    { "EUR/GBP", new Dictionary<DateTime, decimal>() },
-                    { "EUR/RON", new Dictionary<DateTime, decimal>() },
+                    { "EUR/USD", new SortedDictionary<DateTime, decimal>() },
+                    { "EUR/GBP", new SortedDictionary<DateTime, decimal>() },
+                    { "EUR/RON", new SortedDictionary<DateTime, decimal>() },
                 };
 
             using (var sr = new StreamReader(filename))

@@ -6,7 +6,7 @@
     /// Implements an exponential moving average calculator.
     /// Reference: http://www.investopedia.com/articles/trading/10/simple-exponential-moving-averages-compare.asp
     /// </summary>
-    class ExponentialMovingAverage
+    class ExponentialMovingAverage : ISeriesTransform
     {
         /// <summary>
         /// The period for which the moving average is being computed. (N)
@@ -36,6 +36,24 @@
         {
             this.period = period;
             this.smooth = 2m / (1 + this.period);
+        }
+
+        /// <summary>
+        /// Gets the short name of the transformer.
+        /// </summary>
+        /// <returns>Short name of the transformer.</returns>
+        public string GetShortName()
+        {
+            return "EMA";
+        }
+
+        /// <summary>
+        /// Gets the long name of the transformer.
+        /// </summary>
+        /// <returns>Long name of the transformer.</returns>
+        public string GetLongName()
+        {
+            return "Exponential Moving Average";
         }
 
         /// <summary>

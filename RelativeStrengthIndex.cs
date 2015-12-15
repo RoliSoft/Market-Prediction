@@ -6,7 +6,7 @@
     /// Implements a relative strength index calculator.
     /// Reference: http://www.investopedia.com/articles/technical/03/070203.asp
     /// </summary>
-    class RelativeStrengthIndex
+    class RelativeStrengthIndex : ISeriesTransform
     {
         /// <summary>
         /// The period for which the relative strength is being computed.
@@ -34,14 +34,32 @@
         private ExponentialMovingAverage lossAverage;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MovingAverageConvergenceDivergence" /> class.
+        /// Initializes a new instance of the <see cref="RelativeStrengthIndex" /> class.
         /// </summary>
         /// <param name="period">The period.</param>
         public RelativeStrengthIndex(int period)
         {
             this.period = period;
-            gainAverage = new ExponentialMovingAverage(30);
-            lossAverage = new ExponentialMovingAverage(30);
+            gainAverage = new ExponentialMovingAverage(period);
+            lossAverage = new ExponentialMovingAverage(period);
+        }
+
+        /// <summary>
+        /// Gets the short name of the transformer.
+        /// </summary>
+        /// <returns>Short name of the transformer.</returns>
+        public string GetShortName()
+        {
+            return "RSI";
+        }
+
+        /// <summary>
+        /// Gets the long name of the transformer.
+        /// </summary>
+        /// <returns>Long name of the transformer.</returns>
+        public string GetLongName()
+        {
+            return "Relative Strength Index";
         }
 
         /// <summary>

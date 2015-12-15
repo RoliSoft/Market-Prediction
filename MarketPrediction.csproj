@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DetrendedPriceOscillation.cs" />
+    <Compile Include="ISeriesTransform.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
