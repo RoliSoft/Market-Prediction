@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Reflection;
     using System.Windows.Forms;
     using System.Windows.Forms.DataVisualization.Charting;
 
@@ -110,59 +111,27 @@
                 }
             }
         }
-
-        /// <summary>
-        /// Occurs when the checkbox's checked value changes.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
-        private void checkBoxEma_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!processEvents || comboBoxSeries.SelectedItem == null)
-            {
-                return;
-            }
-            
-            if (chart.Series.Any(x => x.Name == (string)comboBoxSeries.SelectedItem + " (EMA)"))
-            {
-                // unload data
-
-                chart.Series.Remove(chart.Series.FirstOrDefault((x => x.Name == (string)comboBoxSeries.SelectedItem + " (EMA)")));
-                comboBoxSeries_SelectedIndexChanged(null, e);
-                SetChartBoundaries();
-            }
-            else
-            {
-                // load data
-
-                SortedDictionary<DateTime, decimal> index;
-                if (indices.TryGetValue((string)comboBoxSeries.SelectedItem, out index))
-                {
-                    var ema = new ExponentialMovingAverage(30);
-                    LoadSeriesTransform((string)comboBoxSeries.SelectedItem, index, ema);
-                    comboBoxSeries_SelectedIndexChanged(null, e);
-                }
-            }
-        }
         
         /// <summary>
-        /// Occurs when the checkbox's checked value changes.
+        /// Occurs when an indicator checkbox is toggled.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
-        private void checkBoxRsi_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxIndicator_CheckedChanged(object sender, EventArgs e)
         {
-            if (!processEvents || comboBoxSeries.SelectedItem == null)
+            if (!processEvents || comboBoxSeries.SelectedItem == null || !(((CheckBox)sender).Tag is string))
             {
                 return;
             }
 
-            if (chart.Series.Any(x => x.Name == (string)comboBoxSeries.SelectedItem + " (RSI)"))
+            var transform = (ISeriesTransform)Activator.CreateInstance(Type.GetType((string)((CheckBox)sender).Tag));
+
+            if (chart.Series.Any(x => x.Name == (string)comboBoxSeries.SelectedItem + " (" + transform.GetShortName() + ")"))
             {
                 // unload data
 
-                chart.Series.Remove(chart.Series.FirstOrDefault((x => x.Name == (string)comboBoxSeries.SelectedItem + " (RSI)")));
-                comboBoxSeries_SelectedIndexChanged(null, e);
+                chart.Series.Remove(chart.Series.FirstOrDefault((x => x.Name == (string)comboBoxSeries.SelectedItem + " (" + transform.GetShortName() + ")")));
+                comboBoxSeries_SelectedIndexChanged(null, null);
                 SetChartBoundaries();
             }
             else
@@ -172,111 +141,8 @@
                 SortedDictionary<DateTime, decimal> index;
                 if (indices.TryGetValue((string)comboBoxSeries.SelectedItem, out index))
                 {
-                    var rsi = new RelativeStrengthIndex(30);
-                    LoadSeriesTransform((string)comboBoxSeries.SelectedItem, index, rsi);
-                    comboBoxSeries_SelectedIndexChanged(null, e);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Occurs when the checkbox's checked value changes.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
-        private void checkBoxMacd_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!processEvents || comboBoxSeries.SelectedItem == null)
-            {
-                return;
-            }
-
-            if (chart.Series.Any(x => x.Name == (string)comboBoxSeries.SelectedItem + " (MACD)"))
-            {
-                // unload data
-
-                chart.Series.Remove(chart.Series.FirstOrDefault((x => x.Name == (string)comboBoxSeries.SelectedItem + " (MACD)")));
-                comboBoxSeries_SelectedIndexChanged(null, e);
-                SetChartBoundaries();
-            }
-            else
-            {
-                // load data
-
-                SortedDictionary<DateTime, decimal> index;
-                if (indices.TryGetValue((string)comboBoxSeries.SelectedItem, out index))
-                {
-                    var macd = new MovingAverageConvergenceDivergence();
-                    LoadSeriesTransform((string)comboBoxSeries.SelectedItem, index, macd);
-                    comboBoxSeries_SelectedIndexChanged(null, e);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Occurs when the checkbox's checked value changes.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
-        private void checkBoxPpo_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!processEvents || comboBoxSeries.SelectedItem == null)
-            {
-                return;
-            }
-
-            if (chart.Series.Any(x => x.Name == (string)comboBoxSeries.SelectedItem + " (PPO)"))
-            {
-                // unload data
-
-                chart.Series.Remove(chart.Series.FirstOrDefault((x => x.Name == (string)comboBoxSeries.SelectedItem + " (PPO)")));
-                comboBoxSeries_SelectedIndexChanged(null, e);
-                SetChartBoundaries();
-            }
-            else
-            {
-                // load data
-
-                SortedDictionary<DateTime, decimal> index;
-                if (indices.TryGetValue((string)comboBoxSeries.SelectedItem, out index))
-                {
-                    var ppo = new PercentagePriceOscillator();
-                    LoadSeriesTransform((string)comboBoxSeries.SelectedItem, index, ppo);
-                    comboBoxSeries_SelectedIndexChanged(null, e);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Occurs when the checkbox's checked value changes.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
-        private void checkBoxDpo_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!processEvents || comboBoxSeries.SelectedItem == null)
-            {
-                return;
-            }
-
-            if (chart.Series.Any(x => x.Name == (string)comboBoxSeries.SelectedItem + " (DPO)"))
-            {
-                // unload data
-
-                chart.Series.Remove(chart.Series.FirstOrDefault((x => x.Name == (string)comboBoxSeries.SelectedItem + " (DPO)")));
-                comboBoxSeries_SelectedIndexChanged(null, e);
-                SetChartBoundaries();
-            }
-            else
-            {
-                // load data
-
-                SortedDictionary<DateTime, decimal> index;
-                if (indices.TryGetValue((string)comboBoxSeries.SelectedItem, out index))
-                {
-                    var dpo = new DetrendedPriceOscillation();
-                    LoadSeriesTransform((string)comboBoxSeries.SelectedItem, index, dpo);
-                    comboBoxSeries_SelectedIndexChanged(null, e);
+                    LoadSeriesTransform((string)comboBoxSeries.SelectedItem, index, transform);
+                    comboBoxSeries_SelectedIndexChanged(null, null);
                 }
             }
         }

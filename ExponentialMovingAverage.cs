@@ -31,6 +31,14 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="ExponentialMovingAverage"/> class.
         /// </summary>
+        public ExponentialMovingAverage() : this(30)
+        {
+            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExponentialMovingAverage"/> class.
+        /// </summary>
         /// <param name="period">The period.</param>
         public ExponentialMovingAverage(int period)
         {

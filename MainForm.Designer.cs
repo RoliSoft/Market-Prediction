@@ -34,17 +34,22 @@
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panelChart = new System.Windows.Forms.Panel();
             this.panelControl = new System.Windows.Forms.Panel();
+            this.checkBoxDpo = new System.Windows.Forms.CheckBox();
+            this.checkBoxPpo = new System.Windows.Forms.CheckBox();
             this.checkBoxIndex = new System.Windows.Forms.CheckBox();
             this.checkBoxMacd = new System.Windows.Forms.CheckBox();
             this.checkBoxRsi = new System.Windows.Forms.CheckBox();
             this.checkBoxEma = new System.Windows.Forms.CheckBox();
             this.comboBoxSeries = new System.Windows.Forms.ComboBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.checkBoxPpo = new System.Windows.Forms.CheckBox();
-            this.checkBoxDpo = new System.Windows.Forms.CheckBox();
+            this.tabControl = new System.Windows.Forms.TabControl();
+            this.tabPageHistData = new System.Windows.Forms.TabPage();
+            this.tabPageNeuron = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.panelChart.SuspendLayout();
             this.panelControl.SuspendLayout();
+            this.tabControl.SuspendLayout();
+            this.tabPageHistData.SuspendLayout();
             this.SuspendLayout();
             // 
             // chart
@@ -80,7 +85,7 @@
             this.chart.Location = new System.Drawing.Point(0, 0);
             this.chart.Name = "chart";
             this.chart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Bright;
-            this.chart.Size = new System.Drawing.Size(702, 426);
+            this.chart.Size = new System.Drawing.Size(665, 360);
             this.chart.TabIndex = 0;
             // 
             // panelChart
@@ -89,9 +94,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelChart.Controls.Add(this.chart);
-            this.panelChart.Location = new System.Drawing.Point(0, 0);
+            this.panelChart.Location = new System.Drawing.Point(2, 3);
             this.panelChart.Name = "panelChart";
-            this.panelChart.Size = new System.Drawing.Size(702, 426);
+            this.panelChart.Size = new System.Drawing.Size(665, 360);
             this.panelChart.TabIndex = 1;
             // 
             // panelControl
@@ -104,10 +109,36 @@
             this.panelControl.Controls.Add(this.checkBoxEma);
             this.panelControl.Controls.Add(this.comboBoxSeries);
             this.panelControl.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelControl.Location = new System.Drawing.Point(0, 419);
+            this.panelControl.Location = new System.Drawing.Point(3, 366);
             this.panelControl.Name = "panelControl";
-            this.panelControl.Size = new System.Drawing.Size(702, 48);
+            this.panelControl.Size = new System.Drawing.Size(664, 48);
             this.panelControl.TabIndex = 3;
+            // 
+            // checkBoxDpo
+            // 
+            this.checkBoxDpo.AutoSize = true;
+            this.checkBoxDpo.Location = new System.Drawing.Point(437, 18);
+            this.checkBoxDpo.Name = "checkBoxDpo";
+            this.checkBoxDpo.Size = new System.Drawing.Size(49, 17);
+            this.checkBoxDpo.TabIndex = 9;
+            this.checkBoxDpo.Tag = "MarketPrediction.DetrendedPriceOscillation";
+            this.checkBoxDpo.Text = "DPO";
+            this.toolTip.SetToolTip(this.checkBoxDpo, "Detrended Price Oscillation");
+            this.checkBoxDpo.UseVisualStyleBackColor = true;
+            this.checkBoxDpo.CheckedChanged += new System.EventHandler(this.checkBoxIndicator_CheckedChanged);
+            // 
+            // checkBoxPpo
+            // 
+            this.checkBoxPpo.AutoSize = true;
+            this.checkBoxPpo.Location = new System.Drawing.Point(383, 18);
+            this.checkBoxPpo.Name = "checkBoxPpo";
+            this.checkBoxPpo.Size = new System.Drawing.Size(48, 17);
+            this.checkBoxPpo.TabIndex = 8;
+            this.checkBoxPpo.Tag = "MarketPrediction.PercentagePriceOscillator";
+            this.checkBoxPpo.Text = "PPO";
+            this.toolTip.SetToolTip(this.checkBoxPpo, "Price Percentage Oscillation");
+            this.checkBoxPpo.UseVisualStyleBackColor = true;
+            this.checkBoxPpo.CheckedChanged += new System.EventHandler(this.checkBoxIndicator_CheckedChanged);
             // 
             // checkBoxIndex
             // 
@@ -128,10 +159,11 @@
             this.checkBoxMacd.Name = "checkBoxMacd";
             this.checkBoxMacd.Size = new System.Drawing.Size(57, 17);
             this.checkBoxMacd.TabIndex = 6;
+            this.checkBoxMacd.Tag = "MarketPrediction.MovingAverageConvergenceDivergence";
             this.checkBoxMacd.Text = "MACD";
             this.toolTip.SetToolTip(this.checkBoxMacd, "Moving Average Convergence Divergence");
             this.checkBoxMacd.UseVisualStyleBackColor = true;
-            this.checkBoxMacd.CheckedChanged += new System.EventHandler(this.checkBoxMacd_CheckedChanged);
+            this.checkBoxMacd.CheckedChanged += new System.EventHandler(this.checkBoxIndicator_CheckedChanged);
             // 
             // checkBoxRsi
             // 
@@ -140,10 +172,11 @@
             this.checkBoxRsi.Name = "checkBoxRsi";
             this.checkBoxRsi.Size = new System.Drawing.Size(44, 17);
             this.checkBoxRsi.TabIndex = 5;
+            this.checkBoxRsi.Tag = "MarketPrediction.RelativeStrengthIndex";
             this.checkBoxRsi.Text = "RSI";
             this.toolTip.SetToolTip(this.checkBoxRsi, "Relative Strength Index");
             this.checkBoxRsi.UseVisualStyleBackColor = true;
-            this.checkBoxRsi.CheckedChanged += new System.EventHandler(this.checkBoxRsi_CheckedChanged);
+            this.checkBoxRsi.CheckedChanged += new System.EventHandler(this.checkBoxIndicator_CheckedChanged);
             // 
             // checkBoxEma
             // 
@@ -152,10 +185,11 @@
             this.checkBoxEma.Name = "checkBoxEma";
             this.checkBoxEma.Size = new System.Drawing.Size(49, 17);
             this.checkBoxEma.TabIndex = 1;
+            this.checkBoxEma.Tag = "MarketPrediction.ExponentialMovingAverage";
             this.checkBoxEma.Text = "EMA";
             this.toolTip.SetToolTip(this.checkBoxEma, "Exponential Moving Average");
             this.checkBoxEma.UseVisualStyleBackColor = true;
-            this.checkBoxEma.CheckedChanged += new System.EventHandler(this.checkBoxEma_CheckedChanged);
+            this.checkBoxEma.CheckedChanged += new System.EventHandler(this.checkBoxIndicator_CheckedChanged);
             // 
             // comboBoxSeries
             // 
@@ -167,37 +201,47 @@
             this.comboBoxSeries.TabIndex = 4;
             this.comboBoxSeries.SelectedIndexChanged += new System.EventHandler(this.comboBoxSeries_SelectedIndexChanged);
             // 
-            // checkBoxPpo
+            // tabControl
             // 
-            this.checkBoxPpo.AutoSize = true;
-            this.checkBoxPpo.Location = new System.Drawing.Point(383, 18);
-            this.checkBoxPpo.Name = "checkBoxPpo";
-            this.checkBoxPpo.Size = new System.Drawing.Size(48, 17);
-            this.checkBoxPpo.TabIndex = 8;
-            this.checkBoxPpo.Text = "PPO";
-            this.toolTip.SetToolTip(this.checkBoxPpo, "Price Percentage Oscillation");
-            this.checkBoxPpo.UseVisualStyleBackColor = true;
-            this.checkBoxPpo.CheckedChanged += new System.EventHandler(this.checkBoxPpo_CheckedChanged);
+            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl.Controls.Add(this.tabPageHistData);
+            this.tabControl.Controls.Add(this.tabPageNeuron);
+            this.tabControl.Location = new System.Drawing.Point(12, 12);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(678, 443);
+            this.tabControl.TabIndex = 4;
             // 
-            // checkBoxDpo
+            // tabPageHistData
             // 
-            this.checkBoxDpo.AutoSize = true;
-            this.checkBoxDpo.Location = new System.Drawing.Point(437, 18);
-            this.checkBoxDpo.Name = "checkBoxDpo";
-            this.checkBoxDpo.Size = new System.Drawing.Size(49, 17);
-            this.checkBoxDpo.TabIndex = 9;
-            this.checkBoxDpo.Text = "DPO";
-            this.toolTip.SetToolTip(this.checkBoxDpo, "Detrended Price Oscillation");
-            this.checkBoxDpo.UseVisualStyleBackColor = true;
-            this.checkBoxDpo.CheckedChanged += new System.EventHandler(this.checkBoxDpo_CheckedChanged);
+            this.tabPageHistData.Controls.Add(this.panelChart);
+            this.tabPageHistData.Controls.Add(this.panelControl);
+            this.tabPageHistData.Location = new System.Drawing.Point(4, 22);
+            this.tabPageHistData.Name = "tabPageHistData";
+            this.tabPageHistData.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageHistData.Size = new System.Drawing.Size(670, 417);
+            this.tabPageHistData.TabIndex = 0;
+            this.tabPageHistData.Text = "Historical Data & Indicators";
+            this.tabPageHistData.UseVisualStyleBackColor = true;
+            // 
+            // tabPageNeuron
+            // 
+            this.tabPageNeuron.Location = new System.Drawing.Point(4, 22);
+            this.tabPageNeuron.Name = "tabPageNeuron";
+            this.tabPageNeuron.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageNeuron.Size = new System.Drawing.Size(670, 417);
+            this.tabPageNeuron.TabIndex = 1;
+            this.tabPageNeuron.Text = "Neural Network";
+            this.tabPageNeuron.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(702, 467);
-            this.Controls.Add(this.panelControl);
-            this.Controls.Add(this.panelChart);
+            this.Controls.Add(this.tabControl);
             this.Name = "MainForm";
             this.Text = "Market Prediction";
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -205,6 +249,8 @@
             this.panelChart.ResumeLayout(false);
             this.panelControl.ResumeLayout(false);
             this.panelControl.PerformLayout();
+            this.tabControl.ResumeLayout(false);
+            this.tabPageHistData.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -222,6 +268,9 @@
         private System.Windows.Forms.CheckBox checkBoxIndex;
         private System.Windows.Forms.CheckBox checkBoxPpo;
         private System.Windows.Forms.CheckBox checkBoxDpo;
+        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabPage tabPageHistData;
+        private System.Windows.Forms.TabPage tabPageNeuron;
     }
 }
 

@@ -25,12 +25,20 @@
         private ExponentialMovingAverage signAverage;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="PercentagePriceOscillator"/> class.
+        /// </summary>
+        public PercentagePriceOscillator() : this(12, 26, 9)
+        {
+            
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PercentagePriceOscillator" /> class.
         /// </summary>
         /// <param name="fast">The fast-moving average of the indices.</param>
         /// <param name="slow">The slow-moving average of the indices.</param>
         /// <param name="sign">The signal line of the moving average convergence divergence.</param>
-        public PercentagePriceOscillator(int fast = 12, int slow = 26, int sign = 9)
+        public PercentagePriceOscillator(int fast, int slow, int sign)
         {
             fastAverage = new ExponentialMovingAverage(fast);
             slowAverage = new ExponentialMovingAverage(slow);

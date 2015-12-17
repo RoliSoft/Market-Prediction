@@ -40,8 +40,16 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DetrendedPriceOscillation"/> class.
         /// </summary>
+        public DetrendedPriceOscillation() : this(20)
+        {
+            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DetrendedPriceOscillation"/> class.
+        /// </summary>
         /// <param name="period">The period.</param>
-        public DetrendedPriceOscillation(int period = 20)
+        public DetrendedPriceOscillation(int period)
         {
             this.period = period;
             this.shift  = period / 2 + 1;

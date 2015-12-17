@@ -26,12 +26,20 @@
         private ExponentialMovingAverage signAverage;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="MovingAverageConvergenceDivergence"/> class.
+        /// </summary>
+        public MovingAverageConvergenceDivergence() : this(12, 26, 9)
+        {
+            
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MovingAverageConvergenceDivergence" /> class.
         /// </summary>
         /// <param name="fast">The fast-moving average of the indices.</param>
         /// <param name="slow">The slow-moving average of the indices.</param>
         /// <param name="sign">The signal line of the moving average convergence divergence.</param>
-        public MovingAverageConvergenceDivergence(int fast = 12, int slow = 26, int sign = 9)
+        public MovingAverageConvergenceDivergence(int fast, int slow, int sign)
         {
             fastAverage = new ExponentialMovingAverage(fast);
             slowAverage = new ExponentialMovingAverage(slow);

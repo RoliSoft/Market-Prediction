@@ -34,6 +34,14 @@
         private ExponentialMovingAverage lossAverage;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="RelativeStrengthIndex"/> class.
+        /// </summary>
+        public RelativeStrengthIndex() : this(30)
+        {
+            
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RelativeStrengthIndex" /> class.
         /// </summary>
         /// <param name="period">The period.</param>
