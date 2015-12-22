@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panelChart = new System.Windows.Forms.Panel();
             this.checkBoxDpo = new System.Windows.Forms.CheckBox();
@@ -42,7 +42,7 @@
             this.comboBoxSeries = new System.Windows.Forms.ComboBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.tabControl = new System.Windows.Forms.TabControl();
-            this.tabPageHistData = new System.Windows.Forms.TabPage();
+            this.tabPageData = new System.Windows.Forms.TabPage();
             this.tabPageNeuron = new System.Windows.Forms.TabPage();
             this.groupBoxCurrency = new System.Windows.Forms.GroupBox();
             this.groupBoxPlot = new System.Windows.Forms.GroupBox();
@@ -51,7 +51,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.panelChart.SuspendLayout();
             this.tabControl.SuspendLayout();
-            this.tabPageHistData.SuspendLayout();
+            this.tabPageData.SuspendLayout();
             this.groupBoxCurrency.SuspendLayout();
             this.groupBoxPlot.SuspendLayout();
             this.groupBoxIndicators.SuspendLayout();
@@ -61,37 +61,37 @@
             // chart
             // 
             this.chart.BackColor = System.Drawing.SystemColors.Control;
-            chartArea5.AxisX.InterlacedColor = System.Drawing.Color.Silver;
-            chartArea5.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
-            chartArea5.AxisX.IsStartedFromZero = false;
-            chartArea5.AxisX.LineColor = System.Drawing.Color.Silver;
-            chartArea5.AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
-            chartArea5.AxisX.MajorTickMark.LineColor = System.Drawing.Color.Silver;
-            chartArea5.AxisX.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
-            chartArea5.AxisY.InterlacedColor = System.Drawing.Color.Silver;
-            chartArea5.AxisY.IsStartedFromZero = false;
-            chartArea5.AxisY.LineColor = System.Drawing.Color.Silver;
-            chartArea5.AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
-            chartArea5.AxisY.MajorTickMark.LineColor = System.Drawing.Color.Silver;
-            chartArea5.AxisY.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
-            chartArea5.BackColor = System.Drawing.SystemColors.Control;
-            chartArea5.BorderColor = System.Drawing.Color.Silver;
-            chartArea5.IsSameFontSizeForAllAxes = true;
-            chartArea5.Name = "ChartArea1";
-            this.chart.ChartAreas.Add(chartArea5);
+            chartArea1.AxisX.InterlacedColor = System.Drawing.Color.Silver;
+            chartArea1.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
+            chartArea1.AxisX.IsStartedFromZero = false;
+            chartArea1.AxisX.LineColor = System.Drawing.Color.Silver;
+            chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            chartArea1.AxisX.MajorTickMark.LineColor = System.Drawing.Color.Silver;
+            chartArea1.AxisX.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
+            chartArea1.AxisY.InterlacedColor = System.Drawing.Color.Silver;
+            chartArea1.AxisY.IsStartedFromZero = false;
+            chartArea1.AxisY.LineColor = System.Drawing.Color.Silver;
+            chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            chartArea1.AxisY.MajorTickMark.LineColor = System.Drawing.Color.Silver;
+            chartArea1.AxisY.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
+            chartArea1.BackColor = System.Drawing.SystemColors.Control;
+            chartArea1.BorderColor = System.Drawing.Color.Silver;
+            chartArea1.IsSameFontSizeForAllAxes = true;
+            chartArea1.Name = "ChartArea1";
+            this.chart.ChartAreas.Add(chartArea1);
             this.chart.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend5.Alignment = System.Drawing.StringAlignment.Center;
-            legend5.BackColor = System.Drawing.SystemColors.Control;
-            legend5.BorderColor = System.Drawing.Color.Transparent;
-            legend5.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Top;
-            legend5.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Row;
-            legend5.Name = "Legend1";
-            legend5.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chart.Legends.Add(legend5);
+            legend1.Alignment = System.Drawing.StringAlignment.Center;
+            legend1.BackColor = System.Drawing.SystemColors.Control;
+            legend1.BorderColor = System.Drawing.Color.Transparent;
+            legend1.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Top;
+            legend1.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Row;
+            legend1.Name = "Legend1";
+            legend1.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chart.Legends.Add(legend1);
             this.chart.Location = new System.Drawing.Point(0, 0);
             this.chart.Name = "chart";
             this.chart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Bright;
-            this.chart.Size = new System.Drawing.Size(786, 327);
+            this.chart.Size = new System.Drawing.Size(771, 491);
             this.chart.TabIndex = 0;
             // 
             // panelChart
@@ -102,7 +102,7 @@
             this.panelChart.Controls.Add(this.chart);
             this.panelChart.Location = new System.Drawing.Point(0, 0);
             this.panelChart.Name = "panelChart";
-            this.panelChart.Size = new System.Drawing.Size(786, 327);
+            this.panelChart.Size = new System.Drawing.Size(771, 491);
             this.panelChart.TabIndex = 1;
             // 
             // checkBoxDpo
@@ -134,7 +134,7 @@
             // checkBoxIndex
             // 
             this.checkBoxIndex.AutoSize = true;
-            this.checkBoxIndex.Location = new System.Drawing.Point(11, 21);
+            this.checkBoxIndex.Location = new System.Drawing.Point(10, 21);
             this.checkBoxIndex.Name = "checkBoxIndex";
             this.checkBoxIndex.Size = new System.Drawing.Size(52, 17);
             this.checkBoxIndex.TabIndex = 7;
@@ -186,44 +186,44 @@
             // 
             this.comboBoxSeries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSeries.FormattingEnabled = true;
-            this.comboBoxSeries.Location = new System.Drawing.Point(6, 19);
+            this.comboBoxSeries.Location = new System.Drawing.Point(10, 19);
             this.comboBoxSeries.Name = "comboBoxSeries";
-            this.comboBoxSeries.Size = new System.Drawing.Size(131, 21);
+            this.comboBoxSeries.Size = new System.Drawing.Size(272, 21);
             this.comboBoxSeries.TabIndex = 4;
             this.comboBoxSeries.SelectedIndexChanged += new System.EventHandler(this.comboBoxSeries_SelectedIndexChanged);
             // 
             // tabControl
             // 
-            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl.Controls.Add(this.tabPageHistData);
+            this.tabControl.Controls.Add(this.tabPageData);
             this.tabControl.Controls.Add(this.tabPageNeuron);
-            this.tabControl.Location = new System.Drawing.Point(12, 322);
+            this.tabControl.Location = new System.Drawing.Point(763, 12);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(763, 240);
+            this.tabControl.Size = new System.Drawing.Size(320, 467);
             this.tabControl.TabIndex = 4;
             // 
-            // tabPageHistData
+            // tabPageData
             // 
-            this.tabPageHistData.AutoScroll = true;
-            this.tabPageHistData.AutoScrollMargin = new System.Drawing.Size(10, 10);
-            this.tabPageHistData.Controls.Add(this.groupBoxPlot);
-            this.tabPageHistData.Controls.Add(this.groupBoxCurrency);
-            this.tabPageHistData.Location = new System.Drawing.Point(4, 22);
-            this.tabPageHistData.Name = "tabPageHistData";
-            this.tabPageHistData.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageHistData.Size = new System.Drawing.Size(755, 214);
-            this.tabPageHistData.TabIndex = 0;
-            this.tabPageHistData.Text = "Historical Data & Indicators";
-            this.tabPageHistData.UseVisualStyleBackColor = true;
+            this.tabPageData.AutoScroll = true;
+            this.tabPageData.AutoScrollMargin = new System.Drawing.Size(10, 10);
+            this.tabPageData.Controls.Add(this.groupBoxPlot);
+            this.tabPageData.Controls.Add(this.groupBoxCurrency);
+            this.tabPageData.Location = new System.Drawing.Point(4, 22);
+            this.tabPageData.Name = "tabPageData";
+            this.tabPageData.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageData.Size = new System.Drawing.Size(312, 441);
+            this.tabPageData.TabIndex = 0;
+            this.tabPageData.Text = "Data";
+            this.tabPageData.UseVisualStyleBackColor = true;
             // 
             // tabPageNeuron
             // 
             this.tabPageNeuron.Location = new System.Drawing.Point(4, 22);
             this.tabPageNeuron.Name = "tabPageNeuron";
             this.tabPageNeuron.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageNeuron.Size = new System.Drawing.Size(755, 214);
+            this.tabPageNeuron.Size = new System.Drawing.Size(312, 441);
             this.tabPageNeuron.TabIndex = 1;
             this.tabPageNeuron.Text = "Neural Network";
             this.tabPageNeuron.UseVisualStyleBackColor = true;
@@ -233,7 +233,7 @@
             this.groupBoxCurrency.Controls.Add(this.comboBoxSeries);
             this.groupBoxCurrency.Location = new System.Drawing.Point(10, 10);
             this.groupBoxCurrency.Name = "groupBoxCurrency";
-            this.groupBoxCurrency.Size = new System.Drawing.Size(144, 48);
+            this.groupBoxCurrency.Size = new System.Drawing.Size(292, 52);
             this.groupBoxCurrency.TabIndex = 10;
             this.groupBoxCurrency.TabStop = false;
             this.groupBoxCurrency.Text = "Currency";
@@ -243,9 +243,9 @@
             this.groupBoxPlot.Controls.Add(this.groupBoxProcessing);
             this.groupBoxPlot.Controls.Add(this.groupBoxIndicators);
             this.groupBoxPlot.Controls.Add(this.checkBoxIndex);
-            this.groupBoxPlot.Location = new System.Drawing.Point(160, 10);
+            this.groupBoxPlot.Location = new System.Drawing.Point(10, 68);
             this.groupBoxPlot.Name = "groupBoxPlot";
-            this.groupBoxPlot.Size = new System.Drawing.Size(253, 153);
+            this.groupBoxPlot.Size = new System.Drawing.Size(292, 153);
             this.groupBoxPlot.TabIndex = 11;
             this.groupBoxPlot.TabStop = false;
             this.groupBoxPlot.Text = "Plot";
@@ -256,9 +256,9 @@
             this.groupBoxIndicators.Controls.Add(this.checkBoxPpo);
             this.groupBoxIndicators.Controls.Add(this.checkBoxMacd);
             this.groupBoxIndicators.Controls.Add(this.checkBoxDpo);
-            this.groupBoxIndicators.Location = new System.Drawing.Point(11, 96);
+            this.groupBoxIndicators.Location = new System.Drawing.Point(10, 96);
             this.groupBoxIndicators.Name = "groupBoxIndicators";
-            this.groupBoxIndicators.Size = new System.Drawing.Size(231, 46);
+            this.groupBoxIndicators.Size = new System.Drawing.Size(272, 46);
             this.groupBoxIndicators.TabIndex = 8;
             this.groupBoxIndicators.TabStop = false;
             this.groupBoxIndicators.Text = "Indicators";
@@ -266,9 +266,9 @@
             // groupBoxProcessing
             // 
             this.groupBoxProcessing.Controls.Add(this.checkBoxEma);
-            this.groupBoxProcessing.Location = new System.Drawing.Point(11, 44);
+            this.groupBoxProcessing.Location = new System.Drawing.Point(10, 44);
             this.groupBoxProcessing.Name = "groupBoxProcessing";
-            this.groupBoxProcessing.Size = new System.Drawing.Size(231, 46);
+            this.groupBoxProcessing.Size = new System.Drawing.Size(272, 46);
             this.groupBoxProcessing.TabIndex = 9;
             this.groupBoxProcessing.TabStop = false;
             this.groupBoxProcessing.Text = "Processing";
@@ -277,16 +277,18 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(787, 574);
+            this.ClientSize = new System.Drawing.Size(1095, 491);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.panelChart);
             this.Name = "MainForm";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Market Prediction";
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chart)).EndInit();
             this.panelChart.ResumeLayout(false);
             this.tabControl.ResumeLayout(false);
-            this.tabPageHistData.ResumeLayout(false);
+            this.tabPageData.ResumeLayout(false);
             this.groupBoxCurrency.ResumeLayout(false);
             this.groupBoxPlot.ResumeLayout(false);
             this.groupBoxPlot.PerformLayout();
@@ -311,7 +313,7 @@
         private System.Windows.Forms.CheckBox checkBoxPpo;
         private System.Windows.Forms.CheckBox checkBoxDpo;
         private System.Windows.Forms.TabControl tabControl;
-        private System.Windows.Forms.TabPage tabPageHistData;
+        private System.Windows.Forms.TabPage tabPageData;
         private System.Windows.Forms.TabPage tabPageNeuron;
         private System.Windows.Forms.GroupBox groupBoxPlot;
         private System.Windows.Forms.GroupBox groupBoxProcessing;
