@@ -38,24 +38,25 @@
             this.checkBoxIndex = new System.Windows.Forms.CheckBox();
             this.checkBoxMacd = new System.Windows.Forms.CheckBox();
             this.checkBoxRsi = new System.Windows.Forms.CheckBox();
-            this.checkBoxEma = new System.Windows.Forms.CheckBox();
+            this.checkBoxSma = new System.Windows.Forms.CheckBox();
             this.comboBoxSeries = new System.Windows.Forms.ComboBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.checkBoxEma = new System.Windows.Forms.CheckBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageData = new System.Windows.Forms.TabPage();
-            this.tabPageNeuron = new System.Windows.Forms.TabPage();
-            this.groupBoxCurrency = new System.Windows.Forms.GroupBox();
             this.groupBoxPlot = new System.Windows.Forms.GroupBox();
-            this.groupBoxIndicators = new System.Windows.Forms.GroupBox();
             this.groupBoxProcessing = new System.Windows.Forms.GroupBox();
+            this.groupBoxIndicators = new System.Windows.Forms.GroupBox();
+            this.groupBoxCurrency = new System.Windows.Forms.GroupBox();
+            this.tabPageNeuron = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.panelChart.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPageData.SuspendLayout();
-            this.groupBoxCurrency.SuspendLayout();
             this.groupBoxPlot.SuspendLayout();
-            this.groupBoxIndicators.SuspendLayout();
             this.groupBoxProcessing.SuspendLayout();
+            this.groupBoxIndicators.SuspendLayout();
+            this.groupBoxCurrency.SuspendLayout();
             this.SuspendLayout();
             // 
             // chart
@@ -68,6 +69,7 @@
             chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
             chartArea1.AxisX.MajorTickMark.LineColor = System.Drawing.Color.Silver;
             chartArea1.AxisX.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
+            chartArea1.AxisX.TextOrientation = System.Windows.Forms.DataVisualization.Charting.TextOrientation.Rotated270;
             chartArea1.AxisY.InterlacedColor = System.Drawing.Color.Silver;
             chartArea1.AxisY.IsStartedFromZero = false;
             chartArea1.AxisY.LineColor = System.Drawing.Color.Silver;
@@ -169,18 +171,18 @@
             this.checkBoxRsi.UseVisualStyleBackColor = true;
             this.checkBoxRsi.CheckedChanged += new System.EventHandler(this.checkBoxIndicator_CheckedChanged);
             // 
-            // checkBoxEma
+            // checkBoxSma
             // 
-            this.checkBoxEma.AutoSize = true;
-            this.checkBoxEma.Location = new System.Drawing.Point(11, 21);
-            this.checkBoxEma.Name = "checkBoxEma";
-            this.checkBoxEma.Size = new System.Drawing.Size(49, 17);
-            this.checkBoxEma.TabIndex = 1;
-            this.checkBoxEma.Tag = "MarketPrediction.ExponentialMovingAverage";
-            this.checkBoxEma.Text = "EMA";
-            this.toolTip.SetToolTip(this.checkBoxEma, "Exponential Moving Average");
-            this.checkBoxEma.UseVisualStyleBackColor = true;
-            this.checkBoxEma.CheckedChanged += new System.EventHandler(this.checkBoxIndicator_CheckedChanged);
+            this.checkBoxSma.AutoSize = true;
+            this.checkBoxSma.Location = new System.Drawing.Point(11, 21);
+            this.checkBoxSma.Name = "checkBoxSma";
+            this.checkBoxSma.Size = new System.Drawing.Size(49, 17);
+            this.checkBoxSma.TabIndex = 1;
+            this.checkBoxSma.Tag = "MarketPrediction.SimpleMovingAverage";
+            this.checkBoxSma.Text = "SMA";
+            this.toolTip.SetToolTip(this.checkBoxSma, "Simple Moving Average");
+            this.checkBoxSma.UseVisualStyleBackColor = true;
+            this.checkBoxSma.CheckedChanged += new System.EventHandler(this.checkBoxIndicator_CheckedChanged);
             // 
             // comboBoxSeries
             // 
@@ -191,6 +193,19 @@
             this.comboBoxSeries.Size = new System.Drawing.Size(272, 21);
             this.comboBoxSeries.TabIndex = 4;
             this.comboBoxSeries.SelectedIndexChanged += new System.EventHandler(this.comboBoxSeries_SelectedIndexChanged);
+            // 
+            // checkBoxEma
+            // 
+            this.checkBoxEma.AutoSize = true;
+            this.checkBoxEma.Location = new System.Drawing.Point(66, 21);
+            this.checkBoxEma.Name = "checkBoxEma";
+            this.checkBoxEma.Size = new System.Drawing.Size(49, 17);
+            this.checkBoxEma.TabIndex = 2;
+            this.checkBoxEma.Tag = "MarketPrediction.ExponentialMovingAverage";
+            this.checkBoxEma.Text = "EMA";
+            this.toolTip.SetToolTip(this.checkBoxEma, "Exponential Moving Average");
+            this.checkBoxEma.UseVisualStyleBackColor = true;
+            this.checkBoxEma.CheckedChanged += new System.EventHandler(this.checkBoxIndicator_CheckedChanged);
             // 
             // tabControl
             // 
@@ -218,26 +233,6 @@
             this.tabPageData.Text = "Data";
             this.tabPageData.UseVisualStyleBackColor = true;
             // 
-            // tabPageNeuron
-            // 
-            this.tabPageNeuron.Location = new System.Drawing.Point(4, 22);
-            this.tabPageNeuron.Name = "tabPageNeuron";
-            this.tabPageNeuron.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageNeuron.Size = new System.Drawing.Size(312, 441);
-            this.tabPageNeuron.TabIndex = 1;
-            this.tabPageNeuron.Text = "Neural Network";
-            this.tabPageNeuron.UseVisualStyleBackColor = true;
-            // 
-            // groupBoxCurrency
-            // 
-            this.groupBoxCurrency.Controls.Add(this.comboBoxSeries);
-            this.groupBoxCurrency.Location = new System.Drawing.Point(10, 10);
-            this.groupBoxCurrency.Name = "groupBoxCurrency";
-            this.groupBoxCurrency.Size = new System.Drawing.Size(292, 52);
-            this.groupBoxCurrency.TabIndex = 10;
-            this.groupBoxCurrency.TabStop = false;
-            this.groupBoxCurrency.Text = "Currency";
-            // 
             // groupBoxPlot
             // 
             this.groupBoxPlot.Controls.Add(this.groupBoxProcessing);
@@ -249,6 +244,17 @@
             this.groupBoxPlot.TabIndex = 11;
             this.groupBoxPlot.TabStop = false;
             this.groupBoxPlot.Text = "Plot";
+            // 
+            // groupBoxProcessing
+            // 
+            this.groupBoxProcessing.Controls.Add(this.checkBoxEma);
+            this.groupBoxProcessing.Controls.Add(this.checkBoxSma);
+            this.groupBoxProcessing.Location = new System.Drawing.Point(10, 44);
+            this.groupBoxProcessing.Name = "groupBoxProcessing";
+            this.groupBoxProcessing.Size = new System.Drawing.Size(272, 46);
+            this.groupBoxProcessing.TabIndex = 9;
+            this.groupBoxProcessing.TabStop = false;
+            this.groupBoxProcessing.Text = "Processing";
             // 
             // groupBoxIndicators
             // 
@@ -263,15 +269,25 @@
             this.groupBoxIndicators.TabStop = false;
             this.groupBoxIndicators.Text = "Indicators";
             // 
-            // groupBoxProcessing
+            // groupBoxCurrency
             // 
-            this.groupBoxProcessing.Controls.Add(this.checkBoxEma);
-            this.groupBoxProcessing.Location = new System.Drawing.Point(10, 44);
-            this.groupBoxProcessing.Name = "groupBoxProcessing";
-            this.groupBoxProcessing.Size = new System.Drawing.Size(272, 46);
-            this.groupBoxProcessing.TabIndex = 9;
-            this.groupBoxProcessing.TabStop = false;
-            this.groupBoxProcessing.Text = "Processing";
+            this.groupBoxCurrency.Controls.Add(this.comboBoxSeries);
+            this.groupBoxCurrency.Location = new System.Drawing.Point(10, 10);
+            this.groupBoxCurrency.Name = "groupBoxCurrency";
+            this.groupBoxCurrency.Size = new System.Drawing.Size(292, 52);
+            this.groupBoxCurrency.TabIndex = 10;
+            this.groupBoxCurrency.TabStop = false;
+            this.groupBoxCurrency.Text = "Currency";
+            // 
+            // tabPageNeuron
+            // 
+            this.tabPageNeuron.Location = new System.Drawing.Point(4, 22);
+            this.tabPageNeuron.Name = "tabPageNeuron";
+            this.tabPageNeuron.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageNeuron.Size = new System.Drawing.Size(312, 441);
+            this.tabPageNeuron.TabIndex = 1;
+            this.tabPageNeuron.Text = "Neural Network";
+            this.tabPageNeuron.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -289,13 +305,13 @@
             this.panelChart.ResumeLayout(false);
             this.tabControl.ResumeLayout(false);
             this.tabPageData.ResumeLayout(false);
-            this.groupBoxCurrency.ResumeLayout(false);
             this.groupBoxPlot.ResumeLayout(false);
             this.groupBoxPlot.PerformLayout();
-            this.groupBoxIndicators.ResumeLayout(false);
-            this.groupBoxIndicators.PerformLayout();
             this.groupBoxProcessing.ResumeLayout(false);
             this.groupBoxProcessing.PerformLayout();
+            this.groupBoxIndicators.ResumeLayout(false);
+            this.groupBoxIndicators.PerformLayout();
+            this.groupBoxCurrency.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -308,7 +324,7 @@
         private System.Windows.Forms.CheckBox checkBoxMacd;
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.CheckBox checkBoxRsi;
-        private System.Windows.Forms.CheckBox checkBoxEma;
+        private System.Windows.Forms.CheckBox checkBoxSma;
         private System.Windows.Forms.CheckBox checkBoxIndex;
         private System.Windows.Forms.CheckBox checkBoxPpo;
         private System.Windows.Forms.CheckBox checkBoxDpo;
@@ -319,6 +335,7 @@
         private System.Windows.Forms.GroupBox groupBoxProcessing;
         private System.Windows.Forms.GroupBox groupBoxIndicators;
         private System.Windows.Forms.GroupBox groupBoxCurrency;
+        private System.Windows.Forms.CheckBox checkBoxEma;
     }
 }
 

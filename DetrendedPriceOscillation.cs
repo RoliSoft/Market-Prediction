@@ -35,7 +35,7 @@
         /// <summary>
         /// The moving average of the indices on tracked period.
         /// </summary>
-        private ExponentialMovingAverage periodAverage;
+        private SimpleMovingAverage periodAverage;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DetrendedPriceOscillation"/> class.
@@ -53,7 +53,7 @@
         {
             this.period = period;
             this.shift  = period / 2 + 1;
-            periodAverage = new ExponentialMovingAverage(period);
+            periodAverage = new SimpleMovingAverage(period);
             previous = new Queue<decimal>(shift);
         }
         

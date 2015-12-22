@@ -66,6 +66,7 @@
             processEvents = false;
 
             checkBoxIndex.Checked = chart.Series.Any(x => x.Name == (string)comboBoxSeries.SelectedItem);
+            checkBoxSma.Checked   = chart.Series.Any(x => x.Name == (string)comboBoxSeries.SelectedItem + " (SMA)");
             checkBoxEma.Checked   = chart.Series.Any(x => x.Name == (string)comboBoxSeries.SelectedItem + " (EMA)");
             checkBoxRsi.Checked   = chart.Series.Any(x => x.Name == (string)comboBoxSeries.SelectedItem + " (RSI)");
             checkBoxMacd.Checked  = chart.Series.Any(x => x.Name == (string)comboBoxSeries.SelectedItem + " (MACD)");
@@ -214,7 +215,7 @@
         /// </summary>
         private void SetChartBoundaries()
         {
-            double min = double.MaxValue,
+            /*double min = double.MaxValue,
                    max = double.MinValue;
 
             if (chart.Series.Count == 0)
@@ -236,7 +237,7 @@
             if (Math.Abs(max - double.MinValue) > 0.01)
             {
                 chart.ChartAreas[0].AxisY.Maximum = max;
-            }
+            }*/
         }
     }
 }
