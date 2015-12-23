@@ -49,6 +49,7 @@
             this.groupBoxIndicators = new System.Windows.Forms.GroupBox();
             this.groupBoxCurrency = new System.Windows.Forms.GroupBox();
             this.tabPageNeuron = new System.Windows.Forms.TabPage();
+            this.buttonLearn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.panelChart.SuspendLayout();
             this.tabControl.SuspendLayout();
@@ -57,6 +58,7 @@
             this.groupBoxProcessing.SuspendLayout();
             this.groupBoxIndicators.SuspendLayout();
             this.groupBoxCurrency.SuspendLayout();
+            this.tabPageNeuron.SuspendLayout();
             this.SuspendLayout();
             // 
             // chart
@@ -69,7 +71,6 @@
             chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
             chartArea1.AxisX.MajorTickMark.LineColor = System.Drawing.Color.Silver;
             chartArea1.AxisX.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
-            chartArea1.AxisX.TextOrientation = System.Windows.Forms.DataVisualization.Charting.TextOrientation.Rotated270;
             chartArea1.AxisY.InterlacedColor = System.Drawing.Color.Silver;
             chartArea1.AxisY.IsStartedFromZero = false;
             chartArea1.AxisY.LineColor = System.Drawing.Color.Silver;
@@ -281,6 +282,7 @@
             // 
             // tabPageNeuron
             // 
+            this.tabPageNeuron.Controls.Add(this.buttonLearn);
             this.tabPageNeuron.Location = new System.Drawing.Point(4, 22);
             this.tabPageNeuron.Name = "tabPageNeuron";
             this.tabPageNeuron.Padding = new System.Windows.Forms.Padding(3);
@@ -288,6 +290,16 @@
             this.tabPageNeuron.TabIndex = 1;
             this.tabPageNeuron.Text = "Neural Network";
             this.tabPageNeuron.UseVisualStyleBackColor = true;
+            // 
+            // buttonLearn
+            // 
+            this.buttonLearn.Location = new System.Drawing.Point(123, 79);
+            this.buttonLearn.Name = "buttonLearn";
+            this.buttonLearn.Size = new System.Drawing.Size(75, 23);
+            this.buttonLearn.TabIndex = 0;
+            this.buttonLearn.Text = "Learn";
+            this.buttonLearn.UseVisualStyleBackColor = true;
+            this.buttonLearn.Click += new System.EventHandler(this.buttonLearn_Click);
             // 
             // MainForm
             // 
@@ -312,6 +324,7 @@
             this.groupBoxIndicators.ResumeLayout(false);
             this.groupBoxIndicators.PerformLayout();
             this.groupBoxCurrency.ResumeLayout(false);
+            this.tabPageNeuron.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -336,6 +349,7 @@
         private System.Windows.Forms.GroupBox groupBoxIndicators;
         private System.Windows.Forms.GroupBox groupBoxCurrency;
         private System.Windows.Forms.CheckBox checkBoxEma;
+        private System.Windows.Forms.Button buttonLearn;
     }
 }
 

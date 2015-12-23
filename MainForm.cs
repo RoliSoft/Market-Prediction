@@ -1,4 +1,8 @@
-﻿namespace MarketPrediction
+﻿using AForge;
+using AForge.Neuro;
+using AForge.Neuro.Learning;
+
+namespace MarketPrediction
 {
     using System;
     using System.Collections;
@@ -31,6 +35,8 @@
         {
             InitializeComponent();
         }
+
+        #region Data
 
         /// <summary>
         /// Handles the Load event of the MainForm control.
@@ -215,7 +221,7 @@
         /// </summary>
         private void SetChartBoundaries()
         {
-            /*double min = double.MaxValue,
+            double min = double.MaxValue,
                    max = double.MinValue;
 
             if (chart.Series.Count == 0)
@@ -237,7 +243,165 @@
             if (Math.Abs(max - double.MinValue) > 0.01)
             {
                 chart.ChartAreas[0].AxisY.Maximum = max;
-            }*/
+            }
         }
+
+        #endregion
+
+        #region Neural Network
+
+        /// <summary>
+        /// Occurs when the Learn button is clicked.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
+        private void buttonLearn_Click(object sender, EventArgs e)
+        {
+            SortedDictionary<DateTime, decimal> index = indices[(string)comboBoxSeries.SelectedItem];
+
+            double learningRate = 0.1;
+            double momentum = 0.0;
+            double sigmoidAlphaValue = 2.0;
+            int windowSize = 5;
+            int predictionSize = 1;
+            int iterations = 100;//1000
+
+            int samples = index.Count - predictionSize - windowSize;
+            double factor = 1.7 / index.Count;
+            double yMin = (double)index.Values.Min();
+            double[][] input = new double[samples][];
+            double[][] output = new double[samples][];
+
+            for (int i = 0; i < samples; i++)
+            {
+                input[i] = new double[windowSize];
+                output[i] = new double[1];
+
+                // set input
+                for (int j = 0; j < windowSize; j++)
+                {
+                    input[i][j] = ((double)index.Values.ElementAt(i + j) - yMin) * factor - 0.85;
+                }
+                // set output
+                output[i][0] = ((double)index.Values.ElementAt(i + windowSize) - yMin) * factor - 0.85;
+            }
+
+            Neuron.RandRange = new Range(0.3f, 0.3f);
+
+            var nn = new ActivationNetwork(new BipolarSigmoidFunction(sigmoidAlphaValue),
+                windowSize,     // number of inputs
+                windowSize * 2, // number of neurons on the first layer
+                1);             // number of neurons on the second layer
+            
+            var bp = new BackPropagationLearning(nn);
+            bp.LearningRate = learningRate;
+            bp.Momentum = momentum;
+            
+            int iteration = 1;
+
+            // solution array
+            int solutionSize = index.Count - windowSize;
+            double[,] solution = new double[solutionSize, 2];
+            double[] networkInput = new double[windowSize];
+
+            // calculate X values to be used with solution function
+            for (int j = 0; j < solutionSize; j++)
+            {
+                solution[j, 0] = j + windowSize;
+            }
+
+            bool needToStop = false;
+            
+            while (!needToStop)
+            {
+                double error = bp.RunEpoch(input, output) / samples;
+
+                // calculate solution and learning and prediction errors
+                double learningError = 0.0;
+                double predictionError = 0.0;
+                // go through all the data
+                for (int i = 0, n = index.Count - windowSize; i < n; i++)
+                {
+                    // put values from current window as network's input
+                    for (int j = 0; j < windowSize; j++)
+                    {
+                        networkInput[j] = ((double)index.Values.ElementAt(i + j) - yMin) * factor - 0.85;
+                    }
+
+                    // evalue the function
+                    solution[i, 1] = (nn.Compute(networkInput)[0] + 0.85) / factor + yMin;
+
+                    // calculate prediction error
+                    if (i >= n - predictionSize)
+                    {
+                        predictionError += Math.Abs(solution[i, 1] - (double)index.Values.ElementAt(windowSize + i));
+                    }
+                    else
+                    {
+                        learningError += Math.Abs(solution[i, 1] - (double)index.Values.ElementAt(windowSize + i));
+                    }
+                }
+                
+                // increase current iteration
+                iteration++;
+
+                // check if we need to stop
+                if ((iterations != 0) && (iteration > iterations))
+                {
+                    Text = predictionError + " " + learningError + " " + error;
+                    break;
+                }
+            }
+
+
+            var series = new Series("NN");
+            series.ChartType = SeriesChartType.FastLine;
+
+            /*for (int j = windowSize, k = 0, n = index.Count; j < n; j++, k++)
+            {
+                //AddSubItem(dataList, j, solution[k, 1].ToString());
+                series.Points.Add(solution[k, 1]);
+            }*/
+
+            /*int k = 0;
+            foreach (var idx in index)
+            {
+                series.Points.AddXY(idx.Key, solution[k++, 1]);
+
+                if (k >= solution.Length / 2)
+                {
+                    break;
+                }
+            }*/
+
+            var date = index.Keys.Min();
+            for (int j = windowSize, k = 0, n = index.Count; j < n; j++, k++)
+            {
+                //AddSubItem(dataList, j, solution[k, 1].ToString());
+                series.Points.AddXY(date, solution[k, 1]);
+                date = date.AddDays(1);
+            }
+
+            // predict 30 days into the future
+            /*for (int i = 0; i < 30; i ++)
+            {
+                series.Points.AddXY(date, (nn.Compute(networkInput)[0] + 0.85) / factor + yMin);
+                date = date.AddDays(1);
+            }*/
+
+            try
+            {
+                chart.Series.Add(series);
+            }
+            catch (ArgumentException)
+            {
+                chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == "NN"));
+                chart.Series.Add(series);
+            }
+
+            SetChartBoundaries();
+        }
+
+        #endregion
     }
 }
