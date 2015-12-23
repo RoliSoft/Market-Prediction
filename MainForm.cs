@@ -48,6 +48,7 @@ namespace MarketPrediction
             try
             {
                 indices = OandaReader.ReadIndices("oanda_2014-2015.csv");
+                indices["XBT/USD"] = CoinDeskReader.ReadIndex("coindesk-bpi-USD-close.csv");
                 comboBoxSeries.Items.AddRange(indices.Keys.ToArray<object>());
                 comboBoxSeries.SelectedIndex = 0;
             }
@@ -258,6 +259,7 @@ namespace MarketPrediction
         private void buttonLearn_Click(object sender, EventArgs e)
         {
             SortedDictionary<DateTime, decimal> index = indices[(string)comboBoxSeries.SelectedItem];
+            double[] data = index.Values.Select(x => (double)x).ToArray();
 
             double learningRate = 0.05;
             double momentum = 0.99;
@@ -265,6 +267,9 @@ namespace MarketPrediction
             int windowSize = 5;
             int predictionSize = 1;
             int iterations = 1000;//1000
+
+            progressBarNeuronLearn.Value = 0;
+            progressBarNeuronLearn.Maximum = iterations;
 
             int samples = index.Count - predictionSize - windowSize;
             double yMin = (double)index.Values.Min();
@@ -279,11 +284,11 @@ namespace MarketPrediction
                 // set input
                 for (int j = 0; j < windowSize; j++)
                 {
-                    input[i][j] = ((double)index.Values.ElementAt(i + j) - yMin);
+                    input[i][j] = data[i + j] - yMin;
                 }
 
                 // set output
-                output[i][0] = ((double)index.Values.ElementAt(i + windowSize) - yMin);
+                output[i][0] = data[i + windowSize] - yMin;
             }
 
             Neuron.RandRange = new Range(0.3f, 0.3f);
@@ -325,20 +330,20 @@ namespace MarketPrediction
                     // put values from current window as network's input
                     for (int j = 0; j < windowSize; j++)
                     {
-                        networkInput[j] = ((double)index.Values.ElementAt(i + j) - yMin);
+                        networkInput[j] = data[i + j] - yMin;
                     }
 
                     // evalue the function
-                    solution[i, 1] = (nn.Compute(networkInput)[0]) + yMin;
+                    solution[i, 1] = nn.Compute(networkInput)[0] + yMin;
 
                     // calculate prediction error
                     if (i >= n - predictionSize)
                     {
-                        predictionError += Math.Abs(solution[i, 1] - (double)index.Values.ElementAt(windowSize + i));
+                        predictionError += Math.Abs(solution[i, 1] - data[windowSize + i]);
                     }
                     else
                     {
-                        learningError += Math.Abs(solution[i, 1] - (double)index.Values.ElementAt(windowSize + i));
+                        learningError += Math.Abs(solution[i, 1] - data[windowSize + i]);
                     }
                 }
                 
@@ -351,6 +356,8 @@ namespace MarketPrediction
                     Text = predictionError + " " + learningError + " " + error;
                     break;
                 }
+
+                progressBarNeuronLearn.Value = iteration;
             }
 
 

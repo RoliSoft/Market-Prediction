@@ -4,8 +4,17 @@
     using System.Collections.Generic;
     using System.IO;
 
+    /// <summary>
+    /// Implements an Oanda CSV data dump reader.
+    /// Data is freely available from http://www.oanda.com/currency/historical-rates/
+    /// </summary>
     class OandaReader
     {
+        /// <summary>
+        /// Reads the available indices from the specified file.
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        /// <returns>List of indices with list of date and associated index.</returns>
         public static Dictionary<string, SortedDictionary<DateTime, decimal>> ReadIndices(string filename)
         {
             var indices = new Dictionary<string, SortedDictionary<DateTime, decimal>>
@@ -37,10 +46,5 @@
 
             return indices;
         }
-
-        public static ICollection<decimal> GetIndices(Dictionary<DateTime, decimal> indices)
-        {
-            return indices.Values;
-        } 
     }
 }

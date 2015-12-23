@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panelChart = new System.Windows.Forms.Panel();
             this.checkBoxDpo = new System.Windows.Forms.CheckBox();
@@ -50,6 +50,7 @@
             this.groupBoxCurrency = new System.Windows.Forms.GroupBox();
             this.tabPageNeuron = new System.Windows.Forms.TabPage();
             this.buttonLearn = new System.Windows.Forms.Button();
+            this.progressBarNeuronLearn = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.panelChart.SuspendLayout();
             this.tabControl.SuspendLayout();
@@ -64,33 +65,33 @@
             // chart
             // 
             this.chart.BackColor = System.Drawing.SystemColors.Control;
-            chartArea1.AxisX.InterlacedColor = System.Drawing.Color.Silver;
-            chartArea1.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
-            chartArea1.AxisX.IsStartedFromZero = false;
-            chartArea1.AxisX.LineColor = System.Drawing.Color.Silver;
-            chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
-            chartArea1.AxisX.MajorTickMark.LineColor = System.Drawing.Color.Silver;
-            chartArea1.AxisX.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
-            chartArea1.AxisY.InterlacedColor = System.Drawing.Color.Silver;
-            chartArea1.AxisY.IsStartedFromZero = false;
-            chartArea1.AxisY.LineColor = System.Drawing.Color.Silver;
-            chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
-            chartArea1.AxisY.MajorTickMark.LineColor = System.Drawing.Color.Silver;
-            chartArea1.AxisY.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
-            chartArea1.BackColor = System.Drawing.SystemColors.Control;
-            chartArea1.BorderColor = System.Drawing.Color.Silver;
-            chartArea1.IsSameFontSizeForAllAxes = true;
-            chartArea1.Name = "ChartArea1";
-            this.chart.ChartAreas.Add(chartArea1);
+            chartArea6.AxisX.InterlacedColor = System.Drawing.Color.Silver;
+            chartArea6.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
+            chartArea6.AxisX.IsStartedFromZero = false;
+            chartArea6.AxisX.LineColor = System.Drawing.Color.Silver;
+            chartArea6.AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            chartArea6.AxisX.MajorTickMark.LineColor = System.Drawing.Color.Silver;
+            chartArea6.AxisX.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
+            chartArea6.AxisY.InterlacedColor = System.Drawing.Color.Silver;
+            chartArea6.AxisY.IsStartedFromZero = false;
+            chartArea6.AxisY.LineColor = System.Drawing.Color.Silver;
+            chartArea6.AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            chartArea6.AxisY.MajorTickMark.LineColor = System.Drawing.Color.Silver;
+            chartArea6.AxisY.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
+            chartArea6.BackColor = System.Drawing.SystemColors.Control;
+            chartArea6.BorderColor = System.Drawing.Color.Silver;
+            chartArea6.IsSameFontSizeForAllAxes = true;
+            chartArea6.Name = "ChartArea1";
+            this.chart.ChartAreas.Add(chartArea6);
             this.chart.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Alignment = System.Drawing.StringAlignment.Center;
-            legend1.BackColor = System.Drawing.SystemColors.Control;
-            legend1.BorderColor = System.Drawing.Color.Transparent;
-            legend1.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Top;
-            legend1.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Row;
-            legend1.Name = "Legend1";
-            legend1.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chart.Legends.Add(legend1);
+            legend6.Alignment = System.Drawing.StringAlignment.Center;
+            legend6.BackColor = System.Drawing.SystemColors.Control;
+            legend6.BorderColor = System.Drawing.Color.Transparent;
+            legend6.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Top;
+            legend6.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Row;
+            legend6.Name = "Legend1";
+            legend6.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chart.Legends.Add(legend6);
             this.chart.Location = new System.Drawing.Point(0, 0);
             this.chart.Name = "chart";
             this.chart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Bright;
@@ -282,6 +283,7 @@
             // 
             // tabPageNeuron
             // 
+            this.tabPageNeuron.Controls.Add(this.progressBarNeuronLearn);
             this.tabPageNeuron.Controls.Add(this.buttonLearn);
             this.tabPageNeuron.Location = new System.Drawing.Point(4, 22);
             this.tabPageNeuron.Name = "tabPageNeuron";
@@ -300,6 +302,15 @@
             this.buttonLearn.Text = "Learn";
             this.buttonLearn.UseVisualStyleBackColor = true;
             this.buttonLearn.Click += new System.EventHandler(this.buttonLearn_Click);
+            // 
+            // progressBarNeuronLearn
+            // 
+            this.progressBarNeuronLearn.Location = new System.Drawing.Point(10, 407);
+            this.progressBarNeuronLearn.Name = "progressBarNeuronLearn";
+            this.progressBarNeuronLearn.Size = new System.Drawing.Size(292, 23);
+            this.progressBarNeuronLearn.Step = 1;
+            this.progressBarNeuronLearn.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.progressBarNeuronLearn.TabIndex = 1;
             // 
             // MainForm
             // 
@@ -350,6 +361,7 @@
         private System.Windows.Forms.GroupBox groupBoxCurrency;
         private System.Windows.Forms.CheckBox checkBoxEma;
         private System.Windows.Forms.Button buttonLearn;
+        private System.Windows.Forms.ProgressBar progressBarNeuronLearn;
     }
 }
 
