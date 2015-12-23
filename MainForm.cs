@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace MarketPrediction
 {
@@ -30,6 +31,16 @@ namespace MarketPrediction
         /// Indicates whether to process events.
         /// </summary>
         private bool processEvents = true;
+
+        /// <summary>
+        /// Indicates whether a genetic algorithm is currently learning.
+        /// </summary>
+        private bool geneticRunning = false;
+
+        /// <summary>
+        /// Signals a currently running genetic algorithm to stop.
+        /// </summary>
+        private bool geneticStop = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainForm"/> class.
@@ -467,11 +478,25 @@ namespace MarketPrediction
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
-        private void buttonLearnGenetic_Click(object sender, EventArgs e)
+        private async void buttonLearnGenetic_Click(object sender, EventArgs e)
         {
+            if (geneticRunning)
+            {
+                buttonLearnGenetic.Enabled = false;
+                buttonLearnGenetic.Text = "Stopping";
+                geneticStop = true;
+                return;
+            }
+
+            geneticStop = false;
+            geneticRunning = true;
+
+            groupBoxGeneticParams.Enabled = groupBoxGeneticSolution.Enabled = false;
+            buttonLearnGenetic.Text = "Stop";
+
             SortedDictionary<DateTime, decimal> index = indices[(string)comboBoxSeries.SelectedItem];
             double[] data = index.Values.Take((int)numericUpDownSampleCount.Value).Select(x => (double)x).ToArray();
-            
+
             int iterations = (int)numericUpDownGeneticIterations.Value;
             int population = (int)numericUpDownGeneticPopulation.Value;
             int window = 5;
@@ -546,12 +571,30 @@ namespace MarketPrediction
             }
             
             Array.Copy(consts, 0, input, window, consts.Length);
-            
-            for (int i = 0; i < iterations; i++)
+
+            await Task.Run(() =>
+                {
+                    for (int i = 0; i < iterations; i++)
+                    {
+                        ga.RunEpoch();
+
+                        Invoke(new Action<int>(p => progressBarGeneticLearn.Value = p), i);
+
+                        if (geneticStop)
+                        {
+                            return;
+                        }
+                    }
+                });
+
+            if (geneticStop)
             {
-                ga.RunEpoch();
-                
-                progressBarGeneticLearn.Value = i;
+                geneticStop = geneticRunning = false;
+
+                buttonLearnGenetic.Text = "Learn";
+                groupBoxGeneticParams.Enabled = groupBoxGeneticSolution.Enabled = buttonLearnGenetic.Enabled = true;
+
+                return;
             }
 
             var errorLearn = 0.0;
@@ -575,6 +618,11 @@ namespace MarketPrediction
                     errorLearn += Math.Abs(solution[j] - data[window + j]);
                 }
             }
+
+            geneticStop = geneticRunning = false;
+
+            buttonLearnGenetic.Text = "Learn";
+            groupBoxGeneticParams.Enabled = groupBoxGeneticSolution.Enabled = buttonLearnGenetic.Enabled = true;
 
             textBoxGeneticLearnError.Text = errorLearn.ToString();
             textBoxGeneticPredError.Text  = errorPred.ToString();
