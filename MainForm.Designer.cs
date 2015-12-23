@@ -49,8 +49,11 @@
             this.groupBoxIndicators = new System.Windows.Forms.GroupBox();
             this.groupBoxCurrency = new System.Windows.Forms.GroupBox();
             this.tabPageNeuron = new System.Windows.Forms.TabPage();
-            this.buttonLearn = new System.Windows.Forms.Button();
+            this.buttonLearnNeuron = new System.Windows.Forms.Button();
             this.progressBarNeuronLearn = new System.Windows.Forms.ProgressBar();
+            this.tabPageGenetic = new System.Windows.Forms.TabPage();
+            this.progressBarGeneticLearn = new System.Windows.Forms.ProgressBar();
+            this.buttonLearnGenetic = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.panelChart.SuspendLayout();
             this.tabControl.SuspendLayout();
@@ -60,6 +63,7 @@
             this.groupBoxIndicators.SuspendLayout();
             this.groupBoxCurrency.SuspendLayout();
             this.tabPageNeuron.SuspendLayout();
+            this.tabPageGenetic.SuspendLayout();
             this.SuspendLayout();
             // 
             // chart
@@ -215,6 +219,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.tabPageData);
             this.tabControl.Controls.Add(this.tabPageNeuron);
+            this.tabControl.Controls.Add(this.tabPageGenetic);
             this.tabControl.Location = new System.Drawing.Point(763, 12);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
@@ -283,8 +288,10 @@
             // 
             // tabPageNeuron
             // 
+            this.tabPageNeuron.AutoScroll = true;
+            this.tabPageNeuron.AutoScrollMargin = new System.Drawing.Size(10, 10);
             this.tabPageNeuron.Controls.Add(this.progressBarNeuronLearn);
-            this.tabPageNeuron.Controls.Add(this.buttonLearn);
+            this.tabPageNeuron.Controls.Add(this.buttonLearnNeuron);
             this.tabPageNeuron.Location = new System.Drawing.Point(4, 22);
             this.tabPageNeuron.Name = "tabPageNeuron";
             this.tabPageNeuron.Padding = new System.Windows.Forms.Padding(3);
@@ -293,15 +300,15 @@
             this.tabPageNeuron.Text = "Neural Network";
             this.tabPageNeuron.UseVisualStyleBackColor = true;
             // 
-            // buttonLearn
+            // buttonLearnNeuron
             // 
-            this.buttonLearn.Location = new System.Drawing.Point(123, 79);
-            this.buttonLearn.Name = "buttonLearn";
-            this.buttonLearn.Size = new System.Drawing.Size(75, 23);
-            this.buttonLearn.TabIndex = 0;
-            this.buttonLearn.Text = "Learn";
-            this.buttonLearn.UseVisualStyleBackColor = true;
-            this.buttonLearn.Click += new System.EventHandler(this.buttonLearn_Click);
+            this.buttonLearnNeuron.Location = new System.Drawing.Point(123, 79);
+            this.buttonLearnNeuron.Name = "buttonLearnNeuron";
+            this.buttonLearnNeuron.Size = new System.Drawing.Size(75, 23);
+            this.buttonLearnNeuron.TabIndex = 0;
+            this.buttonLearnNeuron.Text = "Learn";
+            this.buttonLearnNeuron.UseVisualStyleBackColor = true;
+            this.buttonLearnNeuron.Click += new System.EventHandler(this.buttonLearnNeuron_Click);
             // 
             // progressBarNeuronLearn
             // 
@@ -311,6 +318,39 @@
             this.progressBarNeuronLearn.Step = 1;
             this.progressBarNeuronLearn.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBarNeuronLearn.TabIndex = 1;
+            // 
+            // tabPageGenetic
+            // 
+            this.tabPageGenetic.AutoScroll = true;
+            this.tabPageGenetic.AutoScrollMargin = new System.Drawing.Size(10, 10);
+            this.tabPageGenetic.Controls.Add(this.progressBarGeneticLearn);
+            this.tabPageGenetic.Controls.Add(this.buttonLearnGenetic);
+            this.tabPageGenetic.Location = new System.Drawing.Point(4, 22);
+            this.tabPageGenetic.Name = "tabPageGenetic";
+            this.tabPageGenetic.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageGenetic.Size = new System.Drawing.Size(312, 441);
+            this.tabPageGenetic.TabIndex = 2;
+            this.tabPageGenetic.Text = "Genetic Algorithm";
+            this.tabPageGenetic.UseVisualStyleBackColor = true;
+            // 
+            // progressBarGeneticLearn
+            // 
+            this.progressBarGeneticLearn.Location = new System.Drawing.Point(10, 407);
+            this.progressBarGeneticLearn.Name = "progressBarGeneticLearn";
+            this.progressBarGeneticLearn.Size = new System.Drawing.Size(292, 23);
+            this.progressBarGeneticLearn.Step = 1;
+            this.progressBarGeneticLearn.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.progressBarGeneticLearn.TabIndex = 3;
+            // 
+            // buttonLearnGenetic
+            // 
+            this.buttonLearnGenetic.Location = new System.Drawing.Point(123, 79);
+            this.buttonLearnGenetic.Name = "buttonLearnGenetic";
+            this.buttonLearnGenetic.Size = new System.Drawing.Size(75, 23);
+            this.buttonLearnGenetic.TabIndex = 2;
+            this.buttonLearnGenetic.Text = "Learn";
+            this.buttonLearnGenetic.UseVisualStyleBackColor = true;
+            this.buttonLearnGenetic.Click += new System.EventHandler(this.buttonLearnGenetic_Click);
             // 
             // MainForm
             // 
@@ -336,6 +376,7 @@
             this.groupBoxIndicators.PerformLayout();
             this.groupBoxCurrency.ResumeLayout(false);
             this.tabPageNeuron.ResumeLayout(false);
+            this.tabPageGenetic.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -360,8 +401,11 @@
         private System.Windows.Forms.GroupBox groupBoxIndicators;
         private System.Windows.Forms.GroupBox groupBoxCurrency;
         private System.Windows.Forms.CheckBox checkBoxEma;
-        private System.Windows.Forms.Button buttonLearn;
+        private System.Windows.Forms.Button buttonLearnNeuron;
         private System.Windows.Forms.ProgressBar progressBarNeuronLearn;
+        private System.Windows.Forms.TabPage tabPageGenetic;
+        private System.Windows.Forms.ProgressBar progressBarGeneticLearn;
+        private System.Windows.Forms.Button buttonLearnGenetic;
     }
 }
 

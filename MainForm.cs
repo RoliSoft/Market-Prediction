@@ -1,8 +1,4 @@
-﻿using AForge;
-using AForge.Neuro;
-using AForge.Neuro.Learning;
-
-namespace MarketPrediction
+﻿namespace MarketPrediction
 {
     using System;
     using System.Collections;
@@ -12,6 +8,11 @@ namespace MarketPrediction
     using System.Reflection;
     using System.Windows.Forms;
     using System.Windows.Forms.DataVisualization.Charting;
+
+    using AForge;
+    using AForge.Neuro;
+    using AForge.Neuro.Learning;
+    using AForge.Genetic;
 
     /// <summary>
     /// Main form of the application.
@@ -252,11 +253,11 @@ namespace MarketPrediction
         #region Neural Network
 
         /// <summary>
-        /// Occurs when the Learn button is clicked.
+        /// Occurs when the Learn button is clicked on the Neural Network tab page.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
-        private void buttonLearn_Click(object sender, EventArgs e)
+        private void buttonLearnNeuron_Click(object sender, EventArgs e)
         {
             SortedDictionary<DateTime, decimal> index = indices[(string)comboBoxSeries.SelectedItem];
             double[] data = index.Values.Select(x => (double)x).ToArray();
@@ -403,6 +404,130 @@ namespace MarketPrediction
             catch (ArgumentException)
             {
                 chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == "NN"));
+                chart.Series.Add(series);
+            }
+
+            SetChartBoundaries();
+        }
+
+        #endregion
+
+        #region Genetic Algorithm
+
+        /// <summary>
+        /// Occurs when the Learn button is clicked on the Genetic Algorithm tab page.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
+        private void buttonLearnGenetic_Click(object sender, EventArgs e)
+        {
+            GPTreeChromosome.MaxInitialLevel = 3;
+            GPTreeChromosome.MaxLevel = 5;
+
+            SortedDictionary<DateTime, decimal> index = indices[(string)comboBoxSeries.SelectedItem];
+            double[] data = index.Values.Select(x => (double)x).ToArray();
+            
+            int populationSize = 100;
+            int iterations = 1000;
+            int windowSize = 5;
+            int predictionSize = 1;
+
+            int headLength = 20;
+
+            progressBarGeneticLearn.Value = 0;
+            progressBarGeneticLearn.Maximum = iterations;
+
+            // constants
+            double[] constants = new double[10] { 1, 2, 3, 5, 7, 11, 13, 17, 19, 23 };
+            // create fitness function
+            TimeSeriesPredictionFitness fitness = new TimeSeriesPredictionFitness(data, windowSize, predictionSize, constants);
+            // create gene function
+            IGPGene gene = new SimpleGeneFunction(windowSize + constants.Length);
+            // create population
+            Population population = new Population(populationSize, new GPTreeChromosome(gene), fitness, new EliteSelection());
+            // iterations
+            int i = 1;
+            // solution array
+            int solutionSize = data.Length - windowSize;
+            double[,] solution = new double[solutionSize, 2];
+            double[] input = new double[windowSize + constants.Length];
+
+            population.AutoShuffling = true;
+
+            // calculate X values to be used with solution function
+            for (int j = 0; j < solutionSize; j++)
+            {
+                solution[j, 0] = j + windowSize;
+            }
+            // prepare input
+            Array.Copy(constants, 0, input, windowSize, constants.Length);
+
+            // loop
+            while (true)
+            {
+                // run one epoch of genetic algorithm
+                population.RunEpoch();
+                
+                // get best solution
+                string bestFunction = population.BestChromosome.ToString();
+
+                // calculate best function and prediction error
+                double learningError = 0.0;
+                double predictionError = 0.0;
+                // go through all the data
+                for (int j = 0, n = data.Length - windowSize; j < n; j++)
+                {
+                    // put values from current window as variables
+                    for (int k = 0, b = j + windowSize - 1; k < windowSize; k++)
+                    {
+                        input[k] = data[b - k];
+                    }
+
+                    // evalue the function
+                    solution[j, 1] = PolishExpression.Evaluate(bestFunction, input);
+
+                    // calculate prediction error
+                    if (j >= n - predictionSize)
+                    {
+                        predictionError += Math.Abs(solution[j, 1] - data[windowSize + j]);
+                    }
+                    else
+                    {
+                        learningError += Math.Abs(solution[j, 1] - data[windowSize + j]);
+                    }
+                }
+                
+                // increase current iteration
+                i++;
+
+                //
+                if ((iterations != 0) && (i > iterations))
+                {
+                    Text = population.BestChromosome.ToString();
+                    break;
+                }
+
+                progressBarGeneticLearn.Value = i;
+            }
+
+            var series = new Series("GA");
+            series.ChartType = SeriesChartType.FastLine;
+            
+            var date = index.Keys.Min();
+            for (int j = windowSize, k = 0, n = index.Count; j < n; j++, k++)
+            {
+                //AddSubItem(dataList, j, solution[k, 1].ToString());
+                series.Points.AddXY(date, solution[k, 1]);
+                date = date.AddDays(1);
+            }
+
+            try
+            {
+                chart.Series.Add(series);
+            }
+            catch (ArgumentException)
+            {
+                chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == "GA"));
                 chart.Series.Add(series);
             }
 
