@@ -1,4 +1,6 @@
-﻿namespace MarketPrediction
+﻿using System.Threading;
+
+namespace MarketPrediction
 {
     using System;
     using System.Collections;
@@ -421,12 +423,65 @@
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
         private void buttonLearnGenetic_Click(object sender, EventArgs e)
         {
-            GPTreeChromosome.MaxInitialLevel = 3;
-            GPTreeChromosome.MaxLevel = 5;
-
             SortedDictionary<DateTime, decimal> index = indices[(string)comboBoxSeries.SelectedItem];
-            double[] data = index.Values.Select(x => (double)x).ToArray();
+            double[] data = index.Values.Take(14).Select(x => (double)x).ToArray();
             
+            /*var window = 5;
+            var consts = new[] { data.Min(), data.Average(), data.Max() };
+
+            var ga = new Population(
+                100,
+                new GPTreeChromosome(new SimpleGeneFunction(window + consts.Length)),
+                new TimeSeriesPredictionFitness(data, window, 1, consts),
+                new EliteSelection()
+            );
+
+            progressBarGeneticLearn.Maximum = 1000;
+            
+            for (int i = 0; i < 1000; i++)
+            {
+                ga.RunEpoch();
+
+                progressBarGeneticLearn.Value = i;
+            }
+            
+            var solution = new double[data.Length - window, 2];
+            var input = new double[consts.Length + window];
+
+            for (int j = 0, n = data.Length - window; j < n; j++)
+            {
+                for (int k = 0, b = j + window - 1; k < window; k++)
+                {
+                    input[k] = data[b - k];
+                }
+
+                solution[j, 1] = PolishExpression.Evaluate(ga.BestChromosome.ToString(), input);
+            }
+
+            Text = Utils.ResolveChromosome(ga.BestChromosome.ToString());
+
+            var series = new Series("GA");
+            series.ChartType = SeriesChartType.FastLine;
+
+            var date = index.Keys.Min();
+            for (int j = window, k = 0, n = data.Length; j < n; j++, k++)
+            {
+                series.Points.AddXY(date, solution[k, 1]);
+                date = date.AddDays(1);
+            }
+
+            try
+            {
+                chart.Series.Add(series);
+            }
+            catch (ArgumentException)
+            {
+                chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == "GA"));
+                chart.Series.Add(series);
+            }
+
+            SetChartBoundaries();*/
+
             int populationSize = 100;
             int iterations = 1000;
             int windowSize = 5;
@@ -459,6 +514,7 @@
             {
                 solution[j, 0] = j + windowSize;
             }
+
             // prepare input
             Array.Copy(constants, 0, input, windowSize, constants.Length);
 
@@ -503,7 +559,7 @@
                 //
                 if ((iterations != 0) && (i > iterations))
                 {
-                    Text = population.BestChromosome.ToString();
+                    Text = Utils.ResolveChromosome(population.BestChromosome.ToString());
                     break;
                 }
 
@@ -513,11 +569,10 @@
             var series = new Series("GA");
             series.ChartType = SeriesChartType.FastLine;
             
-            var date = index.Keys.Min();
-            for (int j = windowSize, k = 0, n = index.Count; j < n; j++, k++)
+            var date = index.Keys.Min().AddDays(windowSize - 1);
+            for (int j = 0; j < data.Length - windowSize; j++)
             {
-                //AddSubItem(dataList, j, solution[k, 1].ToString());
-                series.Points.AddXY(date, solution[k, 1]);
+                series.Points.AddXY(date, solution[j, 1]);
                 date = date.AddDays(1);
             }
 
