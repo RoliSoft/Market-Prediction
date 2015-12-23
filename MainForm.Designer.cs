@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panelChart = new System.Windows.Forms.Panel();
             this.checkBoxDpo = new System.Windows.Forms.CheckBox();
@@ -65,37 +65,37 @@
             // chart
             // 
             this.chart.BackColor = System.Drawing.SystemColors.Control;
-            chartArea6.AxisX.InterlacedColor = System.Drawing.Color.Silver;
-            chartArea6.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
-            chartArea6.AxisX.IsStartedFromZero = false;
-            chartArea6.AxisX.LineColor = System.Drawing.Color.Silver;
-            chartArea6.AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
-            chartArea6.AxisX.MajorTickMark.LineColor = System.Drawing.Color.Silver;
-            chartArea6.AxisX.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
-            chartArea6.AxisY.InterlacedColor = System.Drawing.Color.Silver;
-            chartArea6.AxisY.IsStartedFromZero = false;
-            chartArea6.AxisY.LineColor = System.Drawing.Color.Silver;
-            chartArea6.AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
-            chartArea6.AxisY.MajorTickMark.LineColor = System.Drawing.Color.Silver;
-            chartArea6.AxisY.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
-            chartArea6.BackColor = System.Drawing.SystemColors.Control;
-            chartArea6.BorderColor = System.Drawing.Color.Silver;
-            chartArea6.IsSameFontSizeForAllAxes = true;
-            chartArea6.Name = "ChartArea1";
-            this.chart.ChartAreas.Add(chartArea6);
+            chartArea2.AxisX.InterlacedColor = System.Drawing.Color.Silver;
+            chartArea2.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
+            chartArea2.AxisX.IsStartedFromZero = false;
+            chartArea2.AxisX.LineColor = System.Drawing.Color.Silver;
+            chartArea2.AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            chartArea2.AxisX.MajorTickMark.LineColor = System.Drawing.Color.Silver;
+            chartArea2.AxisX.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
+            chartArea2.AxisY.InterlacedColor = System.Drawing.Color.Silver;
+            chartArea2.AxisY.IsStartedFromZero = false;
+            chartArea2.AxisY.LineColor = System.Drawing.Color.Silver;
+            chartArea2.AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            chartArea2.AxisY.MajorTickMark.LineColor = System.Drawing.Color.Silver;
+            chartArea2.AxisY.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
+            chartArea2.BackColor = System.Drawing.SystemColors.Control;
+            chartArea2.BorderColor = System.Drawing.Color.Silver;
+            chartArea2.IsSameFontSizeForAllAxes = true;
+            chartArea2.Name = "ChartArea1";
+            this.chart.ChartAreas.Add(chartArea2);
             this.chart.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend6.Alignment = System.Drawing.StringAlignment.Center;
-            legend6.BackColor = System.Drawing.SystemColors.Control;
-            legend6.BorderColor = System.Drawing.Color.Transparent;
-            legend6.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Top;
-            legend6.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Row;
-            legend6.Name = "Legend1";
-            legend6.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chart.Legends.Add(legend6);
+            legend2.Alignment = System.Drawing.StringAlignment.Center;
+            legend2.BackColor = System.Drawing.SystemColors.Control;
+            legend2.BorderColor = System.Drawing.Color.Transparent;
+            legend2.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Top;
+            legend2.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Row;
+            legend2.Name = "Legend1";
+            legend2.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chart.Legends.Add(legend2);
             this.chart.Location = new System.Drawing.Point(0, 0);
             this.chart.Name = "chart";
             this.chart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Bright;
-            this.chart.Size = new System.Drawing.Size(771, 491);
+            this.chart.Size = new System.Drawing.Size(806, 491);
             this.chart.TabIndex = 0;
             // 
             // panelChart
@@ -104,9 +104,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelChart.Controls.Add(this.chart);
-            this.panelChart.Location = new System.Drawing.Point(0, 0);
+            this.panelChart.Location = new System.Drawing.Point(-30, 0);
             this.panelChart.Name = "panelChart";
-            this.panelChart.Size = new System.Drawing.Size(771, 491);
+            this.panelChart.Size = new System.Drawing.Size(806, 491);
             this.panelChart.TabIndex = 1;
             // 
             // checkBoxDpo

@@ -264,7 +264,7 @@ namespace MarketPrediction
             double learningRate = 0.05;
             double momentum = 0.99;
             double sigmoidAlphaValue = 2.0;
-            int windowSize = 5;
+            int windowSize = 1;
             int predictionSize = 1;
             int iterations = 1000;//1000
 
