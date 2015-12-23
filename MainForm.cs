@@ -59,6 +59,10 @@ namespace MarketPrediction
             {
                 MessageBox.Show("Failed to load indices: " + ex.Message);
             }
+
+            comboBoxGeneticFuncs.SelectedIndex = 0;
+            comboBoxGeneticChromosome.SelectedIndex = 0;
+            comboBoxGeneticSelection.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -466,9 +470,10 @@ namespace MarketPrediction
         private void buttonLearnGenetic_Click(object sender, EventArgs e)
         {
             SortedDictionary<DateTime, decimal> index = indices[(string)comboBoxSeries.SelectedItem];
-            double[] data = index.Values.Take(14).Select(x => (double)x).ToArray();
+            double[] data = index.Values.Take((int)numericUpDownSampleCount.Value).Select(x => (double)x).ToArray();
             
-            int iterations = 1000;
+            int iterations = (int)numericUpDownGeneticIterations.Value;
+            int population = (int)numericUpDownGeneticPopulation.Value;
             int window = 5;
             int prediction = 0;
             
@@ -476,18 +481,65 @@ namespace MarketPrediction
             progressBarGeneticLearn.Maximum = iterations;
             
             var consts = new[] { data.Min(), data.Average(), data.Max() };
+
+            IGPGene gene;
+
+            switch (comboBoxGeneticFuncs.SelectedIndex)
+            {
+                default:
+                case 0:
+                    gene = new SimpleGeneFunction(window + consts.Length);
+                    break;
+
+                case 1:
+                    gene = new ExtendedGeneFunction(window + consts.Length);
+                    break;
+            }
+
+            IChromosome chromosome;
+            
+            switch (comboBoxGeneticChromosome.SelectedIndex)
+            {
+                default:
+                case 0:
+                    chromosome = new GPTreeChromosome(gene);
+                    break;
+
+                case 1:
+                    chromosome = new GEPChromosome(gene, 20);
+                    break;
+            }
+
+            ISelectionMethod selection;
+
+            switch (comboBoxGeneticSelection.SelectedIndex)
+            {
+                default:
+                case 0:
+                    selection = new EliteSelection();
+                    break;
+
+                case 1:
+                    selection = new RankSelection();
+                    break;
+
+                case 2:
+                    selection = new RouletteWheelSelection();
+                    break;
+            }
+
             var ga = new Population(
-                100,
-                new GPTreeChromosome(new SimpleGeneFunction(window + consts.Length)),
+                population,
+                chromosome,
                 new TimeSeriesPredictionFitness(data, window, 0, consts),
-                new EliteSelection()
+                selection
             );
+
+            ga.AutoShuffling = checkBoxGeneticShuffle.Checked;
             
             var solution = new double[data.Length - window];
             var input = new double[window + consts.Length];
 
-            //ga.AutoShuffling = true;
-            
             for (int j = 0; j < data.Length - window; j++)
             {
                 solution[j] = j + window;

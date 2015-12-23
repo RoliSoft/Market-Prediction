@@ -62,6 +62,19 @@
             this.label3 = new System.Windows.Forms.Label();
             this.textBoxGeneticLearnError = new System.Windows.Forms.TextBox();
             this.textBoxGeneticPredError = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.numericUpDownGeneticIterations = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownGeneticPopulation = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numericUpDownSampleCount = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
+            this.checkBoxGeneticShuffle = new System.Windows.Forms.CheckBox();
+            this.comboBoxGeneticFuncs = new System.Windows.Forms.ComboBox();
+            this.comboBoxGeneticChromosome = new System.Windows.Forms.ComboBox();
+            this.comboBoxGeneticSelection = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.panelChart.SuspendLayout();
             this.tabControl.SuspendLayout();
@@ -72,7 +85,11 @@
             this.groupBoxCurrency.SuspendLayout();
             this.tabPageNeuron.SuspendLayout();
             this.tabPageGenetic.SuspendLayout();
+            this.groupBoxGeneticParams.SuspendLayout();
             this.groupBoxGeneticSolution.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticIterations)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticPopulation)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSampleCount)).BeginInit();
             this.SuspendLayout();
             // 
             // chart
@@ -371,9 +388,22 @@
             // 
             // groupBoxGeneticParams
             // 
+            this.groupBoxGeneticParams.Controls.Add(this.label9);
+            this.groupBoxGeneticParams.Controls.Add(this.label8);
+            this.groupBoxGeneticParams.Controls.Add(this.label7);
+            this.groupBoxGeneticParams.Controls.Add(this.comboBoxGeneticSelection);
+            this.groupBoxGeneticParams.Controls.Add(this.comboBoxGeneticChromosome);
+            this.groupBoxGeneticParams.Controls.Add(this.comboBoxGeneticFuncs);
+            this.groupBoxGeneticParams.Controls.Add(this.checkBoxGeneticShuffle);
+            this.groupBoxGeneticParams.Controls.Add(this.numericUpDownSampleCount);
+            this.groupBoxGeneticParams.Controls.Add(this.label6);
+            this.groupBoxGeneticParams.Controls.Add(this.label5);
+            this.groupBoxGeneticParams.Controls.Add(this.numericUpDownGeneticPopulation);
+            this.groupBoxGeneticParams.Controls.Add(this.numericUpDownGeneticIterations);
+            this.groupBoxGeneticParams.Controls.Add(this.label4);
             this.groupBoxGeneticParams.Location = new System.Drawing.Point(10, 10);
             this.groupBoxGeneticParams.Name = "groupBoxGeneticParams";
-            this.groupBoxGeneticParams.Size = new System.Drawing.Size(292, 52);
+            this.groupBoxGeneticParams.Size = new System.Drawing.Size(292, 206);
             this.groupBoxGeneticParams.TabIndex = 11;
             this.groupBoxGeneticParams.TabStop = false;
             this.groupBoxGeneticParams.Text = "Parameters";
@@ -386,7 +416,7 @@
             this.groupBoxGeneticSolution.Controls.Add(this.label2);
             this.groupBoxGeneticSolution.Controls.Add(this.label1);
             this.groupBoxGeneticSolution.Controls.Add(this.textBoxGeneticSolution);
-            this.groupBoxGeneticSolution.Location = new System.Drawing.Point(10, 68);
+            this.groupBoxGeneticSolution.Location = new System.Drawing.Point(10, 222);
             this.groupBoxGeneticSolution.Name = "groupBoxGeneticSolution";
             this.groupBoxGeneticSolution.Size = new System.Drawing.Size(292, 148);
             this.groupBoxGeneticSolution.TabIndex = 12;
@@ -448,6 +478,179 @@
             this.textBoxGeneticPredError.Size = new System.Drawing.Size(184, 20);
             this.textBoxGeneticPredError.TabIndex = 5;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(10, 46);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(53, 13);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "Iterations:";
+            // 
+            // numericUpDownGeneticIterations
+            // 
+            this.numericUpDownGeneticIterations.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownGeneticIterations.Location = new System.Drawing.Point(98, 45);
+            this.numericUpDownGeneticIterations.Maximum = new decimal(new int[] {
+            0,
+            1,
+            0,
+            0});
+            this.numericUpDownGeneticIterations.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownGeneticIterations.Name = "numericUpDownGeneticIterations";
+            this.numericUpDownGeneticIterations.Size = new System.Drawing.Size(184, 20);
+            this.numericUpDownGeneticIterations.TabIndex = 4;
+            this.numericUpDownGeneticIterations.ThousandsSeparator = true;
+            this.numericUpDownGeneticIterations.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownGeneticPopulation
+            // 
+            this.numericUpDownGeneticPopulation.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownGeneticPopulation.Location = new System.Drawing.Point(98, 71);
+            this.numericUpDownGeneticPopulation.Maximum = new decimal(new int[] {
+            0,
+            1,
+            0,
+            0});
+            this.numericUpDownGeneticPopulation.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownGeneticPopulation.Name = "numericUpDownGeneticPopulation";
+            this.numericUpDownGeneticPopulation.Size = new System.Drawing.Size(184, 20);
+            this.numericUpDownGeneticPopulation.TabIndex = 5;
+            this.numericUpDownGeneticPopulation.ThousandsSeparator = true;
+            this.numericUpDownGeneticPopulation.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(10, 72);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(60, 13);
+            this.label5.TabIndex = 6;
+            this.label5.Text = "Population:";
+            // 
+            // numericUpDownSampleCount
+            // 
+            this.numericUpDownSampleCount.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownSampleCount.Location = new System.Drawing.Point(98, 19);
+            this.numericUpDownSampleCount.Maximum = new decimal(new int[] {
+            0,
+            1,
+            0,
+            0});
+            this.numericUpDownSampleCount.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownSampleCount.Name = "numericUpDownSampleCount";
+            this.numericUpDownSampleCount.Size = new System.Drawing.Size(184, 20);
+            this.numericUpDownSampleCount.TabIndex = 8;
+            this.numericUpDownSampleCount.ThousandsSeparator = true;
+            this.numericUpDownSampleCount.Value = new decimal(new int[] {
+            14,
+            0,
+            0,
+            0});
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(10, 20);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(73, 13);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "Days to Train:";
+            // 
+            // checkBoxGeneticShuffle
+            // 
+            this.checkBoxGeneticShuffle.AutoSize = true;
+            this.checkBoxGeneticShuffle.Location = new System.Drawing.Point(13, 179);
+            this.checkBoxGeneticShuffle.Name = "checkBoxGeneticShuffle";
+            this.checkBoxGeneticShuffle.Size = new System.Drawing.Size(136, 17);
+            this.checkBoxGeneticShuffle.TabIndex = 9;
+            this.checkBoxGeneticShuffle.Text = "Shuffle on Each Epoch";
+            this.checkBoxGeneticShuffle.UseVisualStyleBackColor = true;
+            // 
+            // comboBoxGeneticFuncs
+            // 
+            this.comboBoxGeneticFuncs.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxGeneticFuncs.FormattingEnabled = true;
+            this.comboBoxGeneticFuncs.Items.AddRange(new object[] {
+            "Simple Arithmetics",
+            "Arithmetics and Functions"});
+            this.comboBoxGeneticFuncs.Location = new System.Drawing.Point(98, 97);
+            this.comboBoxGeneticFuncs.Name = "comboBoxGeneticFuncs";
+            this.comboBoxGeneticFuncs.Size = new System.Drawing.Size(184, 21);
+            this.comboBoxGeneticFuncs.TabIndex = 5;
+            // 
+            // comboBoxGeneticChromosome
+            // 
+            this.comboBoxGeneticChromosome.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxGeneticChromosome.FormattingEnabled = true;
+            this.comboBoxGeneticChromosome.Items.AddRange(new object[] {
+            "Gene Tree",
+            "Gene Expression"});
+            this.comboBoxGeneticChromosome.Location = new System.Drawing.Point(98, 124);
+            this.comboBoxGeneticChromosome.Name = "comboBoxGeneticChromosome";
+            this.comboBoxGeneticChromosome.Size = new System.Drawing.Size(184, 21);
+            this.comboBoxGeneticChromosome.TabIndex = 10;
+            // 
+            // comboBoxGeneticSelection
+            // 
+            this.comboBoxGeneticSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxGeneticSelection.FormattingEnabled = true;
+            this.comboBoxGeneticSelection.Items.AddRange(new object[] {
+            "Elite",
+            "Rank",
+            "Roulette"});
+            this.comboBoxGeneticSelection.Location = new System.Drawing.Point(98, 151);
+            this.comboBoxGeneticSelection.Name = "comboBoxGeneticSelection";
+            this.comboBoxGeneticSelection.Size = new System.Drawing.Size(184, 21);
+            this.comboBoxGeneticSelection.TabIndex = 11;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(10, 100);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(85, 13);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "Gene Functions:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(10, 127);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(71, 13);
+            this.label8.TabIndex = 13;
+            this.label8.Text = "Chromosome:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(10, 154);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(54, 13);
+            this.label9.TabIndex = 14;
+            this.label9.Text = "Selection:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -473,8 +676,13 @@
             this.groupBoxCurrency.ResumeLayout(false);
             this.tabPageNeuron.ResumeLayout(false);
             this.tabPageGenetic.ResumeLayout(false);
+            this.groupBoxGeneticParams.ResumeLayout(false);
+            this.groupBoxGeneticParams.PerformLayout();
             this.groupBoxGeneticSolution.ResumeLayout(false);
             this.groupBoxGeneticSolution.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticIterations)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticPopulation)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSampleCount)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -512,6 +720,19 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown numericUpDownGeneticPopulation;
+        private System.Windows.Forms.NumericUpDown numericUpDownGeneticIterations;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown numericUpDownSampleCount;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox checkBoxGeneticShuffle;
+        private System.Windows.Forms.ComboBox comboBoxGeneticSelection;
+        private System.Windows.Forms.ComboBox comboBoxGeneticChromosome;
+        private System.Windows.Forms.ComboBox comboBoxGeneticFuncs;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
     }
 }
 
