@@ -49,11 +49,19 @@
             this.groupBoxIndicators = new System.Windows.Forms.GroupBox();
             this.groupBoxCurrency = new System.Windows.Forms.GroupBox();
             this.tabPageNeuron = new System.Windows.Forms.TabPage();
-            this.buttonLearnNeuron = new System.Windows.Forms.Button();
             this.progressBarNeuronLearn = new System.Windows.Forms.ProgressBar();
+            this.buttonLearnNeuron = new System.Windows.Forms.Button();
             this.tabPageGenetic = new System.Windows.Forms.TabPage();
             this.progressBarGeneticLearn = new System.Windows.Forms.ProgressBar();
             this.buttonLearnGenetic = new System.Windows.Forms.Button();
+            this.groupBoxGeneticParams = new System.Windows.Forms.GroupBox();
+            this.groupBoxGeneticSolution = new System.Windows.Forms.GroupBox();
+            this.textBoxGeneticSolution = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxGeneticLearnError = new System.Windows.Forms.TextBox();
+            this.textBoxGeneticPredError = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.panelChart.SuspendLayout();
             this.tabControl.SuspendLayout();
@@ -64,6 +72,7 @@
             this.groupBoxCurrency.SuspendLayout();
             this.tabPageNeuron.SuspendLayout();
             this.tabPageGenetic.SuspendLayout();
+            this.groupBoxGeneticSolution.SuspendLayout();
             this.SuspendLayout();
             // 
             // chart
@@ -300,9 +309,21 @@
             this.tabPageNeuron.Text = "Neural Network";
             this.tabPageNeuron.UseVisualStyleBackColor = true;
             // 
+            // progressBarNeuronLearn
+            // 
+            this.progressBarNeuronLearn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBarNeuronLearn.Location = new System.Drawing.Point(10, 408);
+            this.progressBarNeuronLearn.Name = "progressBarNeuronLearn";
+            this.progressBarNeuronLearn.Size = new System.Drawing.Size(211, 23);
+            this.progressBarNeuronLearn.Step = 1;
+            this.progressBarNeuronLearn.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.progressBarNeuronLearn.TabIndex = 1;
+            // 
             // buttonLearnNeuron
             // 
-            this.buttonLearnNeuron.Location = new System.Drawing.Point(123, 79);
+            this.buttonLearnNeuron.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonLearnNeuron.Location = new System.Drawing.Point(227, 408);
             this.buttonLearnNeuron.Name = "buttonLearnNeuron";
             this.buttonLearnNeuron.Size = new System.Drawing.Size(75, 23);
             this.buttonLearnNeuron.TabIndex = 0;
@@ -310,19 +331,12 @@
             this.buttonLearnNeuron.UseVisualStyleBackColor = true;
             this.buttonLearnNeuron.Click += new System.EventHandler(this.buttonLearnNeuron_Click);
             // 
-            // progressBarNeuronLearn
-            // 
-            this.progressBarNeuronLearn.Location = new System.Drawing.Point(10, 407);
-            this.progressBarNeuronLearn.Name = "progressBarNeuronLearn";
-            this.progressBarNeuronLearn.Size = new System.Drawing.Size(292, 23);
-            this.progressBarNeuronLearn.Step = 1;
-            this.progressBarNeuronLearn.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.progressBarNeuronLearn.TabIndex = 1;
-            // 
             // tabPageGenetic
             // 
             this.tabPageGenetic.AutoScroll = true;
             this.tabPageGenetic.AutoScrollMargin = new System.Drawing.Size(10, 10);
+            this.tabPageGenetic.Controls.Add(this.groupBoxGeneticSolution);
+            this.tabPageGenetic.Controls.Add(this.groupBoxGeneticParams);
             this.tabPageGenetic.Controls.Add(this.progressBarGeneticLearn);
             this.tabPageGenetic.Controls.Add(this.buttonLearnGenetic);
             this.tabPageGenetic.Location = new System.Drawing.Point(4, 22);
@@ -335,22 +349,104 @@
             // 
             // progressBarGeneticLearn
             // 
-            this.progressBarGeneticLearn.Location = new System.Drawing.Point(10, 407);
+            this.progressBarGeneticLearn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBarGeneticLearn.Location = new System.Drawing.Point(10, 408);
             this.progressBarGeneticLearn.Name = "progressBarGeneticLearn";
-            this.progressBarGeneticLearn.Size = new System.Drawing.Size(292, 23);
+            this.progressBarGeneticLearn.Size = new System.Drawing.Size(211, 23);
             this.progressBarGeneticLearn.Step = 1;
             this.progressBarGeneticLearn.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBarGeneticLearn.TabIndex = 3;
             // 
             // buttonLearnGenetic
             // 
-            this.buttonLearnGenetic.Location = new System.Drawing.Point(123, 79);
+            this.buttonLearnGenetic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonLearnGenetic.Location = new System.Drawing.Point(227, 408);
             this.buttonLearnGenetic.Name = "buttonLearnGenetic";
             this.buttonLearnGenetic.Size = new System.Drawing.Size(75, 23);
             this.buttonLearnGenetic.TabIndex = 2;
             this.buttonLearnGenetic.Text = "Learn";
             this.buttonLearnGenetic.UseVisualStyleBackColor = true;
             this.buttonLearnGenetic.Click += new System.EventHandler(this.buttonLearnGenetic_Click);
+            // 
+            // groupBoxGeneticParams
+            // 
+            this.groupBoxGeneticParams.Location = new System.Drawing.Point(10, 10);
+            this.groupBoxGeneticParams.Name = "groupBoxGeneticParams";
+            this.groupBoxGeneticParams.Size = new System.Drawing.Size(292, 52);
+            this.groupBoxGeneticParams.TabIndex = 11;
+            this.groupBoxGeneticParams.TabStop = false;
+            this.groupBoxGeneticParams.Text = "Parameters";
+            // 
+            // groupBoxGeneticSolution
+            // 
+            this.groupBoxGeneticSolution.Controls.Add(this.textBoxGeneticPredError);
+            this.groupBoxGeneticSolution.Controls.Add(this.textBoxGeneticLearnError);
+            this.groupBoxGeneticSolution.Controls.Add(this.label3);
+            this.groupBoxGeneticSolution.Controls.Add(this.label2);
+            this.groupBoxGeneticSolution.Controls.Add(this.label1);
+            this.groupBoxGeneticSolution.Controls.Add(this.textBoxGeneticSolution);
+            this.groupBoxGeneticSolution.Location = new System.Drawing.Point(10, 68);
+            this.groupBoxGeneticSolution.Name = "groupBoxGeneticSolution";
+            this.groupBoxGeneticSolution.Size = new System.Drawing.Size(292, 148);
+            this.groupBoxGeneticSolution.TabIndex = 12;
+            this.groupBoxGeneticSolution.TabStop = false;
+            this.groupBoxGeneticSolution.Text = "Solution";
+            // 
+            // textBoxGeneticSolution
+            // 
+            this.textBoxGeneticSolution.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxGeneticSolution.Location = new System.Drawing.Point(10, 92);
+            this.textBoxGeneticSolution.Multiline = true;
+            this.textBoxGeneticSolution.Name = "textBoxGeneticSolution";
+            this.textBoxGeneticSolution.ReadOnly = true;
+            this.textBoxGeneticSolution.Size = new System.Drawing.Size(272, 45);
+            this.textBoxGeneticSolution.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(10, 72);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(159, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Equation of Fittest Chromosome:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(10, 20);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(76, 13);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Learning Error:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(10, 46);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(82, 13);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Prediction Error:";
+            // 
+            // textBoxGeneticLearnError
+            // 
+            this.textBoxGeneticLearnError.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxGeneticLearnError.Location = new System.Drawing.Point(98, 18);
+            this.textBoxGeneticLearnError.Name = "textBoxGeneticLearnError";
+            this.textBoxGeneticLearnError.ReadOnly = true;
+            this.textBoxGeneticLearnError.Size = new System.Drawing.Size(184, 20);
+            this.textBoxGeneticLearnError.TabIndex = 4;
+            // 
+            // textBoxGeneticPredError
+            // 
+            this.textBoxGeneticPredError.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxGeneticPredError.Location = new System.Drawing.Point(98, 44);
+            this.textBoxGeneticPredError.Name = "textBoxGeneticPredError";
+            this.textBoxGeneticPredError.ReadOnly = true;
+            this.textBoxGeneticPredError.Size = new System.Drawing.Size(184, 20);
+            this.textBoxGeneticPredError.TabIndex = 5;
             // 
             // MainForm
             // 
@@ -377,6 +473,8 @@
             this.groupBoxCurrency.ResumeLayout(false);
             this.tabPageNeuron.ResumeLayout(false);
             this.tabPageGenetic.ResumeLayout(false);
+            this.groupBoxGeneticSolution.ResumeLayout(false);
+            this.groupBoxGeneticSolution.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -406,6 +504,14 @@
         private System.Windows.Forms.TabPage tabPageGenetic;
         private System.Windows.Forms.ProgressBar progressBarGeneticLearn;
         private System.Windows.Forms.Button buttonLearnGenetic;
+        private System.Windows.Forms.GroupBox groupBoxGeneticSolution;
+        private System.Windows.Forms.TextBox textBoxGeneticSolution;
+        private System.Windows.Forms.GroupBox groupBoxGeneticParams;
+        private System.Windows.Forms.TextBox textBoxGeneticPredError;
+        private System.Windows.Forms.TextBox textBoxGeneticLearnError;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
     }
 }
 

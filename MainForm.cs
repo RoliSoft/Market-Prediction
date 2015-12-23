@@ -221,6 +221,48 @@ namespace MarketPrediction
         }
 
         /// <summary>
+        /// Adds a series to the chart starting with the specified date.
+        /// </summary>
+        /// <param name="name">The name of the series.</param>
+        /// <param name="start">The starting date.</param>
+        /// <param name="data">The data.</param>
+        private void AddToChart(string name, DateTime start, IEnumerable data)
+        {
+            var series = new Series(name)
+                {
+                    ChartType = SeriesChartType.FastLine
+                };
+
+            var date = start;
+            foreach (var point in data)
+            {
+                series.Points.AddXY(date, point);
+                date = date.AddDays(1);
+            }
+
+            try
+            {
+                chart.Series.Add(series);
+            }
+            catch (ArgumentException)
+            {
+                chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == name));
+                chart.Series.Add(series);
+            }
+
+            SetChartBoundaries();
+        }
+
+        /// <summary>
+        /// Clears the chart.
+        /// </summary>
+        private void ClearChart()
+        {
+            chart.Series.Clear();
+            comboBoxSeries_SelectedIndexChanged(null, null);
+        }
+
+        /// <summary>
         /// Sets the min/max boundaries for the chart.
         /// </summary>
         private void SetChartBoundaries()
@@ -426,27 +468,42 @@ namespace MarketPrediction
             SortedDictionary<DateTime, decimal> index = indices[(string)comboBoxSeries.SelectedItem];
             double[] data = index.Values.Take(14).Select(x => (double)x).ToArray();
             
-            /*var window = 5;
+            int iterations = 1000;
+            int window = 5;
+            int prediction = 0;
+            
+            progressBarGeneticLearn.Value = 0;
+            progressBarGeneticLearn.Maximum = iterations;
+            
             var consts = new[] { data.Min(), data.Average(), data.Max() };
-
             var ga = new Population(
                 100,
                 new GPTreeChromosome(new SimpleGeneFunction(window + consts.Length)),
-                new TimeSeriesPredictionFitness(data, window, 1, consts),
+                new TimeSeriesPredictionFitness(data, window, 0, consts),
                 new EliteSelection()
             );
-
-            progressBarGeneticLearn.Maximum = 1000;
             
-            for (int i = 0; i < 1000; i++)
-            {
-                ga.RunEpoch();
+            var solution = new double[data.Length - window];
+            var input = new double[window + consts.Length];
 
-                progressBarGeneticLearn.Value = i;
+            //ga.AutoShuffling = true;
+            
+            for (int j = 0; j < data.Length - window; j++)
+            {
+                solution[j] = j + window;
             }
             
-            var solution = new double[data.Length - window, 2];
-            var input = new double[consts.Length + window];
+            Array.Copy(consts, 0, input, window, consts.Length);
+            
+            for (int i = 0; i < iterations; i++)
+            {
+                ga.RunEpoch();
+                
+                progressBarGeneticLearn.Value = i;
+            }
+
+            var errorLearn = 0.0;
+            var errorPred  = 0.0;
 
             for (int j = 0, n = data.Length - window; j < n; j++)
             {
@@ -455,138 +512,23 @@ namespace MarketPrediction
                     input[k] = data[b - k];
                 }
 
-                solution[j, 1] = PolishExpression.Evaluate(ga.BestChromosome.ToString(), input);
-            }
+                solution[j] = PolishExpression.Evaluate(ga.BestChromosome.ToString(), input);
 
-            Text = Utils.ResolveChromosome(ga.BestChromosome.ToString());
-
-            var series = new Series("GA");
-            series.ChartType = SeriesChartType.FastLine;
-
-            var date = index.Keys.Min();
-            for (int j = window, k = 0, n = data.Length; j < n; j++, k++)
-            {
-                series.Points.AddXY(date, solution[k, 1]);
-                date = date.AddDays(1);
-            }
-
-            try
-            {
-                chart.Series.Add(series);
-            }
-            catch (ArgumentException)
-            {
-                chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == "GA"));
-                chart.Series.Add(series);
-            }
-
-            SetChartBoundaries();*/
-
-            int populationSize = 100;
-            int iterations = 1000;
-            int windowSize = 5;
-            int predictionSize = 1;
-
-            int headLength = 20;
-
-            progressBarGeneticLearn.Value = 0;
-            progressBarGeneticLearn.Maximum = iterations;
-
-            // constants
-            double[] constants = new double[10] { 1, 2, 3, 5, 7, 11, 13, 17, 19, 23 };
-            // create fitness function
-            TimeSeriesPredictionFitness fitness = new TimeSeriesPredictionFitness(data, windowSize, predictionSize, constants);
-            // create gene function
-            IGPGene gene = new SimpleGeneFunction(windowSize + constants.Length);
-            // create population
-            Population population = new Population(populationSize, new GPTreeChromosome(gene), fitness, new EliteSelection());
-            // iterations
-            int i = 1;
-            // solution array
-            int solutionSize = data.Length - windowSize;
-            double[,] solution = new double[solutionSize, 2];
-            double[] input = new double[windowSize + constants.Length];
-
-            population.AutoShuffling = true;
-
-            // calculate X values to be used with solution function
-            for (int j = 0; j < solutionSize; j++)
-            {
-                solution[j, 0] = j + windowSize;
-            }
-
-            // prepare input
-            Array.Copy(constants, 0, input, windowSize, constants.Length);
-
-            // loop
-            while (true)
-            {
-                // run one epoch of genetic algorithm
-                population.RunEpoch();
-                
-                // get best solution
-                string bestFunction = population.BestChromosome.ToString();
-
-                // calculate best function and prediction error
-                double learningError = 0.0;
-                double predictionError = 0.0;
-                // go through all the data
-                for (int j = 0, n = data.Length - windowSize; j < n; j++)
+                if (j >= n - prediction)
                 {
-                    // put values from current window as variables
-                    for (int k = 0, b = j + windowSize - 1; k < windowSize; k++)
-                    {
-                        input[k] = data[b - k];
-                    }
-
-                    // evalue the function
-                    solution[j, 1] = PolishExpression.Evaluate(bestFunction, input);
-
-                    // calculate prediction error
-                    if (j >= n - predictionSize)
-                    {
-                        predictionError += Math.Abs(solution[j, 1] - data[windowSize + j]);
-                    }
-                    else
-                    {
-                        learningError += Math.Abs(solution[j, 1] - data[windowSize + j]);
-                    }
+                    errorPred  += Math.Abs(solution[j] - data[window + j]);
                 }
-                
-                // increase current iteration
-                i++;
-
-                //
-                if ((iterations != 0) && (i > iterations))
+                else
                 {
-                    Text = Utils.ResolveChromosome(population.BestChromosome.ToString());
-                    break;
+                    errorLearn += Math.Abs(solution[j] - data[window + j]);
                 }
-
-                progressBarGeneticLearn.Value = i;
             }
 
-            var series = new Series("GA");
-            series.ChartType = SeriesChartType.FastLine;
-            
-            var date = index.Keys.Min().AddDays(windowSize - 1);
-            for (int j = 0; j < data.Length - windowSize; j++)
-            {
-                series.Points.AddXY(date, solution[j, 1]);
-                date = date.AddDays(1);
-            }
+            textBoxGeneticLearnError.Text = errorLearn.ToString();
+            textBoxGeneticPredError.Text  = errorPred.ToString();
+            textBoxGeneticSolution.Text   = Utils.ResolveChromosome(ga.BestChromosome.ToString());
 
-            try
-            {
-                chart.Series.Add(series);
-            }
-            catch (ArgumentException)
-            {
-                chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == "GA"));
-                chart.Series.Add(series);
-            }
-
-            SetChartBoundaries();
+            AddToChart("GA", index.Keys.Min().AddDays(window - 1), solution);
         }
 
         #endregion
