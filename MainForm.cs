@@ -259,15 +259,14 @@ namespace MarketPrediction
         {
             SortedDictionary<DateTime, decimal> index = indices[(string)comboBoxSeries.SelectedItem];
 
-            double learningRate = 0.1;
-            double momentum = 0.0;
+            double learningRate = 0.05;
+            double momentum = 0.99;
             double sigmoidAlphaValue = 2.0;
             int windowSize = 5;
             int predictionSize = 1;
-            int iterations = 100;//1000
+            int iterations = 1000;//1000
 
             int samples = index.Count - predictionSize - windowSize;
-            double factor = 1.7 / index.Count;
             double yMin = (double)index.Values.Min();
             double[][] input = new double[samples][];
             double[][] output = new double[samples][];
@@ -280,10 +279,11 @@ namespace MarketPrediction
                 // set input
                 for (int j = 0; j < windowSize; j++)
                 {
-                    input[i][j] = ((double)index.Values.ElementAt(i + j) - yMin) * factor - 0.85;
+                    input[i][j] = ((double)index.Values.ElementAt(i + j) - yMin);
                 }
+
                 // set output
-                output[i][0] = ((double)index.Values.ElementAt(i + windowSize) - yMin) * factor - 0.85;
+                output[i][0] = ((double)index.Values.ElementAt(i + windowSize) - yMin);
             }
 
             Neuron.RandRange = new Range(0.3f, 0.3f);
@@ -325,11 +325,11 @@ namespace MarketPrediction
                     // put values from current window as network's input
                     for (int j = 0; j < windowSize; j++)
                     {
-                        networkInput[j] = ((double)index.Values.ElementAt(i + j) - yMin) * factor - 0.85;
+                        networkInput[j] = ((double)index.Values.ElementAt(i + j) - yMin);
                     }
 
                     // evalue the function
-                    solution[i, 1] = (nn.Compute(networkInput)[0] + 0.85) / factor + yMin;
+                    solution[i, 1] = (nn.Compute(networkInput)[0]) + yMin;
 
                     // calculate prediction error
                     if (i >= n - predictionSize)
