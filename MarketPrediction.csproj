@@ -68,6 +68,7 @@
     <Compile Include="MenuButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="NeuralNetwork.cs" />
     <Compile Include="SimpleMovingAverage.cs" />
     <Compile Include="ISeriesTransform.cs" />
     <Compile Include="MainForm.cs">

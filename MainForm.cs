@@ -43,16 +43,6 @@
         private bool geneticStop = false;
 
         /// <summary>
-        /// Indicates whether a neural network is currently learning.
-        /// </summary>
-        private bool neuronRunning = false;
-
-        /// <summary>
-        /// Signals a currently running neural network to stop.
-        /// </summary>
-        private bool neuronStop = false;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="MainForm"/> class.
         /// </summary>
         public MainForm()
@@ -412,6 +402,56 @@
             }
         }
 
+        /// <summary>
+        /// Prepares the data from the specified UI settings.
+        /// </summary>
+        /// <param name="sampleSize"><c>Value</c> of one of the "Sample Size" numericUpDowns.</param>
+        /// <param name="dataSet"><c>SelectedItem</c> of one of the "Data Set" comboBoxes.</param>
+        /// <returns>Tuple of the starting date of the data and the points themselves.</returns>
+        private Tuple<DateTime, double[]> PrepareData(decimal sampleSize, object dataSet)
+        {
+            double[] data;
+            DateTime? dataStartDate = null;
+
+            var dataSetVal = (Tuple<string, KeyValuePair<string, SortedDictionary<DateTime, decimal>>, string>)dataSet;
+            var sampleSizeVal = sampleSize != 0 ? (int)sampleSize : dataSetVal.Item2.Value.Values.Count;
+
+            if (dataSetVal.Item3 != null)
+            {
+                var dataTmp = new List<double>();
+                var transformer = (ISeriesTransform)Activator.CreateInstance(Type.GetType(dataSetVal.Item3));
+
+                foreach (var val in dataSetVal.Item2.Value)
+                {
+                    transformer.AddIndex(val.Value);
+
+                    if (transformer.IsReady())
+                    {
+                        dataTmp.Add((double)transformer.GetValue());
+
+                        if (!dataStartDate.HasValue)
+                        {
+                            dataStartDate = val.Key;
+                        }
+
+                        if (dataTmp.Count >= sampleSizeVal)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                data = dataTmp.ToArray();
+            }
+            else
+            {
+                data = dataSetVal.Item2.Value.Values.Take(sampleSizeVal).Select(x => (double)x).ToArray();
+                dataStartDate = dataSetVal.Item2.Value.Keys.First();
+            }
+
+            return Tuple.Create(dataStartDate.Value, data);
+        }
+
         #endregion
 
         #region Neural Network
@@ -423,158 +463,60 @@
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
         private async void buttonLearnNeuron_Click(object sender, EventArgs e)
         {
-            if (neuronRunning)
+            if (NeuralNetwork.NeuronRunning)
             {
                 buttonLearnNeuron.Enabled = false;
                 buttonLearnNeuron.Text = "Stopping";
-                neuronStop = true;
+                NeuralNetwork.NeuronStop = true;
                 return;
             }
 
-            neuronStop = false;
-            neuronRunning = true;
+            NeuralNetwork.NeuronStop = false;
+            NeuralNetwork.NeuronRunning = true;
 
             groupBoxNeuronParams.Enabled = groupBoxNeuronSolution.Enabled = false;
             buttonLearnNeuron.Text = "Stop";
 
-            double[] data;
-            DateTime? dataStartDate = null;
-            {
-                var dataSetVal = (Tuple<string, KeyValuePair<string, SortedDictionary<DateTime, decimal>>, string>)comboBoxNeuronDataSet.SelectedItem;
-                var sampleSize = numericUpDownNeuronSampleCount.Value != 0 ? (int)numericUpDownNeuronSampleCount.Value : dataSetVal.Item2.Value.Values.Count;
-
-                if (dataSetVal.Item3 != null)
-                {
-                    var dataTmp = new List<double>();
-                    var transformer = (ISeriesTransform)Activator.CreateInstance(Type.GetType(dataSetVal.Item3));
-
-                    foreach (var val in dataSetVal.Item2.Value)
-                    {
-                        transformer.AddIndex(val.Value);
-
-                        if (transformer.IsReady())
-                        {
-                            dataTmp.Add((double)transformer.GetValue());
-
-                            if (!dataStartDate.HasValue)
-                            {
-                                dataStartDate = val.Key;
-                            }
-
-                            if (dataTmp.Count >= sampleSize)
-                            {
-                                break;
-                            }
-                        }
-                    }
-
-                    data = dataTmp.ToArray();
-                }
-                else
-                {
-                    data = dataSetVal.Item2.Value.Values.Take(sampleSize).Select(x => (double)x).ToArray();
-                    dataStartDate = dataSetVal.Item2.Value.Keys.First();
-                }
-            }
-
             var learningRate = (double)numericUpDownNeuronLearnRate.Value;
-            var momentum = (double)numericUpDownNeuronMomentum.Value;
-            var inputCount = (int)numericUpDownNeuronInputs.Value;
-            var hiddenCount = (int)numericUpDownNeuronHidden.Value;
-            var iterations = (int)numericUpDownNeuronIterations.Value;
-            var sigmoidAlphaValue = 2.0;
-            var prediction = 1;
+            var momentum     = (double)numericUpDownNeuronMomentum.Value;
+            var inputCount   = (int)numericUpDownNeuronInputs.Value;
+            var hiddenCount  = (int)numericUpDownNeuronHidden.Value;
+            var iterations   = (int)numericUpDownNeuronIterations.Value;
+            var sigmoidAlpha = 2.0;
+
+            var data = PrepareData(numericUpDownNeuronSampleCount.Value, comboBoxNeuronDataSet.SelectedItem);
+
+            var solution   = new double[data.Item2.Length - inputCount];
+            var errorLearn = 0.0;
+            var trainRes   = false;
 
             progressBarNeuronLearn.Value = 0;
             progressBarNeuronLearn.Maximum = iterations;
 
-            var samples = data.Length - inputCount;
-            var min = data.Min();
-            var input = new double[samples][];
-            var output = new double[samples][];
-
-            for (int i = 0; i < samples; i++)
-            {
-                input[i]  = new double[inputCount];
-                output[i] = new double[1];
-                
-                for (int j = 0; j < inputCount; j++)
-                {
-                    input[i][j] = data[i + j] - min;
-                }
-                
-                output[i][0] = data[i + inputCount] - min;
-            }
-
-            Neuron.RandRange = new Range(0.3f, 0.3f);
-
-            var nn = new ActivationNetwork(new BipolarSigmoidFunction(sigmoidAlphaValue), inputCount, hiddenCount, 1);
-
-            var bp = new BackPropagationLearning(nn)
-                {
-                    LearningRate = learningRate,
-                    Momentum     = momentum
-                };
-            
-            var solution = new double[data.Length - inputCount];
-            var testin   = new double[inputCount];
-            
             await Task.Run(() =>
                 {
-                    for (int i = 0; i < iterations; i++)
-                    {
-                        bp.RunEpoch(input, output);
-
-                        Invoke(new Action<int>(p => progressBarNeuronLearn.Value = p), i);
-
-                        if (neuronStop)
-                        {
-                            return;
-                        }
-                    }
+                    trainRes = NeuralNetwork.TrainAndEval(data.Item2, ref solution, ref errorLearn, iterations, inputCount, hiddenCount, learningRate, momentum, sigmoidAlpha, p => Invoke(new Action<int>(pi => progressBarNeuronLearn.Value = pi), p));
                 });
 
-            if (neuronStop)
+            if (!trainRes || NeuralNetwork.NeuronStop)
             {
-                neuronStop = neuronRunning = false;
+                NeuralNetwork.NeuronStop = NeuralNetwork.NeuronRunning = false;
 
                 buttonLearnNeuron.Text = "Learn";
                 groupBoxNeuronParams.Enabled = groupBoxNeuronSolution.Enabled = buttonLearnNeuron.Enabled = true;
 
                 return;
             }
-
-            var errorLearn = 0.0;
-            var errorPred  = 0.0;
-
-            for (int i = 0, n = data.Length - inputCount; i < n; i++)
-            {
-                for (int j = 0; j < inputCount; j++)
-                {
-                    testin[j] = data[i + j] - min;
-                }
-                
-                solution[i] = nn.Compute(testin)[0] + min;
-                
-                /*if (i >= n - prediction)
-                {
-                    errorPred  += Math.Abs(solution[i] - data[inputCount + i]);
-                }
-                else*/
-                {
-                    errorLearn += Math.Abs(solution[i] - data[inputCount + i]);
-                }
-            }
-
-            neuronStop = neuronRunning = false;
+            
+            NeuralNetwork.NeuronStop = NeuralNetwork.NeuronRunning = false;
 
             buttonLearnNeuron.Text = "Learn";
             groupBoxNeuronParams.Enabled = groupBoxNeuronSolution.Enabled = buttonLearnNeuron.Enabled = true;
 
             textBoxNeuronLearnError.Text = errorLearn.ToString();
-            textBoxNeuronPredError.Text  = errorPred.ToString();
+            //textBoxNeuronPredError.Text  = errorPred.ToString();
 
-            AddToChart("NN", dataStartDate.Value, solution);
+            AddToChart("NN", data.Item1, solution);
         }
 
         /// <summary>
@@ -584,7 +526,7 @@
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
         private void clearToolStripMenuItemNeuron_Click(object sender, EventArgs e)
         {
-            if (neuronRunning)
+            if (NeuralNetwork.NeuronRunning)
             {
                 return;
             }
