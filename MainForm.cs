@@ -33,16 +33,6 @@
         private bool processEvents = true;
 
         /// <summary>
-        /// Indicates whether a genetic algorithm is currently learning.
-        /// </summary>
-        private bool geneticRunning = false;
-
-        /// <summary>
-        /// Signals a currently running genetic algorithm to stop.
-        /// </summary>
-        private bool geneticStop = false;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="MainForm"/> class.
         /// </summary>
         public MainForm()
@@ -552,192 +542,64 @@
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
         private async void buttonLearnGenetic_Click(object sender, EventArgs e)
         {
-            if (geneticRunning)
+            if (GeneticAlgorithm.GeneticRunning)
             {
                 buttonLearnGenetic.Enabled = false;
                 buttonLearnGenetic.Text = "Stopping";
-                geneticStop = true;
+                GeneticAlgorithm.GeneticStop = true;
                 return;
             }
 
-            geneticStop = false;
-            geneticRunning = true;
+            GeneticAlgorithm.GeneticStop = false;
+            GeneticAlgorithm.GeneticRunning = true;
 
             groupBoxGeneticParams.Enabled = groupBoxGeneticSolution.Enabled = false;
             buttonLearnGenetic.Text = "Stop";
-
-            double[] data;
-            DateTime? dataStartDate = null;
-            {
-                var dataSetVal = (Tuple<string, KeyValuePair<string, SortedDictionary<DateTime, decimal>>, string>)comboBoxGeneticDataSet.SelectedItem;
-                var sampleSize = numericUpDownGeneticSampleCount.Value != 0 ? (int)numericUpDownGeneticSampleCount.Value : dataSetVal.Item2.Value.Values.Count;
-
-                if (dataSetVal.Item3 != null)
-                {
-                    var dataTmp = new List<double>();
-                    var transformer = (ISeriesTransform)Activator.CreateInstance(Type.GetType(dataSetVal.Item3));
-
-                    foreach (var val in dataSetVal.Item2.Value)
-                    {
-                        transformer.AddIndex(val.Value);
-
-                        if (transformer.IsReady())
-                        {
-                            dataTmp.Add((double)transformer.GetValue());
-
-                            if (!dataStartDate.HasValue)
-                            {
-                                dataStartDate = val.Key;
-                            }
-
-                            if (dataTmp.Count >= sampleSize)
-                            {
-                                break;
-                            }
-                        }
-                    }
-
-                    data = dataTmp.ToArray();
-                }
-                else
-                {
-                    data = dataSetVal.Item2.Value.Values.Take(sampleSize).Select(x => (double)x).ToArray();
-                    dataStartDate = dataSetVal.Item2.Value.Keys.First();
-                }
-            }
-
-            int iterations = (int)numericUpDownGeneticIterations.Value;
-            int population = (int)numericUpDownGeneticPopulation.Value;
-            int window = 5;
-            int prediction = 0;
             
+            var iterations = (int)numericUpDownGeneticIterations.Value;
+            var population = (int)numericUpDownGeneticPopulation.Value;
+            var inputCount = 5;
+            var shuffle    = checkBoxGeneticShuffle.Checked;
+            var geneType   = (GeneticAlgorithm.GeneFunctions)comboBoxGeneticFuncs.SelectedIndex;
+            var selectionType = (GeneticAlgorithm.Selections)comboBoxGeneticSelection.SelectedIndex;
+            var chromosomeType = (GeneticAlgorithm.Chromosomes)comboBoxGeneticChromosome.SelectedIndex;
+
+            var data = PrepareData(numericUpDownGeneticSampleCount.Value, comboBoxGeneticDataSet.SelectedItem);
+
+            var constants      = new[] { data.Item2.Min(), data.Item2.Average(), data.Item2.Max() };
+            var solution       = new double[data.Item2.Length - inputCount];
+            var bestChromosome = "";
+            var errorLearn     = 0.0;
+            var trainRes       = false;
+
             progressBarGeneticLearn.Value = 0;
             progressBarGeneticLearn.Maximum = iterations;
-            
-            var consts = new[] { data.Min(), data.Average(), data.Max() };
-
-            IGPGene gene;
-
-            switch (comboBoxGeneticFuncs.SelectedIndex)
-            {
-                default:
-                case 0:
-                    gene = new SimpleGeneFunction(window + consts.Length);
-                    break;
-
-                case 1:
-                    gene = new ExtendedGeneFunction(window + consts.Length);
-                    break;
-            }
-
-            IChromosome chromosome;
-            
-            switch (comboBoxGeneticChromosome.SelectedIndex)
-            {
-                default:
-                case 0:
-                    chromosome = new GPTreeChromosome(gene);
-                    break;
-
-                case 1:
-                    chromosome = new GEPChromosome(gene, 20);
-                    break;
-            }
-
-            ISelectionMethod selection;
-
-            switch (comboBoxGeneticSelection.SelectedIndex)
-            {
-                default:
-                case 0:
-                    selection = new EliteSelection();
-                    break;
-
-                case 1:
-                    selection = new RankSelection();
-                    break;
-
-                case 2:
-                    selection = new RouletteWheelSelection();
-                    break;
-            }
-
-            var ga = new Population(
-                population,
-                chromosome,
-                new TimeSeriesPredictionFitness(data, window, 0, consts),
-                selection
-            );
-
-            ga.AutoShuffling = checkBoxGeneticShuffle.Checked;
-            
-            var solution = new double[data.Length - window];
-            var input = new double[window + consts.Length];
-
-            for (int j = 0; j < data.Length - window; j++)
-            {
-                solution[j] = j + window;
-            }
-            
-            Array.Copy(consts, 0, input, window, consts.Length);
 
             await Task.Run(() =>
                 {
-                    for (int i = 0; i < iterations; i++)
-                    {
-                        ga.RunEpoch();
-
-                        Invoke(new Action<int>(p => progressBarGeneticLearn.Value = p), i);
-
-                        if (geneticStop)
-                        {
-                            return;
-                        }
-                    }
+                    trainRes = GeneticAlgorithm.TrainAndEval(data.Item2, ref solution, ref bestChromosome, ref errorLearn, iterations, population, inputCount, shuffle, constants, geneType, chromosomeType, selectionType, p => Invoke(new Action<int>(pi => progressBarGeneticLearn.Value = pi), p));
                 });
 
-            if (geneticStop)
+            if (!trainRes || GeneticAlgorithm.GeneticStop)
             {
-                geneticStop = geneticRunning = false;
+                GeneticAlgorithm.GeneticStop = GeneticAlgorithm.GeneticRunning = false;
 
                 buttonLearnGenetic.Text = "Learn";
                 groupBoxGeneticParams.Enabled = groupBoxGeneticSolution.Enabled = buttonLearnGenetic.Enabled = true;
 
                 return;
             }
-
-            var errorLearn = 0.0;
-            var errorPred  = 0.0;
-
-            for (int j = 0, n = data.Length - window; j < n; j++)
-            {
-                for (int k = 0, b = j + window - 1; k < window; k++)
-                {
-                    input[k] = data[b - k];
-                }
-
-                solution[j] = PolishExpression.Evaluate(ga.BestChromosome.ToString(), input);
-
-                if (j >= n - prediction)
-                {
-                    errorPred  += Math.Abs(solution[j] - data[window + j]);
-                }
-                else
-                {
-                    errorLearn += Math.Abs(solution[j] - data[window + j]);
-                }
-            }
-
-            geneticStop = geneticRunning = false;
+            
+            GeneticAlgorithm.GeneticStop = GeneticAlgorithm.GeneticRunning = false;
 
             buttonLearnGenetic.Text = "Learn";
             groupBoxGeneticParams.Enabled = groupBoxGeneticSolution.Enabled = buttonLearnGenetic.Enabled = true;
 
             textBoxGeneticLearnError.Text = errorLearn.ToString();
-            textBoxGeneticPredError.Text  = errorPred.ToString();
-            textBoxGeneticSolution.Text   = Utils.ResolveChromosome(ga.BestChromosome.ToString());
+            //textBoxGeneticPredError.Text  = errorPred.ToString();
+            textBoxGeneticSolution.Text   = Utils.ResolveChromosome(bestChromosome);
 
-            AddToChart("GA", dataStartDate.Value.AddDays(window - 1), solution);
+            AddToChart("GA", data.Item1.AddDays(inputCount - 1), solution);
         }
 
         /// <summary>
@@ -747,7 +609,7 @@
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
         private void clearToolStripMenuItemGenetic_Click(object sender, EventArgs e)
         {
-            if (geneticRunning)
+            if (GeneticAlgorithm.GeneticRunning)
             {
                 return;
             }

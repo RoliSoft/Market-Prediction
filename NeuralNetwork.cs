@@ -1,14 +1,14 @@
-﻿using System;
-using System.Linq;
-using AForge;
-using AForge.Neuro;
-using AForge.Neuro.Learning;
-
-namespace MarketPrediction
+﻿namespace MarketPrediction
 {
+    using System;
+    using System.Linq;
+
+    using AForge;
+    using AForge.Neuro;
+    using AForge.Neuro.Learning;
 
     /// <summary>
-    /// Encapsulates methods related to working with the neural network.
+    /// Encapsulates methods related to working with neural networks.
     /// </summary>
     static class NeuralNetwork
     {
@@ -35,8 +35,9 @@ namespace MarketPrediction
         /// <param name="momentum">The momentum parameter of the back propagation learning algorithm</param>
         /// <param name="sigmoidAlpha">The sigmoid alpha parameter of the activation function.</param>
         /// <param name="progressCallback">The progress callback: current iteration.</param>
-        /// <returns><c>true</c> if the training and evaluation was successful, <c>false</c> otherwise.</returns>
-        /// <exception cref="ArgumentException">Array should be size of data minus number of inputs on the neural network.</exception>
+        /// <returns>
+        ///   <c>true</c> if the training and evaluation was successful, <c>false</c> otherwise.</returns>
+        /// <exception cref="ArgumentException">Array should be size of data minus number of inputs.</exception>
         public static bool TrainAndEval(double[] data, ref double[] solution, ref double error, int iterations, int inputCount, int hiddenCount, double learningRate, double momentum, double sigmoidAlpha, Action<int> progressCallback = null)
         {
             var min     = data.Min();
@@ -68,7 +69,7 @@ namespace MarketPrediction
 
             if (solution.Length != data.Length - inputCount)
             {
-                throw new ArgumentException("Array should be the size of data minus number of inputs on the neural network.", nameof(solution));
+                throw new ArgumentException("Array should be the size of data minus number of inputs.", nameof(solution));
             }
 
             for (int i = 0; i < iterations; i++)
@@ -83,8 +84,8 @@ namespace MarketPrediction
                 }
             }
 
-            var test  = new double[inputCount];
-                error = 0.0;
+            var test = new double[inputCount];
+               error = 0.0;
 
             for (int i = 0, n = data.Length - inputCount; i < n; i++)
             {
