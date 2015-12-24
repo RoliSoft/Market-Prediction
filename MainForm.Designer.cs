@@ -58,6 +58,14 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.groupBoxNeuronParams = new System.Windows.Forms.GroupBox();
+            this.numericUpDownNeuronMomentum = new System.Windows.Forms.NumericUpDown();
+            this.label19 = new System.Windows.Forms.Label();
+            this.numericUpDownNeuronLearnRate = new System.Windows.Forms.NumericUpDown();
+            this.label17 = new System.Windows.Forms.Label();
+            this.numericUpDownNeuronHidden = new System.Windows.Forms.NumericUpDown();
+            this.label15 = new System.Windows.Forms.Label();
+            this.numericUpDownNeuronInputs = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.comboBoxNeuronDataSet = new System.Windows.Forms.ComboBox();
             this.numericUpDownNeuronSampleCount = new System.Windows.Forms.NumericUpDown();
@@ -108,6 +116,10 @@
             this.tabPageNeuron.SuspendLayout();
             this.groupBoxNeuronSolution.SuspendLayout();
             this.groupBoxNeuronParams.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronMomentum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronLearnRate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronHidden)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronInputs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronSampleCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronIterations)).BeginInit();
             this.contextMenuStripNeuron.SuspendLayout();
@@ -385,7 +397,7 @@
             this.groupBoxNeuronSolution.Controls.Add(this.textBoxNeuronLearnError);
             this.groupBoxNeuronSolution.Controls.Add(this.label10);
             this.groupBoxNeuronSolution.Controls.Add(this.label11);
-            this.groupBoxNeuronSolution.Location = new System.Drawing.Point(10, 120);
+            this.groupBoxNeuronSolution.Location = new System.Drawing.Point(10, 224);
             this.groupBoxNeuronSolution.Name = "groupBoxNeuronSolution";
             this.groupBoxNeuronSolution.Size = new System.Drawing.Size(292, 75);
             this.groupBoxNeuronSolution.TabIndex = 14;
@@ -430,6 +442,14 @@
             // 
             // groupBoxNeuronParams
             // 
+            this.groupBoxNeuronParams.Controls.Add(this.numericUpDownNeuronMomentum);
+            this.groupBoxNeuronParams.Controls.Add(this.label19);
+            this.groupBoxNeuronParams.Controls.Add(this.numericUpDownNeuronLearnRate);
+            this.groupBoxNeuronParams.Controls.Add(this.label17);
+            this.groupBoxNeuronParams.Controls.Add(this.numericUpDownNeuronHidden);
+            this.groupBoxNeuronParams.Controls.Add(this.label15);
+            this.groupBoxNeuronParams.Controls.Add(this.numericUpDownNeuronInputs);
+            this.groupBoxNeuronParams.Controls.Add(this.label14);
             this.groupBoxNeuronParams.Controls.Add(this.label12);
             this.groupBoxNeuronParams.Controls.Add(this.comboBoxNeuronDataSet);
             this.groupBoxNeuronParams.Controls.Add(this.numericUpDownNeuronSampleCount);
@@ -438,10 +458,142 @@
             this.groupBoxNeuronParams.Controls.Add(this.label18);
             this.groupBoxNeuronParams.Location = new System.Drawing.Point(10, 10);
             this.groupBoxNeuronParams.Name = "groupBoxNeuronParams";
-            this.groupBoxNeuronParams.Size = new System.Drawing.Size(292, 104);
+            this.groupBoxNeuronParams.Size = new System.Drawing.Size(292, 208);
             this.groupBoxNeuronParams.TabIndex = 13;
             this.groupBoxNeuronParams.TabStop = false;
             this.groupBoxNeuronParams.Text = "Parameters";
+            // 
+            // numericUpDownNeuronMomentum
+            // 
+            this.numericUpDownNeuronMomentum.DecimalPlaces = 3;
+            this.numericUpDownNeuronMomentum.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownNeuronMomentum.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.numericUpDownNeuronMomentum.Location = new System.Drawing.Point(98, 176);
+            this.numericUpDownNeuronMomentum.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownNeuronMomentum.Name = "numericUpDownNeuronMomentum";
+            this.numericUpDownNeuronMomentum.Size = new System.Drawing.Size(184, 20);
+            this.numericUpDownNeuronMomentum.TabIndex = 22;
+            this.numericUpDownNeuronMomentum.Value = new decimal(new int[] {
+            988,
+            0,
+            0,
+            196608});
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(10, 177);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(62, 13);
+            this.label19.TabIndex = 21;
+            this.label19.Text = "Momentum:";
+            // 
+            // numericUpDownNeuronLearnRate
+            // 
+            this.numericUpDownNeuronLearnRate.DecimalPlaces = 3;
+            this.numericUpDownNeuronLearnRate.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownNeuronLearnRate.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.numericUpDownNeuronLearnRate.Location = new System.Drawing.Point(98, 150);
+            this.numericUpDownNeuronLearnRate.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownNeuronLearnRate.Name = "numericUpDownNeuronLearnRate";
+            this.numericUpDownNeuronLearnRate.Size = new System.Drawing.Size(184, 20);
+            this.numericUpDownNeuronLearnRate.TabIndex = 20;
+            this.numericUpDownNeuronLearnRate.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(10, 151);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(77, 13);
+            this.label17.TabIndex = 19;
+            this.label17.Text = "Learning Rate:";
+            // 
+            // numericUpDownNeuronHidden
+            // 
+            this.numericUpDownNeuronHidden.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownNeuronHidden.Location = new System.Drawing.Point(98, 124);
+            this.numericUpDownNeuronHidden.Maximum = new decimal(new int[] {
+            0,
+            1,
+            0,
+            0});
+            this.numericUpDownNeuronHidden.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownNeuronHidden.Name = "numericUpDownNeuronHidden";
+            this.numericUpDownNeuronHidden.Size = new System.Drawing.Size(184, 20);
+            this.numericUpDownNeuronHidden.TabIndex = 18;
+            this.numericUpDownNeuronHidden.ThousandsSeparator = true;
+            this.numericUpDownNeuronHidden.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(10, 125);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(78, 13);
+            this.label15.TabIndex = 17;
+            this.label15.Text = "Hidden Layers:";
+            // 
+            // numericUpDownNeuronInputs
+            // 
+            this.numericUpDownNeuronInputs.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownNeuronInputs.Location = new System.Drawing.Point(98, 98);
+            this.numericUpDownNeuronInputs.Maximum = new decimal(new int[] {
+            0,
+            1,
+            0,
+            0});
+            this.numericUpDownNeuronInputs.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownNeuronInputs.Name = "numericUpDownNeuronInputs";
+            this.numericUpDownNeuronInputs.Size = new System.Drawing.Size(184, 20);
+            this.numericUpDownNeuronInputs.TabIndex = 16;
+            this.numericUpDownNeuronInputs.ThousandsSeparator = true;
+            this.numericUpDownNeuronInputs.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(10, 99);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(82, 13);
+            this.label14.TabIndex = 15;
+            this.label14.Text = "Network Inputs:";
             // 
             // label12
             // 
@@ -918,6 +1070,10 @@
             this.groupBoxNeuronSolution.PerformLayout();
             this.groupBoxNeuronParams.ResumeLayout(false);
             this.groupBoxNeuronParams.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronMomentum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronLearnRate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronHidden)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronInputs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronSampleCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronIterations)).EndInit();
             this.contextMenuStripNeuron.ResumeLayout(false);
@@ -1001,6 +1157,14 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStripChart;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+        private System.Windows.Forms.NumericUpDown numericUpDownNeuronInputs;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.NumericUpDown numericUpDownNeuronHidden;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.NumericUpDown numericUpDownNeuronLearnRate;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.NumericUpDown numericUpDownNeuronMomentum;
+        private System.Windows.Forms.Label label19;
     }
 }
 

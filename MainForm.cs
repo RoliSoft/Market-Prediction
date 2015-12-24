@@ -477,40 +477,38 @@
                 }
             }
 
-            var learningRate = 0.05;
-            var momentum = 0.99;
-            var sigmoidAlphaValue = 2.0;
-            var window = 1;
-            var prediction = 1;
+            var learningRate = (double)numericUpDownNeuronLearnRate.Value;
+            var momentum = (double)numericUpDownNeuronMomentum.Value;
+            var inputCount = (int)numericUpDownNeuronInputs.Value;
+            var hiddenCount = (int)numericUpDownNeuronHidden.Value;
             var iterations = (int)numericUpDownNeuronIterations.Value;
+            var sigmoidAlphaValue = 2.0;
+            var prediction = 1;
 
             progressBarNeuronLearn.Value = 0;
             progressBarNeuronLearn.Maximum = iterations;
 
-            var samples = data.Length - prediction - window;
+            var samples = data.Length - inputCount;
             var min = data.Min();
             var input = new double[samples][];
             var output = new double[samples][];
 
             for (int i = 0; i < samples; i++)
             {
-                input[i]  = new double[window];
+                input[i]  = new double[inputCount];
                 output[i] = new double[1];
                 
-                for (int j = 0; j < window; j++)
+                for (int j = 0; j < inputCount; j++)
                 {
                     input[i][j] = data[i + j] - min;
                 }
                 
-                output[i][0] = data[i + window] - min;
+                output[i][0] = data[i + inputCount] - min;
             }
 
             Neuron.RandRange = new Range(0.3f, 0.3f);
 
-            var nn = new ActivationNetwork(new BipolarSigmoidFunction(sigmoidAlphaValue),
-                window,     // number of inputs
-                window * 2, // number of neurons on the first layer
-                1);         // number of neurons on the second layer
+            var nn = new ActivationNetwork(new BipolarSigmoidFunction(sigmoidAlphaValue), inputCount, hiddenCount, 1);
 
             var bp = new BackPropagationLearning(nn)
                 {
@@ -518,8 +516,8 @@
                     Momentum     = momentum
                 };
             
-            var solution = new double[data.Length - window];
-            var testin   = new double[window];
+            var solution = new double[data.Length - inputCount];
+            var testin   = new double[inputCount];
             
             await Task.Run(() =>
                 {
@@ -549,22 +547,22 @@
             var errorLearn = 0.0;
             var errorPred  = 0.0;
 
-            for (int i = 0, n = data.Length - window; i < n; i++)
+            for (int i = 0, n = data.Length - inputCount; i < n; i++)
             {
-                for (int j = 0; j < window; j++)
+                for (int j = 0; j < inputCount; j++)
                 {
                     testin[j] = data[i + j] - min;
                 }
                 
                 solution[i] = nn.Compute(testin)[0] + min;
                 
-                if (i >= n - prediction)
+                /*if (i >= n - prediction)
                 {
-                    errorPred  += Math.Abs(solution[i] - data[window + i]);
+                    errorPred  += Math.Abs(solution[i] - data[inputCount + i]);
                 }
-                else
+                else*/
                 {
-                    errorLearn += Math.Abs(solution[i] - data[window + i]);
+                    errorLearn += Math.Abs(solution[i] - data[inputCount + i]);
                 }
             }
 
