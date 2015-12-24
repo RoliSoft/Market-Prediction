@@ -216,7 +216,7 @@
                 SortedDictionary<DateTime, decimal> index;
                 if (indices.TryGetValue((string)comboBoxSeries.SelectedItem, out index))
                 {
-                    LoadSeries((string)comboBoxSeries.SelectedItem, index);
+                    LoadSeries((string)comboBoxSeries.SelectedItem, index, (int)numericUpDownDataSampleCount.Value, (int)numericUpDownDataSampleOffset.Value);
                     comboBoxSeries_SelectedIndexChanged(null, e);
                 }
             }
@@ -251,7 +251,7 @@
                 SortedDictionary<DateTime, decimal> index;
                 if (indices.TryGetValue((string)comboBoxSeries.SelectedItem, out index))
                 {
-                    LoadSeriesTransform((string)comboBoxSeries.SelectedItem, index, transform);
+                    LoadSeriesTransform((string)comboBoxSeries.SelectedItem, index, transform, (int)numericUpDownDataSampleCount.Value, (int)numericUpDownDataSampleOffset.Value);
                     comboBoxSeries_SelectedIndexChanged(null, null);
                 }
             }
@@ -261,13 +261,22 @@
         /// Loads the series into the main chart.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <param name="indices">The indices.</param>
-        private void LoadSeries(string name, SortedDictionary<DateTime, decimal> indices)
+        /// <param name="data">The indices.</param>
+        /// <param name="size">The size of the sample to load.</param>
+        /// <param name="offset">The offset to start from.</param>
+        private void LoadSeries(string name, SortedDictionary<DateTime, decimal> data, int size, int offset)
         {
-            var series = new Series(name);
-            series.ChartType = SeriesChartType.FastLine;
+            var series = new Series(name)
+                {
+                    ChartType = SeriesChartType.FastLine
+                };
 
-            foreach (var index in indices)
+            if (size == 0)
+            {
+                size = data.Values.Count;
+            }
+
+            foreach (var index in data.Skip(offset).Take(size))
             {
                 series.Points.AddXY(index.Key, index.Value);
             }
@@ -281,7 +290,7 @@
                 chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == name));
                 chart.Series.Add(series);
             }
-            
+
             SetChartBoundaries();
         }
 
@@ -289,14 +298,23 @@
         /// Loads a transformed series into the main chart.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <param name="indices">The indices.</param>
+        /// <param name="data">The indices.</param>
         /// <param name="transform">The transformer.</param>
-        private void LoadSeriesTransform(string name, SortedDictionary<DateTime, decimal> indices, ISeriesTransform transform)
+        /// <param name="size">The size of the sample to load.</param>
+        /// <param name="offset">The offset to start from.</param>
+        private void LoadSeriesTransform(string name, SortedDictionary<DateTime, decimal> data, ISeriesTransform transform, int size, int offset)
         {
-            var series = new Series(name + " (" + transform.GetShortName() + ")");
-            series.ChartType = SeriesChartType.FastLine;
-            
-            foreach (var index in indices)
+            var series = new Series(name + " (" + transform.GetShortName() + ")")
+                {
+                    ChartType = SeriesChartType.FastLine
+                };
+
+            if (size == 0)
+            {
+                size = data.Values.Count;
+            }
+
+            foreach (var index in data.Skip(offset).Take(size))
             {
                 transform.AddIndex(index.Value);
 

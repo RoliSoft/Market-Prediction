@@ -50,7 +50,7 @@
             this.groupBoxPlot = new System.Windows.Forms.GroupBox();
             this.groupBoxProcessing = new System.Windows.Forms.GroupBox();
             this.groupBoxIndicators = new System.Windows.Forms.GroupBox();
-            this.groupBoxCurrency = new System.Windows.Forms.GroupBox();
+            this.groupBoxDataSet = new System.Windows.Forms.GroupBox();
             this.tabPageNeuron = new System.Windows.Forms.TabPage();
             this.groupBoxNeuronSolution = new System.Windows.Forms.GroupBox();
             this.textBoxNeuronPredError = new System.Windows.Forms.TextBox();
@@ -110,6 +110,11 @@
             this.buttonLearnGenetic = new MarketPrediction.MenuButton();
             this.contextMenuStripGenetic = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.clearToolStripMenuItemGenetic = new System.Windows.Forms.ToolStripMenuItem();
+            this.label23 = new System.Windows.Forms.Label();
+            this.numericUpDownDataSampleOffset = new System.Windows.Forms.NumericUpDown();
+            this.label24 = new System.Windows.Forms.Label();
+            this.numericUpDownDataSampleCount = new System.Windows.Forms.NumericUpDown();
+            this.label25 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.panelChart.SuspendLayout();
             this.contextMenuStripChart.SuspendLayout();
@@ -118,7 +123,7 @@
             this.groupBoxPlot.SuspendLayout();
             this.groupBoxProcessing.SuspendLayout();
             this.groupBoxIndicators.SuspendLayout();
-            this.groupBoxCurrency.SuspendLayout();
+            this.groupBoxDataSet.SuspendLayout();
             this.tabPageNeuron.SuspendLayout();
             this.groupBoxNeuronSolution.SuspendLayout();
             this.groupBoxNeuronParams.SuspendLayout();
@@ -139,6 +144,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticPopulation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticIterations)).BeginInit();
             this.contextMenuStripGenetic.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDataSampleOffset)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDataSampleCount)).BeginInit();
             this.SuspendLayout();
             // 
             // chart
@@ -292,9 +299,9 @@
             // 
             this.comboBoxSeries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSeries.FormattingEnabled = true;
-            this.comboBoxSeries.Location = new System.Drawing.Point(10, 19);
+            this.comboBoxSeries.Location = new System.Drawing.Point(98, 19);
             this.comboBoxSeries.Name = "comboBoxSeries";
-            this.comboBoxSeries.Size = new System.Drawing.Size(272, 21);
+            this.comboBoxSeries.Size = new System.Drawing.Size(184, 21);
             this.comboBoxSeries.TabIndex = 4;
             this.comboBoxSeries.SelectedIndexChanged += new System.EventHandler(this.comboBoxSeries_SelectedIndexChanged);
             // 
@@ -329,7 +336,7 @@
             this.tabPageData.AutoScroll = true;
             this.tabPageData.AutoScrollMargin = new System.Drawing.Size(10, 10);
             this.tabPageData.Controls.Add(this.groupBoxPlot);
-            this.tabPageData.Controls.Add(this.groupBoxCurrency);
+            this.tabPageData.Controls.Add(this.groupBoxDataSet);
             this.tabPageData.Location = new System.Drawing.Point(4, 22);
             this.tabPageData.Name = "tabPageData";
             this.tabPageData.Padding = new System.Windows.Forms.Padding(3);
@@ -343,7 +350,7 @@
             this.groupBoxPlot.Controls.Add(this.groupBoxProcessing);
             this.groupBoxPlot.Controls.Add(this.groupBoxIndicators);
             this.groupBoxPlot.Controls.Add(this.checkBoxIndex);
-            this.groupBoxPlot.Location = new System.Drawing.Point(10, 68);
+            this.groupBoxPlot.Location = new System.Drawing.Point(10, 93);
             this.groupBoxPlot.Name = "groupBoxPlot";
             this.groupBoxPlot.Size = new System.Drawing.Size(292, 153);
             this.groupBoxPlot.TabIndex = 11;
@@ -374,15 +381,20 @@
             this.groupBoxIndicators.TabStop = false;
             this.groupBoxIndicators.Text = "Indicators";
             // 
-            // groupBoxCurrency
+            // groupBoxDataSet
             // 
-            this.groupBoxCurrency.Controls.Add(this.comboBoxSeries);
-            this.groupBoxCurrency.Location = new System.Drawing.Point(10, 10);
-            this.groupBoxCurrency.Name = "groupBoxCurrency";
-            this.groupBoxCurrency.Size = new System.Drawing.Size(292, 52);
-            this.groupBoxCurrency.TabIndex = 10;
-            this.groupBoxCurrency.TabStop = false;
-            this.groupBoxCurrency.Text = "Currency";
+            this.groupBoxDataSet.Controls.Add(this.numericUpDownDataSampleOffset);
+            this.groupBoxDataSet.Controls.Add(this.label24);
+            this.groupBoxDataSet.Controls.Add(this.numericUpDownDataSampleCount);
+            this.groupBoxDataSet.Controls.Add(this.label25);
+            this.groupBoxDataSet.Controls.Add(this.label23);
+            this.groupBoxDataSet.Controls.Add(this.comboBoxSeries);
+            this.groupBoxDataSet.Location = new System.Drawing.Point(10, 10);
+            this.groupBoxDataSet.Name = "groupBoxDataSet";
+            this.groupBoxDataSet.Size = new System.Drawing.Size(292, 77);
+            this.groupBoxDataSet.TabIndex = 10;
+            this.groupBoxDataSet.TabStop = false;
+            this.groupBoxDataSet.Text = "Set";
             // 
             // tabPageNeuron
             // 
@@ -1135,6 +1147,61 @@
             this.clearToolStripMenuItemGenetic.Text = "Clear";
             this.clearToolStripMenuItemGenetic.Click += new System.EventHandler(this.clearToolStripMenuItemGenetic_Click);
             // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(10, 22);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(52, 13);
+            this.label23.TabIndex = 15;
+            this.label23.Text = "Currency:";
+            // 
+            // numericUpDownDataSampleOffset
+            // 
+            this.numericUpDownDataSampleOffset.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownDataSampleOffset.Location = new System.Drawing.Point(211, 46);
+            this.numericUpDownDataSampleOffset.Maximum = new decimal(new int[] {
+            0,
+            1,
+            0,
+            0});
+            this.numericUpDownDataSampleOffset.Name = "numericUpDownDataSampleOffset";
+            this.numericUpDownDataSampleOffset.Size = new System.Drawing.Size(71, 20);
+            this.numericUpDownDataSampleOffset.TabIndex = 28;
+            this.numericUpDownDataSampleOffset.ThousandsSeparator = true;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(176, 49);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(29, 13);
+            this.label24.TabIndex = 27;
+            this.label24.Text = "Ofs.:";
+            // 
+            // numericUpDownDataSampleCount
+            // 
+            this.numericUpDownDataSampleCount.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownDataSampleCount.Location = new System.Drawing.Point(98, 46);
+            this.numericUpDownDataSampleCount.Maximum = new decimal(new int[] {
+            0,
+            1,
+            0,
+            0});
+            this.numericUpDownDataSampleCount.Name = "numericUpDownDataSampleCount";
+            this.numericUpDownDataSampleCount.Size = new System.Drawing.Size(71, 20);
+            this.numericUpDownDataSampleCount.TabIndex = 26;
+            this.numericUpDownDataSampleCount.ThousandsSeparator = true;
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(10, 47);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(68, 13);
+            this.label25.TabIndex = 25;
+            this.label25.Text = "Sample Size:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1158,7 +1225,8 @@
             this.groupBoxProcessing.PerformLayout();
             this.groupBoxIndicators.ResumeLayout(false);
             this.groupBoxIndicators.PerformLayout();
-            this.groupBoxCurrency.ResumeLayout(false);
+            this.groupBoxDataSet.ResumeLayout(false);
+            this.groupBoxDataSet.PerformLayout();
             this.tabPageNeuron.ResumeLayout(false);
             this.groupBoxNeuronSolution.ResumeLayout(false);
             this.groupBoxNeuronSolution.PerformLayout();
@@ -1183,6 +1251,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticPopulation)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticIterations)).EndInit();
             this.contextMenuStripGenetic.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDataSampleOffset)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDataSampleCount)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1205,7 +1275,7 @@
         private System.Windows.Forms.GroupBox groupBoxPlot;
         private System.Windows.Forms.GroupBox groupBoxProcessing;
         private System.Windows.Forms.GroupBox groupBoxIndicators;
-        private System.Windows.Forms.GroupBox groupBoxCurrency;
+        private System.Windows.Forms.GroupBox groupBoxDataSet;
         private System.Windows.Forms.CheckBox checkBoxEma;
         private MenuButton buttonLearnNeuron;
         private System.Windows.Forms.ProgressBar progressBarNeuronLearn;
@@ -1268,6 +1338,11 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.NumericUpDown numericUpDownGeneticSampleOffset;
         private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.NumericUpDown numericUpDownDataSampleOffset;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.NumericUpDown numericUpDownDataSampleCount;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label23;
     }
 }
 
