@@ -152,8 +152,7 @@
             {
                 AutoShuffling = shuffle
             };
-
-
+            
             if (solution.Length != data.Length - inputCount)
             {
                 throw new ArgumentException("Array should be the size of data minus number of inputs.", nameof(solution));

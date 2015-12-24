@@ -55,15 +55,15 @@
 
                 comboBoxSeries.Items.AddRange(indices.Keys.ToArray<object>());
                 comboBoxSeries.SelectedIndex = 0;
-
+                
                 var transforms = new Dictionary<string, string>
                     {
-                        { "SMA",  "MarketPrediction.SimpleMovingAverage" },
-                        { "EMA",  "MarketPrediction.ExponentialMovingAverage" },
-                        { "RSI",  "MarketPrediction.RelativeStrengthIndex" },
-                        { "MACD", "MarketPrediction.MovingAverageConvergenceDivergence" },
-                        { "PPO",  "MarketPrediction.PercentagePriceOscillator" },
-                        { "DPO",  "MarketPrediction.DetrendedPriceOscillation" },
+                        { "SMA",  "MarketPrediction.Indicators.SimpleMovingAverage" },
+                        { "EMA",  "MarketPrediction.Indicators.ExponentialMovingAverage" },
+                        { "RSI",  "MarketPrediction.Indicators.RelativeStrengthIndex" },
+                        { "MACD", "MarketPrediction.Indicators.MovingAverageConvergenceDivergence" },
+                        { "PPO",  "MarketPrediction.Indicators.PercentagePriceOscillator" },
+                        { "DPO",  "MarketPrediction.Indicators.DetrendedPriceOscillation" },
                     };
 
                 foreach (var index in indices)
@@ -395,9 +395,10 @@
         /// Prepares the data from the specified UI settings.
         /// </summary>
         /// <param name="sampleSize"><c>Value</c> of one of the "Sample Size" numericUpDowns.</param>
+        /// <param name="sampleOffset"><c>Value</c> of one of the "Sample Offset" (or "Ofs.") numericUpDowns.</param>
         /// <param name="dataSet"><c>SelectedItem</c> of one of the "Data Set" comboBoxes.</param>
         /// <returns>Tuple of the starting date of the data and the points themselves.</returns>
-        private Tuple<DateTime, double[]> PrepareData(decimal sampleSize, object dataSet)
+        private Tuple<DateTime, double[]> PrepareData(decimal sampleSize, decimal sampleOffset, object dataSet)
         {
             double[] data;
             DateTime? dataStartDate = null;
@@ -410,7 +411,7 @@
                 var dataTmp = new List<double>();
                 var transformer = (ISeriesTransform)Activator.CreateInstance(Type.GetType(dataSetVal.Item3));
 
-                foreach (var val in dataSetVal.Item2.Value)
+                foreach (var val in dataSetVal.Item2.Value.Skip((int)sampleOffset))
                 {
                     transformer.AddIndex(val.Value);
 
@@ -434,8 +435,8 @@
             }
             else
             {
-                data = dataSetVal.Item2.Value.Values.Take(sampleSizeVal).Select(x => (double)x).ToArray();
-                dataStartDate = dataSetVal.Item2.Value.Keys.First();
+                data = dataSetVal.Item2.Value.Values.Skip((int)sampleOffset).Take(sampleSizeVal).Select(x => (double)x).ToArray();
+                dataStartDate = dataSetVal.Item2.Value.Keys.First().AddDays((int)sampleOffset);
             }
 
             return Tuple.Create(dataStartDate.Value, data);
@@ -473,7 +474,7 @@
             var iterations   = (int)numericUpDownNeuronIterations.Value;
             var sigmoidAlpha = 2.0;
 
-            var data = PrepareData(numericUpDownNeuronSampleCount.Value, comboBoxNeuronDataSet.SelectedItem);
+            var data = PrepareData(numericUpDownNeuronSampleCount.Value, numericUpDownNeuronSampleOffset.Value, comboBoxNeuronDataSet.SelectedItem);
 
             var solution   = new double[data.Item2.Length - inputCount];
             var errorLearn = 0.0;
@@ -552,13 +553,13 @@
             
             var iterations     = (int)numericUpDownGeneticIterations.Value;
             var population     = (int)numericUpDownGeneticPopulation.Value;
-            var inputCount     = 5;
+            var inputCount     = (int)numericUpDownGeneticInputs.Value;
             var shuffle        = checkBoxGeneticShuffle.Checked;
             var geneType       = (GeneticAlgorithm.GeneFunctions)comboBoxGeneticFuncs.SelectedIndex;
             var selectionType  = (GeneticAlgorithm.Selections)comboBoxGeneticSelection.SelectedIndex;
             var chromosomeType = (GeneticAlgorithm.Chromosomes)comboBoxGeneticChromosome.SelectedIndex;
 
-            var data = PrepareData(numericUpDownGeneticSampleCount.Value, comboBoxGeneticDataSet.SelectedItem);
+            var data = PrepareData(numericUpDownGeneticSampleCount.Value, numericUpDownGeneticSampleOffset.Value, comboBoxGeneticDataSet.SelectedItem);
 
             var constants      = new[] { data.Item2.Min(), data.Item2.Average(), data.Item2.Max() };
             var solution       = new double[data.Item2.Length - inputCount];
