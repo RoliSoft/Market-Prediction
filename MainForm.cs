@@ -487,21 +487,16 @@
                 {
                     trainRes = NeuralNetwork.TrainAndEval(data.Item2, ref solution, ref errorLearn, iterations, inputCount, hiddenCount, learningRate, momentum, sigmoidAlpha, p => Invoke(new Action<int>(pi => progressBarNeuronLearn.Value = pi), p));
                 });
-
-            if (!trainRes || NeuralNetwork.NeuronStop)
-            {
-                NeuralNetwork.NeuronStop = NeuralNetwork.NeuronRunning = false;
-
-                buttonLearnNeuron.Text = "Learn";
-                groupBoxNeuronParams.Enabled = groupBoxNeuronSolution.Enabled = buttonLearnNeuron.Enabled = true;
-
-                return;
-            }
             
             NeuralNetwork.NeuronStop = NeuralNetwork.NeuronRunning = false;
 
             buttonLearnNeuron.Text = "Learn";
             groupBoxNeuronParams.Enabled = groupBoxNeuronSolution.Enabled = buttonLearnNeuron.Enabled = true;
+
+            if (!trainRes)
+            {
+                return;
+            }
 
             textBoxNeuronLearnError.Text = errorLearn.ToString();
             //textBoxNeuronPredError.Text  = errorPred.ToString();
@@ -556,12 +551,12 @@
             groupBoxGeneticParams.Enabled = groupBoxGeneticSolution.Enabled = false;
             buttonLearnGenetic.Text = "Stop";
             
-            var iterations = (int)numericUpDownGeneticIterations.Value;
-            var population = (int)numericUpDownGeneticPopulation.Value;
-            var inputCount = 5;
-            var shuffle    = checkBoxGeneticShuffle.Checked;
-            var geneType   = (GeneticAlgorithm.GeneFunctions)comboBoxGeneticFuncs.SelectedIndex;
-            var selectionType = (GeneticAlgorithm.Selections)comboBoxGeneticSelection.SelectedIndex;
+            var iterations     = (int)numericUpDownGeneticIterations.Value;
+            var population     = (int)numericUpDownGeneticPopulation.Value;
+            var inputCount     = 5;
+            var shuffle        = checkBoxGeneticShuffle.Checked;
+            var geneType       = (GeneticAlgorithm.GeneFunctions)comboBoxGeneticFuncs.SelectedIndex;
+            var selectionType  = (GeneticAlgorithm.Selections)comboBoxGeneticSelection.SelectedIndex;
             var chromosomeType = (GeneticAlgorithm.Chromosomes)comboBoxGeneticChromosome.SelectedIndex;
 
             var data = PrepareData(numericUpDownGeneticSampleCount.Value, comboBoxGeneticDataSet.SelectedItem);
@@ -579,21 +574,16 @@
                 {
                     trainRes = GeneticAlgorithm.TrainAndEval(data.Item2, ref solution, ref bestChromosome, ref errorLearn, iterations, population, inputCount, shuffle, constants, geneType, chromosomeType, selectionType, p => Invoke(new Action<int>(pi => progressBarGeneticLearn.Value = pi), p));
                 });
-
-            if (!trainRes || GeneticAlgorithm.GeneticStop)
-            {
-                GeneticAlgorithm.GeneticStop = GeneticAlgorithm.GeneticRunning = false;
-
-                buttonLearnGenetic.Text = "Learn";
-                groupBoxGeneticParams.Enabled = groupBoxGeneticSolution.Enabled = buttonLearnGenetic.Enabled = true;
-
-                return;
-            }
             
             GeneticAlgorithm.GeneticStop = GeneticAlgorithm.GeneticRunning = false;
 
             buttonLearnGenetic.Text = "Learn";
             groupBoxGeneticParams.Enabled = groupBoxGeneticSolution.Enabled = buttonLearnGenetic.Enabled = true;
+
+            if (!trainRes)
+            {
+                return;
+            }
 
             textBoxGeneticLearnError.Text = errorLearn.ToString();
             //textBoxGeneticPredError.Text  = errorPred.ToString();
