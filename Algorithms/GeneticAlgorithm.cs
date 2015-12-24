@@ -1,6 +1,7 @@
 ﻿namespace MarketPrediction.Algorithms
 {
     using System;
+    using System.Threading;
 
     using AForge;
     using AForge.Genetic;
@@ -10,16 +11,6 @@
     /// </summary>
     public static class GeneticAlgorithm
     {
-        /// <summary>
-        /// Indicates whether a genetic algorithm is currently learning.
-        /// </summary>
-        public static bool GeneticRunning = false;
-
-        /// <summary>
-        /// Signals a currently running genetic algorithm to stop.
-        /// </summary>
-        public static bool GeneticStop = false;
-
         /// <summary>
         /// Supported gene functions.
         /// </summary>
@@ -88,11 +79,12 @@
         /// <param name="geneType">Type of the gene functions.</param>
         /// <param name="chromosomeType">Type of the chromosome.</param>
         /// <param name="selectionType">Type of the chromosome selection.</param>
+        /// <param name="cancelToken">The cancellation token for the async operation.</param>
         /// <param name="progressCallback">The progress callback: current iteration.</param>
         /// <returns>
         ///   <c>true</c> if the training and evaluation was successful, <c>false</c> otherwise.</returns>
         /// <exception cref="ArgumentException">Array should be size of data minus number of inputs.</exception>
-        public static bool TrainAndEval(double[] data, ref double[] solution, ref string bestChromosome, ref double error, int iterations, int population, int inputCount, bool shuffle, double[] constants, GeneFunctions geneType, Chromosomes chromosomeType, Selections selectionType, Action<int> progressCallback = null)
+        public static bool TrainAndEval(double[] data, ref double[] solution, ref string bestChromosome, ref double error, int iterations, int population, int inputCount, bool shuffle, double[] constants, GeneFunctions geneType, Chromosomes chromosomeType, Selections selectionType, CancellationToken cancelToken, Action<int> progressCallback = null)
         {
             IGPGene gene;
 
@@ -143,6 +135,8 @@
                 default: return false;
             }
 
+            cancelToken.ThrowIfCancellationRequested();
+
             var ga = new Population(
                 population,
                 chromosome,
@@ -173,13 +167,10 @@
 
                 progressCallback?.Invoke(i);
 
-                if (GeneticStop)
-                {
-                    return false;
-                }
+                cancelToken.ThrowIfCancellationRequested();
             }
 
-            error = 0.0;
+                     error = 0.0;
             bestChromosome = ga.BestChromosome.ToString();
 
             for (int j = 0, n = data.Length - inputCount; j < n; j++)
@@ -192,6 +183,8 @@
                 solution[j] = PolishExpression.Evaluate(bestChromosome, input);
 
                 error += Math.Abs(solution[j] - data[inputCount + j]);
+
+                cancelToken.ThrowIfCancellationRequested();
             }
 
             return true;

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Threading;
 
     using AForge;
     using AForge.Neuro;
@@ -12,16 +13,6 @@
     /// </summary>
     public static class NeuralNetwork
     {
-        /// <summary>
-        /// Indicates whether a neural network is currently learning.
-        /// </summary>
-        public static bool NeuronRunning = false;
-
-        /// <summary>
-        /// Signals a currently running neural network to stop.
-        /// </summary>
-        public static bool NeuronStop = false;
-
         /// <summary>
         /// Trains and evaluates a neural network with the specified parameters.
         /// </summary>
@@ -34,11 +25,12 @@
         /// <param name="learningRate">The learning rate parameter of the back propagation learning algorithm.</param>
         /// <param name="momentum">The momentum parameter of the back propagation learning algorithm</param>
         /// <param name="sigmoidAlpha">The sigmoid alpha parameter of the activation function.</param>
+        /// <param name="cancelToken">The cancellation token for the async operation.</param>
         /// <param name="progressCallback">The progress callback: current iteration.</param>
         /// <returns>
         ///   <c>true</c> if the training and evaluation was successful, <c>false</c> otherwise.</returns>
         /// <exception cref="ArgumentException">Array should be size of data minus number of inputs.</exception>
-        public static bool TrainAndEval(double[] data, ref double[] solution, ref double error, int iterations, int inputCount, int hiddenCount, double learningRate, double momentum, double sigmoidAlpha, Action<int> progressCallback = null)
+        public static bool TrainAndEval(double[] data, ref double[] solution, ref double error, int iterations, int inputCount, int hiddenCount, double learningRate, double momentum, double sigmoidAlpha, CancellationToken cancelToken, Action<int> progressCallback = null)
         {
             var min     = data.Min();
             var samples = data.Length - inputCount;
@@ -57,6 +49,8 @@
 
                 output[i][0] = data[i + inputCount] - min;
             }
+
+            cancelToken.ThrowIfCancellationRequested();
 
             Neuron.RandRange = new Range(0.3f, 0.3f);
 
@@ -78,10 +72,7 @@
 
                 progressCallback?.Invoke(i);
 
-                if (NeuronStop)
-                {
-                    return false;
-                }
+                cancelToken.ThrowIfCancellationRequested();
             }
 
             var test = new double[inputCount];
@@ -97,6 +88,8 @@
                 solution[i] = nn.Compute(test)[0] + min;
 
                 error += Math.Abs(solution[i] - data[inputCount + i]);
+
+                cancelToken.ThrowIfCancellationRequested();
             }
 
             return true;

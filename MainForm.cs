@@ -27,9 +27,17 @@
         /// <summary>
         /// Indicates whether to process events.
         /// </summary>
-        private bool processEvents = true;
+        private bool _processEvents = true;
 
-        private CancellationTokenSource cts;
+        /// <summary>
+        /// The global cancellation token for the neuron network operations.
+        /// </summary>
+        private CancellationTokenSource _neuronCts;
+
+        /// <summary>
+        /// The global cancellation token for the global algorithm operations.
+        /// </summary>
+        private CancellationTokenSource _geneticCts;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainForm"/> class.
@@ -167,12 +175,12 @@
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void comboBoxSeries_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!processEvents)
+            if (!_processEvents)
             {
                 return;
             }
 
-            processEvents = false;
+            _processEvents = false;
 
             checkBoxIndex.Checked = chart.Series.Any(x => x.Name == (string)comboBoxSeries.SelectedItem);
             checkBoxSma.Checked   = chart.Series.Any(x => x.Name == (string)comboBoxSeries.SelectedItem + " (SMA)");
@@ -182,7 +190,7 @@
             checkBoxPpo.Checked   = chart.Series.Any(x => x.Name == (string)comboBoxSeries.SelectedItem + " (PPO)");
             checkBoxDpo.Checked   = chart.Series.Any(x => x.Name == (string)comboBoxSeries.SelectedItem + " (DPO)");
 
-            processEvents = true;
+            _processEvents = true;
         }
         
         /// <summary>
@@ -192,7 +200,7 @@
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
         private void checkBoxIndex_CheckedChanged(object sender, EventArgs e)
         {
-            if (!processEvents || comboBoxSeries.SelectedItem == null)
+            if (!_processEvents || comboBoxSeries.SelectedItem == null)
             {
                 return;
             }
@@ -229,7 +237,7 @@
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
         private void checkBoxIndicator_CheckedChanged(object sender, EventArgs e)
         {
-            if (!processEvents || comboBoxSeries.SelectedItem == null || !(((CheckBox)sender).Tag is string))
+            if (!_processEvents || comboBoxSeries.SelectedItem == null || !(((CheckBox)sender).Tag is string))
             {
                 return;
             }
@@ -471,17 +479,18 @@
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
         private async void buttonLearnNeuron_Click(object sender, EventArgs e)
         {
-            if (NeuralNetwork.NeuronRunning)
+            if (_neuronCts != null)
             {
                 buttonLearnNeuron.Enabled = false;
                 buttonLearnNeuron.Text = "Stopping";
-                NeuralNetwork.NeuronStop = true;
+
+                _neuronCts.Cancel();
+
                 return;
             }
 
-            NeuralNetwork.NeuronStop = false;
-            NeuralNetwork.NeuronRunning = true;
-
+            _neuronCts = new CancellationTokenSource();
+            
             groupBoxNeuronParams.Enabled = groupBoxNeuronSolution.Enabled = false;
             buttonLearnNeuron.Text = "Stop";
 
@@ -503,10 +512,17 @@
 
             await Task.Run(() =>
                 {
-                    trainRes = NeuralNetwork.TrainAndEval(data.Item2, ref solution, ref errorLearn, iterations, inputCount, hiddenCount, learningRate, momentum, sigmoidAlpha, p => Invoke(new Action<int>(pi => progressBarNeuronLearn.Value = pi), p));
+                    try
+                    { 
+                        trainRes = NeuralNetwork.TrainAndEval(data.Item2, ref solution, ref errorLearn, iterations, inputCount, hiddenCount, learningRate, momentum, sigmoidAlpha, _neuronCts.Token, p => Invoke(new Action<int>(pi => progressBarNeuronLearn.Value = pi), p));
+                    }
+                    catch
+                    {
+                        trainRes = false;
+                    }
                 });
-            
-            NeuralNetwork.NeuronStop = NeuralNetwork.NeuronRunning = false;
+
+            _neuronCts = null;
 
             buttonLearnNeuron.Text = "Learn";
             groupBoxNeuronParams.Enabled = groupBoxNeuronSolution.Enabled = buttonLearnNeuron.Enabled = true;
@@ -529,7 +545,7 @@
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
         private void clearToolStripMenuItemNeuron_Click(object sender, EventArgs e)
         {
-            if (NeuralNetwork.NeuronRunning)
+            if (_neuronCts != null)
             {
                 return;
             }
@@ -555,16 +571,17 @@
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
         private async void buttonLearnGenetic_Click(object sender, EventArgs e)
         {
-            if (GeneticAlgorithm.GeneticRunning)
+            if (_geneticCts != null)
             {
                 buttonLearnGenetic.Enabled = false;
                 buttonLearnGenetic.Text = "Stopping";
-                GeneticAlgorithm.GeneticStop = true;
+
+                _geneticCts.Cancel();
+
                 return;
             }
 
-            GeneticAlgorithm.GeneticStop = false;
-            GeneticAlgorithm.GeneticRunning = true;
+            _geneticCts = new CancellationTokenSource();
 
             groupBoxGeneticParams.Enabled = groupBoxGeneticSolution.Enabled = false;
             buttonLearnGenetic.Text = "Stop";
@@ -590,10 +607,17 @@
 
             await Task.Run(() =>
                 {
-                    trainRes = GeneticAlgorithm.TrainAndEval(data.Item2, ref solution, ref bestChromosome, ref errorLearn, iterations, population, inputCount, shuffle, constants, geneType, chromosomeType, selectionType, p => Invoke(new Action<int>(pi => progressBarGeneticLearn.Value = pi), p));
+                    try
+                    { 
+                        trainRes = GeneticAlgorithm.TrainAndEval(data.Item2, ref solution, ref bestChromosome, ref errorLearn, iterations, population, inputCount, shuffle, constants, geneType, chromosomeType, selectionType, _geneticCts.Token, p => Invoke(new Action<int>(pi => progressBarGeneticLearn.Value = pi), p));
+                    }
+                    catch
+                    {
+                        trainRes = false;
+                    }
                 });
-            
-            GeneticAlgorithm.GeneticStop = GeneticAlgorithm.GeneticRunning = false;
+
+            _geneticCts = null;
 
             buttonLearnGenetic.Text = "Learn";
             groupBoxGeneticParams.Enabled = groupBoxGeneticSolution.Enabled = buttonLearnGenetic.Enabled = true;
@@ -617,7 +641,7 @@
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
         private void clearToolStripMenuItemGenetic_Click(object sender, EventArgs e)
         {
-            if (GeneticAlgorithm.GeneticRunning)
+            if (_geneticCts != null)
             {
                 return;
             }
