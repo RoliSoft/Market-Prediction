@@ -1,8 +1,4 @@
-﻿using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace MarketPrediction
+﻿namespace MarketPrediction
 {
     using System;
     using System.Collections;
@@ -12,6 +8,9 @@ namespace MarketPrediction
     using System.Reflection;
     using System.Windows.Forms;
     using System.Windows.Forms.DataVisualization.Charting;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using AForge;
     using AForge.Neuro;
@@ -74,12 +73,40 @@ namespace MarketPrediction
             {
                 indices = OandaReader.ReadIndices("oanda_2014-2015.csv");
                 indices["XBT/USD"] = CoinDeskReader.ReadIndex("coindesk-bpi-USD-close.csv");
+
                 comboBoxSeries.Items.AddRange(indices.Keys.ToArray<object>());
                 comboBoxSeries.SelectedIndex = 0;
+
+                var transforms = new Dictionary<string, string>
+                    {
+                        { "SMA",  "MarketPrediction.SimpleMovingAverage" },
+                        { "EMA",  "MarketPrediction.ExponentialMovingAverage" },
+                        { "RSI",  "MarketPrediction.RelativeStrengthIndex" },
+                        { "MACD", "MarketPrediction.MovingAverageConvergenceDivergence" },
+                        { "PPO",  "MarketPrediction.PercentagePriceOscillator" },
+                        { "DPO",  "MarketPrediction.DetrendedPriceOscillation" },
+                    };
+
+                foreach (var index in indices)
+                {
+                    comboBoxNeuronDataSet.Items.Add(Tuple.Create(index.Key, index, (string)null));
+                    comboBoxGeneticDataSet.Items.Add(Tuple.Create(index.Key, index, (string)null));
+
+                    foreach (var transform in transforms)
+                    {
+                        comboBoxNeuronDataSet.Items.Add(Tuple.Create(index.Key + " (" + transform.Key + ")", index, transform.Value));
+                        comboBoxGeneticDataSet.Items.Add(Tuple.Create(index.Key + " (" + transform.Key + ")", index, transform.Value));
+                    }
+                }
+
+                comboBoxNeuronDataSet.SelectedIndex = 0;
+                comboBoxGeneticDataSet.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Failed to load indices: " + ex.Message);
+                Application.Exit();
+                return;
             }
 
             comboBoxGeneticFuncs.SelectedIndex = 0;
@@ -131,6 +158,14 @@ namespace MarketPrediction
         private void contextMenuStripChart_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             exportToolStripMenuItem.DropDownItems.Clear();
+
+            if (chart.Series.Count == 0)
+            {
+                exportToolStripMenuItem.Enabled = false;
+                return;
+            }
+
+            exportToolStripMenuItem.Enabled = true;
 
             foreach (var series in chart.Series)
             {
@@ -402,8 +437,45 @@ namespace MarketPrediction
             groupBoxNeuronParams.Enabled = groupBoxNeuronSolution.Enabled = false;
             buttonLearnNeuron.Text = "Stop";
 
-            SortedDictionary<DateTime, decimal> index = indices[(string)comboBoxSeries.SelectedItem];
-            double[] data = index.Values.Take(numericUpDownNeuronSampleCount.Value != 0 ? (int)numericUpDownNeuronSampleCount.Value : index.Values.Count).Select(x => (double)x).ToArray();
+            double[] data;
+            DateTime? dataStartDate = null;
+            {
+                var dataSetVal = (Tuple<string, KeyValuePair<string, SortedDictionary<DateTime, decimal>>, string>)comboBoxNeuronDataSet.SelectedItem;
+                var sampleSize = numericUpDownNeuronSampleCount.Value != 0 ? (int)numericUpDownNeuronSampleCount.Value : dataSetVal.Item2.Value.Values.Count;
+
+                if (dataSetVal.Item3 != null)
+                {
+                    var dataTmp = new List<double>();
+                    var transformer = (ISeriesTransform)Activator.CreateInstance(Type.GetType(dataSetVal.Item3));
+
+                    foreach (var val in dataSetVal.Item2.Value)
+                    {
+                        transformer.AddIndex(val.Value);
+
+                        if (transformer.IsReady())
+                        {
+                            dataTmp.Add((double)transformer.GetValue());
+
+                            if (!dataStartDate.HasValue)
+                            {
+                                dataStartDate = val.Key;
+                            }
+
+                            if (dataTmp.Count >= sampleSize)
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    data = dataTmp.ToArray();
+                }
+                else
+                {
+                    data = dataSetVal.Item2.Value.Values.Take(sampleSize).Select(x => (double)x).ToArray();
+                    dataStartDate = dataSetVal.Item2.Value.Keys.First();
+                }
+            }
 
             var learningRate = 0.05;
             var momentum = 0.99;
@@ -504,7 +576,7 @@ namespace MarketPrediction
             textBoxNeuronLearnError.Text = errorLearn.ToString();
             textBoxNeuronPredError.Text  = errorPred.ToString();
 
-            AddToChart("NN", index.Keys.Min(), solution);
+            AddToChart("NN", dataStartDate.Value, solution);
         }
 
         /// <summary>
@@ -514,6 +586,11 @@ namespace MarketPrediction
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
         private void clearToolStripMenuItemNeuron_Click(object sender, EventArgs e)
         {
+            if (neuronRunning)
+            {
+                return;
+            }
+
             try
             {
                 textBoxNeuronLearnError.Clear();
@@ -549,8 +626,45 @@ namespace MarketPrediction
             groupBoxGeneticParams.Enabled = groupBoxGeneticSolution.Enabled = false;
             buttonLearnGenetic.Text = "Stop";
 
-            SortedDictionary<DateTime, decimal> index = indices[(string)comboBoxSeries.SelectedItem];
-            double[] data = index.Values.Take(numericUpDownGeneticSampleCount.Value != 0 ? (int)numericUpDownGeneticSampleCount.Value : index.Values.Count).Select(x => (double)x).ToArray();
+            double[] data;
+            DateTime? dataStartDate = null;
+            {
+                var dataSetVal = (Tuple<string, KeyValuePair<string, SortedDictionary<DateTime, decimal>>, string>)comboBoxGeneticDataSet.SelectedItem;
+                var sampleSize = numericUpDownGeneticSampleCount.Value != 0 ? (int)numericUpDownGeneticSampleCount.Value : dataSetVal.Item2.Value.Values.Count;
+
+                if (dataSetVal.Item3 != null)
+                {
+                    var dataTmp = new List<double>();
+                    var transformer = (ISeriesTransform)Activator.CreateInstance(Type.GetType(dataSetVal.Item3));
+
+                    foreach (var val in dataSetVal.Item2.Value)
+                    {
+                        transformer.AddIndex(val.Value);
+
+                        if (transformer.IsReady())
+                        {
+                            dataTmp.Add((double)transformer.GetValue());
+
+                            if (!dataStartDate.HasValue)
+                            {
+                                dataStartDate = val.Key;
+                            }
+
+                            if (dataTmp.Count >= sampleSize)
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    data = dataTmp.ToArray();
+                }
+                else
+                {
+                    data = dataSetVal.Item2.Value.Values.Take(sampleSize).Select(x => (double)x).ToArray();
+                    dataStartDate = dataSetVal.Item2.Value.Keys.First();
+                }
+            }
 
             int iterations = (int)numericUpDownGeneticIterations.Value;
             int population = (int)numericUpDownGeneticPopulation.Value;
@@ -683,7 +797,7 @@ namespace MarketPrediction
             textBoxGeneticPredError.Text  = errorPred.ToString();
             textBoxGeneticSolution.Text   = Utils.ResolveChromosome(ga.BestChromosome.ToString());
 
-            AddToChart("GA", index.Keys.Min().AddDays(window - 1), solution);
+            AddToChart("GA", dataStartDate.Value.AddDays(window - 1), solution);
         }
 
         /// <summary>
@@ -693,6 +807,11 @@ namespace MarketPrediction
         /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
         private void clearToolStripMenuItemGenetic_Click(object sender, EventArgs e)
         {
+            if (geneticRunning)
+            {
+                return;
+            }
+
             try
             {
                 textBoxGeneticLearnError.Clear();

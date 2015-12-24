@@ -174,20 +174,20 @@
             this.clearToolStripMenuItem,
             this.exportToolStripMenuItem});
             this.contextMenuStripChart.Name = "contextMenuStripChart";
-            this.contextMenuStripChart.Size = new System.Drawing.Size(153, 70);
+            this.contextMenuStripChart.Size = new System.Drawing.Size(108, 48);
             this.contextMenuStripChart.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripChart_Opening);
             // 
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.exportToolStripMenuItem.Text = "Export";
             // 
             // checkBoxDpo
@@ -454,6 +454,7 @@
             // 
             // comboBoxNeuronDataSet
             // 
+            this.comboBoxNeuronDataSet.DisplayMember = "Item1";
             this.comboBoxNeuronDataSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxNeuronDataSet.FormattingEnabled = true;
             this.comboBoxNeuronDataSet.Location = new System.Drawing.Point(98, 19);
@@ -523,7 +524,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBarNeuronLearn.Location = new System.Drawing.Point(10, 408);
             this.progressBarNeuronLearn.Name = "progressBarNeuronLearn";
-            this.progressBarNeuronLearn.Size = new System.Drawing.Size(211, 23);
+            this.progressBarNeuronLearn.Size = new System.Drawing.Size(214, 23);
             this.progressBarNeuronLearn.Step = 1;
             this.progressBarNeuronLearn.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBarNeuronLearn.TabIndex = 1;
@@ -531,7 +532,7 @@
             // buttonLearnNeuron
             // 
             this.buttonLearnNeuron.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonLearnNeuron.Location = new System.Drawing.Point(227, 408);
+            this.buttonLearnNeuron.Location = new System.Drawing.Point(230, 408);
             this.buttonLearnNeuron.Menu = this.contextMenuStripNeuron;
             this.buttonLearnNeuron.Name = "buttonLearnNeuron";
             this.buttonLearnNeuron.Size = new System.Drawing.Size(75, 23);
@@ -675,6 +676,7 @@
             // 
             // comboBoxGeneticDataSet
             // 
+            this.comboBoxGeneticDataSet.DisplayMember = "Item1";
             this.comboBoxGeneticDataSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxGeneticDataSet.FormattingEnabled = true;
             this.comboBoxGeneticDataSet.Location = new System.Drawing.Point(98, 19);
@@ -856,7 +858,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBarGeneticLearn.Location = new System.Drawing.Point(10, 408);
             this.progressBarGeneticLearn.Name = "progressBarGeneticLearn";
-            this.progressBarGeneticLearn.Size = new System.Drawing.Size(211, 23);
+            this.progressBarGeneticLearn.Size = new System.Drawing.Size(214, 23);
             this.progressBarGeneticLearn.Step = 1;
             this.progressBarGeneticLearn.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBarGeneticLearn.TabIndex = 3;
@@ -864,7 +866,7 @@
             // buttonLearnGenetic
             // 
             this.buttonLearnGenetic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonLearnGenetic.Location = new System.Drawing.Point(227, 408);
+            this.buttonLearnGenetic.Location = new System.Drawing.Point(230, 408);
             this.buttonLearnGenetic.Menu = this.contextMenuStripGenetic;
             this.buttonLearnGenetic.Name = "buttonLearnGenetic";
             this.buttonLearnGenetic.Size = new System.Drawing.Size(75, 23);
