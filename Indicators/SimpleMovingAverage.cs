@@ -1,24 +1,23 @@
-﻿namespace MarketPrediction
+﻿namespace MarketPrediction.Indicators
 {
-    using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Implements a simple moving average calculator.
     /// Reference: http://www.investopedia.com/articles/trading/10/simple-exponential-moving-averages-compare.asp
     /// </summary>
-    class SimpleMovingAverage : ISeriesTransform
+    public class SimpleMovingAverage : ISeriesTransform
     {
         /// <summary>
         /// The period for which the moving average is being computed.
         /// </summary>
-        private readonly int period;
+        private readonly int _period;
         
         /// <summary>
         /// The values for the specified period.
         /// </summary>
-        private Queue<decimal> values;
+        private readonly Queue<decimal> _values;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SimpleMovingAverage"/> class.
@@ -31,11 +30,11 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="SimpleMovingAverage"/> class.
         /// </summary>
-        /// <param name="period">The period.</param>
+        /// <param name="period">The _period.</param>
         public SimpleMovingAverage(int period)
         {
-            this.period = period;
-            this.values = new Queue<decimal>();
+            _period = period;
+            _values = new Queue<decimal>();
         }
 
         /// <summary>
@@ -62,12 +61,12 @@
         /// <param name="value">The index value.</param>
         public void AddIndex(decimal value)
         {
-            if (values.Count >= period)
+            if (_values.Count >= _period)
             {
-                values.Dequeue();
+                _values.Dequeue();
             }
 
-            values.Enqueue(value);
+            _values.Enqueue(value);
         }
 
         /// <summary>
@@ -76,7 +75,7 @@
         /// <returns><c>true</c> if this instance is ready; otherwise, <c>false</c>.</returns>
         public bool IsReady()
         {
-            return values.Count >= period;
+            return _values.Count >= _period;
         }
 
         /// <summary>
@@ -85,7 +84,7 @@
         /// <returns>Moving average for the current day.</returns>
         public decimal GetValue()
         {
-            return values.Sum() / values.Count;
+            return _values.Sum() / _values.Count;
         }
     }
 }

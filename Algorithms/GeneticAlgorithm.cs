@@ -1,4 +1,4 @@
-﻿namespace MarketPrediction
+﻿namespace MarketPrediction.Algorithms
 {
     using System;
 
@@ -8,7 +8,7 @@
     /// <summary>
     /// Encapsulates methods related to working with genetic algorithms.
     /// </summary>
-    static class GeneticAlgorithm
+    public static class GeneticAlgorithm
     {
         /// <summary>
         /// Indicates whether a genetic algorithm is currently learning.

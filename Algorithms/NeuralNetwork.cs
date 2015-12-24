@@ -1,4 +1,4 @@
-﻿namespace MarketPrediction
+﻿namespace MarketPrediction.Algorithms
 {
     using System;
     using System.Linq;
@@ -10,7 +10,7 @@
     /// <summary>
     /// Encapsulates methods related to working with neural networks.
     /// </summary>
-    static class NeuralNetwork
+    public static class NeuralNetwork
     {
         /// <summary>
         /// Indicates whether a neural network is currently learning.

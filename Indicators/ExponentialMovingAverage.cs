@@ -1,32 +1,30 @@
-﻿namespace MarketPrediction
+﻿namespace MarketPrediction.Indicators
 {
-    using System;
-
     /// <summary>
     /// Implements an exponential moving average calculator.
     /// Reference: http://www.investopedia.com/articles/trading/10/simple-exponential-moving-averages-compare.asp
     /// </summary>
-    class ExponentialMovingAverage : ISeriesTransform
+    public class ExponentialMovingAverage : ISeriesTransform
     {
         /// <summary>
         /// The period for which the moving average is being computed. (N)
         /// </summary>
-        private readonly int period;
+        private readonly int _period;
 
         /// <summary>
         /// The smoothening factor: α = (2 / 1 + N)
         /// </summary>
-        private readonly decimal smooth;
+        private readonly decimal _smooth;
 
         /// <summary>
         /// The number of indices added at this point up to the maximum period.
         /// </summary>
-        private int iteration;
+        private int _iteration;
 
         /// <summary>
         /// The value of the moving average for the current day.
         /// </summary>
-        private decimal average;
+        private decimal _average;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExponentialMovingAverage"/> class.
@@ -42,8 +40,8 @@
         /// <param name="period">The period.</param>
         public ExponentialMovingAverage(int period)
         {
-            this.period = period;
-            this.smooth = 2m / (1 + this.period);
+            _period = period;
+            _smooth = 2m / (1 + period);
         }
 
         /// <summary>
@@ -70,24 +68,24 @@
         /// <param name="value">The index value.</param>
         public void AddIndex(decimal value)
         {
-            if (iteration < period)
+            if (_iteration < _period)
             {
-                average += value;
+                _average += value;
             }
 
-            if (iteration == period)
+            if (_iteration == _period)
             {
-                average /= period;
+                _average /= _period;
             }
 
-            if (iteration > period)
+            if (_iteration > _period)
             {
-                average = (smooth * (value - average)) + average;
+                _average = (_smooth * (value - _average)) + _average;
             }
 
-            if (iteration <= period + 1)
+            if (_iteration <= _period + 1)
             {
-                iteration++;
+                _iteration++;
             }
         }
 
@@ -97,7 +95,7 @@
         /// <returns><c>true</c> if this instance is ready; otherwise, <c>false</c>.</returns>
         public bool IsReady()
         {
-            return iteration > period;
+            return _iteration > _period;
         }
 
         /// <summary>
@@ -106,7 +104,7 @@
         /// <returns>Moving average for the current day.</returns>
         public decimal GetValue()
         {
-            return average;
+            return _average;
         }
     }
 }

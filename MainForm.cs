@@ -3,19 +3,16 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
-    using System.Reflection;
     using System.Windows.Forms;
     using System.Windows.Forms.DataVisualization.Charting;
     using System.Text;
-    using System.Threading;
     using System.Threading.Tasks;
+    using System.Threading;
 
-    using AForge;
-    using AForge.Neuro;
-    using AForge.Neuro.Learning;
-    using AForge.Genetic;
+    using MarketPrediction.Algorithms;
+    using MarketPrediction.DataLoaders;
+    using MarketPrediction.Indicators;
 
     /// <summary>
     /// Main form of the application.
@@ -31,6 +28,8 @@
         /// Indicates whether to process events.
         /// </summary>
         private bool processEvents = true;
+
+        private CancellationTokenSource cts;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainForm"/> class.

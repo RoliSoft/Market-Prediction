@@ -1,7 +1,5 @@
-﻿namespace MarketPrediction
+﻿namespace MarketPrediction.Indicators
 {
-    using System;
-    using System.Collections;
     using System.Collections.Generic;
 
     /// <summary>
@@ -10,32 +8,32 @@
     /// independent high/low cycles.
     /// Reference: http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:detrended_price_osci
     /// </summary>
-    class DetrendedPriceOscillation : ISeriesTransform
+    public class DetrendedPriceOscillation : ISeriesTransform
     {
         /// <summary>
         /// The period for which the price oscillation is being computed.
         /// </summary>
-        private readonly int period;
+        private readonly int _period;
 
         /// <summary>
         /// The period with which the moving average is being displaced.
         /// </summary>
-        private readonly int shift;
+        private readonly int _shift;
 
         /// <summary>
         /// The current index value.
         /// </summary>
-        private decimal current;
+        private decimal _current;
 
         /// <summary>
         /// The EMA values for the previous days, for shifting.
         /// </summary>
-        private Queue<decimal> previous;
+        private readonly Queue<decimal> _previous;
 
         /// <summary>
         /// The moving average of the indices on tracked period.
         /// </summary>
-        private SimpleMovingAverage periodAverage;
+        private readonly SimpleMovingAverage _periodAverage;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DetrendedPriceOscillation"/> class.
@@ -51,10 +49,10 @@
         /// <param name="period">The period.</param>
         public DetrendedPriceOscillation(int period)
         {
-            this.period = period;
-            this.shift  = period / 2 + 1;
-            periodAverage = new SimpleMovingAverage(period);
-            previous = new Queue<decimal>(shift);
+            _period = period;
+            _shift  = period / 2 + 1;
+            _periodAverage = new SimpleMovingAverage(period);
+            _previous      = new Queue<decimal>(_shift);
         }
         
         /// <summary>
@@ -81,18 +79,18 @@
         /// <param name="value">The index value.</param>
         public void AddIndex(decimal value)
         {
-            current = value;
+            _current = value;
 
-            if (!periodAverage.IsReady())
+            if (!_periodAverage.IsReady())
             {
-                periodAverage.AddIndex(value);
+                _periodAverage.AddIndex(value);
             }
-            else if (previous.Count >= shift)
+            else if (_previous.Count >= _shift)
             {
-                periodAverage.AddIndex(previous.Dequeue());
+                _periodAverage.AddIndex(_previous.Dequeue());
             }
 
-            previous.Enqueue(value);
+            _previous.Enqueue(value);
         }
 
         /// <summary>
@@ -101,7 +99,7 @@
         /// <returns><c>true</c> if this instance is ready; otherwise, <c>false</c>.</returns>
         public bool IsReady()
         {
-            return periodAverage.IsReady() && previous.Count >= shift;
+            return _periodAverage.IsReady() && _previous.Count >= _shift;
         }
 
         /// <summary>
@@ -110,7 +108,7 @@
         /// <returns>Moving average convergence divergence value for the current day.</returns>
         public decimal GetValue()
         {
-            return current - periodAverage.GetValue();
+            return _current - _periodAverage.GetValue();
         }
     }
 }

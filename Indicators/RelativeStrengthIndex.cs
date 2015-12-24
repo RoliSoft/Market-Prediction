@@ -1,37 +1,30 @@
-﻿namespace MarketPrediction
+﻿namespace MarketPrediction.Indicators
 {
-    using System;
-
     /// <summary>
     /// Implements a relative strength index calculator.
     /// Reference: http://www.investopedia.com/articles/technical/03/070203.asp
     /// </summary>
-    class RelativeStrengthIndex : ISeriesTransform
+    public class RelativeStrengthIndex : ISeriesTransform
     {
-        /// <summary>
-        /// The period for which the relative strength is being computed.
-        /// </summary>
-        private readonly int period;
-
         /// <summary>
         /// The value of the strength index for the current day.
         /// </summary>
-        private decimal strength;
+        private decimal _strength;
 
         /// <summary>
         /// The value of the previous index.
         /// </summary>
-        private decimal previous = decimal.MinValue;
+        private decimal _previous = decimal.MinValue;
 
         /// <summary>
         /// The moving average of the indices on days with gains.
         /// </summary>
-        private ExponentialMovingAverage gainAverage;
+        private readonly ExponentialMovingAverage _gainAverage;
 
         /// <summary>
         /// The moving average of the indices on days with losses.
         /// </summary>
-        private ExponentialMovingAverage lossAverage;
+        private readonly ExponentialMovingAverage _lossAverage;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RelativeStrengthIndex"/> class.
@@ -47,9 +40,8 @@
         /// <param name="period">The period.</param>
         public RelativeStrengthIndex(int period)
         {
-            this.period = period;
-            gainAverage = new ExponentialMovingAverage(period);
-            lossAverage = new ExponentialMovingAverage(period);
+            _gainAverage = new ExponentialMovingAverage(period);
+            _lossAverage = new ExponentialMovingAverage(period);
         }
 
         /// <summary>
@@ -76,30 +68,30 @@
         /// <param name="value">The index value.</param>
         public void AddIndex(decimal value)
         {
-            if (previous != decimal.MinValue)
+            if (_previous != decimal.MinValue)
             {
-                if (value >= previous)
+                if (value >= _previous)
                 {
-                    gainAverage.AddIndex(value - previous);
-                    lossAverage.AddIndex(0);
+                    _gainAverage.AddIndex(value - _previous);
+                    _lossAverage.AddIndex(0);
                 }
                 else
                 {
-                    gainAverage.AddIndex(0);
-                    lossAverage.AddIndex(previous - value);
+                    _gainAverage.AddIndex(0);
+                    _lossAverage.AddIndex(_previous - value);
                 }
             }
 
-            previous = value;
+            _previous = value;
 
-            if (lossAverage.GetValue() == 0)
+            if (_lossAverage.GetValue() == 0)
             {
-                strength = 100;
+                _strength = 100;
                 return;
             }
 
-            var relativeStrength = gainAverage.GetValue() / lossAverage.GetValue();
-            strength = 100 - (100 / (1 + relativeStrength));
+            var relativeStrength = _gainAverage.GetValue() / _lossAverage.GetValue();
+            _strength = 100 - (100 / (1 + relativeStrength));
         }
 
         /// <summary>
@@ -108,7 +100,7 @@
         /// <returns><c>true</c> if this instance is ready; otherwise, <c>false</c>.</returns>
         public bool IsReady()
         {
-            return gainAverage.IsReady() && lossAverage.IsReady();
+            return _gainAverage.IsReady() && _lossAverage.IsReady();
         }
 
         /// <summary>
@@ -117,7 +109,7 @@
         /// <returns>Strength index for the current day.</returns>
         public decimal GetValue()
         {
-            return strength;
+            return _strength;
         }
     }
 }

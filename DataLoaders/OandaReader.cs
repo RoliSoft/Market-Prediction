@@ -8,7 +8,7 @@
     /// Implements an Oanda CSV data dump reader.
     /// Data is freely available from http://www.oanda.com/currency/historical-rates/
     /// </summary>
-    class OandaReader
+    public static class OandaReader
     {
         /// <summary>
         /// Reads the available indices from the specified file.

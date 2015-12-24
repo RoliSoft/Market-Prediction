@@ -1,9 +1,9 @@
-﻿namespace MarketPrediction
+﻿namespace MarketPrediction.Indicators
 {
     /// <summary>
     /// Represents an interface for all transformers.
     /// </summary>
-    interface ISeriesTransform
+    public interface ISeriesTransform
     {
         /// <summary>
         /// Gets the short name of the transformer.

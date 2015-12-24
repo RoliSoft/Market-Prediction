@@ -7,7 +7,7 @@
     /// <summary>
     /// Encapsulates several helper methods.
     /// </summary>
-    static class Utils
+    public static class Utils
     {
         /// <summary>
         /// Resolves the notation returned by the genetic algorithm.

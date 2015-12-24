@@ -1,4 +1,4 @@
-﻿namespace MarketPrediction
+﻿namespace MarketPrediction.DataLoaders
 {
     using System;
     using System.Collections.Generic;
@@ -8,7 +8,7 @@
     /// Implements a CoinDesk CSV data dump reader.
     /// Data is freely available from http://www.coindesk.com/price/
     /// </summary>
-    class CoinDeskReader
+    public static class CoinDeskReader
     {
         /// <summary>
         /// Reads the available indices from the specified file.
