@@ -65,6 +65,9 @@
   <ItemGroup>
     <Compile Include="DetrendedPriceOscillation.cs" />
     <Compile Include="CoinDeskReader.cs" />
+    <Compile Include="MenuButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SimpleMovingAverage.cs" />
     <Compile Include="ISeriesTransform.cs" />
     <Compile Include="MainForm.cs">

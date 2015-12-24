@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MarketPrediction
@@ -84,6 +85,65 @@ namespace MarketPrediction
             comboBoxGeneticFuncs.SelectedIndex = 0;
             comboBoxGeneticChromosome.SelectedIndex = 0;
             comboBoxGeneticSelection.SelectedIndex = 0;
+        }
+
+        /// <summary>
+        /// Occurs when the Clear menu item is clicked on the chart menu.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
+        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            clearToolStripMenuItemNeuron_Click(sender, e);
+            clearToolStripMenuItemGenetic_Click(sender, e);
+            ClearChart();
+        }
+
+        /// <summary>
+        /// Occurs when the Export menu item is clicked on the chart menu.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!((sender as ToolStripButton)?.Tag is Series))
+            {
+                return;
+            }
+
+            var series = (Series)((ToolStripButton)sender).Tag;
+
+            var sb = new StringBuilder();
+
+            foreach (var point in series.Points)
+            {
+                sb.AppendLine(point.XValue + "\t" + point.YValues[0]);
+            }
+
+            Clipboard.SetText(sb.ToString());
+        }
+
+        /// <summary>
+        /// Occurs when the context menu of the chart is opening.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs" /> instance containing the event data.</param>
+        private void contextMenuStripChart_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            exportToolStripMenuItem.DropDownItems.Clear();
+
+            foreach (var series in chart.Series)
+            {
+                var tsi = new ToolStripButton
+                    {
+                        Text = series.Name,
+                        Tag  = series
+                    };
+
+                tsi.Click += exportToolStripMenuItem_Click;
+
+                exportToolStripMenuItem.DropDownItems.Add(tsi);
+            }
         }
 
         /// <summary>
@@ -447,6 +507,23 @@ namespace MarketPrediction
             AddToChart("NN", index.Keys.Min(), solution);
         }
 
+        /// <summary>
+        /// Occurs when the Clear menu item is clicked on the Learn button.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
+        private void clearToolStripMenuItemNeuron_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                textBoxNeuronLearnError.Clear();
+                textBoxNeuronPredError.Clear();
+                progressBarNeuronLearn.Value = 0;
+                chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == "NN"));
+            }
+            catch { }
+        }
+
         #endregion
 
         #region Genetic Algorithm
@@ -607,6 +684,24 @@ namespace MarketPrediction
             textBoxGeneticSolution.Text   = Utils.ResolveChromosome(ga.BestChromosome.ToString());
 
             AddToChart("GA", index.Keys.Min().AddDays(window - 1), solution);
+        }
+
+        /// <summary>
+        /// Occurs when the Clear menu item is clicked on the Learn button.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
+        private void clearToolStripMenuItemGenetic_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                textBoxGeneticLearnError.Clear();
+                textBoxGeneticPredError.Clear();
+                textBoxGeneticSolution.Clear();
+                progressBarGeneticLearn.Value = 0;
+                chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == "GA"));
+            }
+            catch { }
         }
 
         #endregion

@@ -29,10 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panelChart = new System.Windows.Forms.Panel();
+            this.contextMenuStripChart = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxDpo = new System.Windows.Forms.CheckBox();
             this.checkBoxPpo = new System.Windows.Forms.CheckBox();
             this.checkBoxIndex = new System.Windows.Forms.CheckBox();
@@ -55,12 +58,16 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.groupBoxNeuronParams = new System.Windows.Forms.GroupBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.comboBoxNeuronDataSet = new System.Windows.Forms.ComboBox();
             this.numericUpDownNeuronSampleCount = new System.Windows.Forms.NumericUpDown();
             this.label16 = new System.Windows.Forms.Label();
             this.numericUpDownNeuronIterations = new System.Windows.Forms.NumericUpDown();
             this.label18 = new System.Windows.Forms.Label();
             this.progressBarNeuronLearn = new System.Windows.Forms.ProgressBar();
-            this.buttonLearnNeuron = new System.Windows.Forms.Button();
+            this.buttonLearnNeuron = new MarketPrediction.MenuButton();
+            this.contextMenuStripNeuron = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.clearToolStripMenuItemNeuron = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPageGenetic = new System.Windows.Forms.TabPage();
             this.groupBoxGeneticSolution = new System.Windows.Forms.GroupBox();
             this.textBoxGeneticPredError = new System.Windows.Forms.TextBox();
@@ -70,6 +77,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxGeneticSolution = new System.Windows.Forms.TextBox();
             this.groupBoxGeneticParams = new System.Windows.Forms.GroupBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.comboBoxGeneticDataSet = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -84,9 +93,12 @@
             this.numericUpDownGeneticIterations = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.progressBarGeneticLearn = new System.Windows.Forms.ProgressBar();
-            this.buttonLearnGenetic = new System.Windows.Forms.Button();
+            this.buttonLearnGenetic = new MarketPrediction.MenuButton();
+            this.contextMenuStripGenetic = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.clearToolStripMenuItemGenetic = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.panelChart.SuspendLayout();
+            this.contextMenuStripChart.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPageData.SuspendLayout();
             this.groupBoxPlot.SuspendLayout();
@@ -98,44 +110,46 @@
             this.groupBoxNeuronParams.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronSampleCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronIterations)).BeginInit();
+            this.contextMenuStripNeuron.SuspendLayout();
             this.tabPageGenetic.SuspendLayout();
             this.groupBoxGeneticSolution.SuspendLayout();
             this.groupBoxGeneticParams.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticSampleCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticPopulation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticIterations)).BeginInit();
+            this.contextMenuStripGenetic.SuspendLayout();
             this.SuspendLayout();
             // 
             // chart
             // 
             this.chart.BackColor = System.Drawing.SystemColors.Control;
-            chartArea4.AxisX.InterlacedColor = System.Drawing.Color.Silver;
-            chartArea4.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
-            chartArea4.AxisX.IsStartedFromZero = false;
-            chartArea4.AxisX.LineColor = System.Drawing.Color.Silver;
-            chartArea4.AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
-            chartArea4.AxisX.MajorTickMark.LineColor = System.Drawing.Color.Silver;
-            chartArea4.AxisX.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
-            chartArea4.AxisY.InterlacedColor = System.Drawing.Color.Silver;
-            chartArea4.AxisY.IsStartedFromZero = false;
-            chartArea4.AxisY.LineColor = System.Drawing.Color.Silver;
-            chartArea4.AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
-            chartArea4.AxisY.MajorTickMark.LineColor = System.Drawing.Color.Silver;
-            chartArea4.AxisY.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
-            chartArea4.BackColor = System.Drawing.SystemColors.Control;
-            chartArea4.BorderColor = System.Drawing.Color.Silver;
-            chartArea4.IsSameFontSizeForAllAxes = true;
-            chartArea4.Name = "ChartArea1";
-            this.chart.ChartAreas.Add(chartArea4);
+            chartArea1.AxisX.InterlacedColor = System.Drawing.Color.Silver;
+            chartArea1.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
+            chartArea1.AxisX.IsStartedFromZero = false;
+            chartArea1.AxisX.LineColor = System.Drawing.Color.Silver;
+            chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            chartArea1.AxisX.MajorTickMark.LineColor = System.Drawing.Color.Silver;
+            chartArea1.AxisX.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
+            chartArea1.AxisY.InterlacedColor = System.Drawing.Color.Silver;
+            chartArea1.AxisY.IsStartedFromZero = false;
+            chartArea1.AxisY.LineColor = System.Drawing.Color.Silver;
+            chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            chartArea1.AxisY.MajorTickMark.LineColor = System.Drawing.Color.Silver;
+            chartArea1.AxisY.ScaleBreakStyle.LineColor = System.Drawing.Color.Silver;
+            chartArea1.BackColor = System.Drawing.SystemColors.Control;
+            chartArea1.BorderColor = System.Drawing.Color.Silver;
+            chartArea1.IsSameFontSizeForAllAxes = true;
+            chartArea1.Name = "ChartArea1";
+            this.chart.ChartAreas.Add(chartArea1);
             this.chart.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend4.Alignment = System.Drawing.StringAlignment.Center;
-            legend4.BackColor = System.Drawing.SystemColors.Control;
-            legend4.BorderColor = System.Drawing.Color.Transparent;
-            legend4.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Top;
-            legend4.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Row;
-            legend4.Name = "Legend1";
-            legend4.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chart.Legends.Add(legend4);
+            legend1.Alignment = System.Drawing.StringAlignment.Center;
+            legend1.BackColor = System.Drawing.SystemColors.Control;
+            legend1.BorderColor = System.Drawing.Color.Transparent;
+            legend1.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Top;
+            legend1.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Row;
+            legend1.Name = "Legend1";
+            legend1.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chart.Legends.Add(legend1);
             this.chart.Location = new System.Drawing.Point(0, 0);
             this.chart.Name = "chart";
             this.chart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Bright;
@@ -147,11 +161,34 @@
             this.panelChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelChart.ContextMenuStrip = this.contextMenuStripChart;
             this.panelChart.Controls.Add(this.chart);
             this.panelChart.Location = new System.Drawing.Point(-30, 0);
             this.panelChart.Name = "panelChart";
             this.panelChart.Size = new System.Drawing.Size(806, 491);
             this.panelChart.TabIndex = 1;
+            // 
+            // contextMenuStripChart
+            // 
+            this.contextMenuStripChart.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearToolStripMenuItem,
+            this.exportToolStripMenuItem});
+            this.contextMenuStripChart.Name = "contextMenuStripChart";
+            this.contextMenuStripChart.Size = new System.Drawing.Size(153, 70);
+            this.contextMenuStripChart.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripChart_Opening);
+            // 
+            // clearToolStripMenuItem
+            // 
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.clearToolStripMenuItem.Text = "Clear";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exportToolStripMenuItem.Text = "Export";
             // 
             // checkBoxDpo
             // 
@@ -348,7 +385,7 @@
             this.groupBoxNeuronSolution.Controls.Add(this.textBoxNeuronLearnError);
             this.groupBoxNeuronSolution.Controls.Add(this.label10);
             this.groupBoxNeuronSolution.Controls.Add(this.label11);
-            this.groupBoxNeuronSolution.Location = new System.Drawing.Point(10, 222);
+            this.groupBoxNeuronSolution.Location = new System.Drawing.Point(10, 120);
             this.groupBoxNeuronSolution.Name = "groupBoxNeuronSolution";
             this.groupBoxNeuronSolution.Size = new System.Drawing.Size(292, 75);
             this.groupBoxNeuronSolution.TabIndex = 14;
@@ -393,21 +430,41 @@
             // 
             // groupBoxNeuronParams
             // 
+            this.groupBoxNeuronParams.Controls.Add(this.label12);
+            this.groupBoxNeuronParams.Controls.Add(this.comboBoxNeuronDataSet);
             this.groupBoxNeuronParams.Controls.Add(this.numericUpDownNeuronSampleCount);
             this.groupBoxNeuronParams.Controls.Add(this.label16);
             this.groupBoxNeuronParams.Controls.Add(this.numericUpDownNeuronIterations);
             this.groupBoxNeuronParams.Controls.Add(this.label18);
             this.groupBoxNeuronParams.Location = new System.Drawing.Point(10, 10);
             this.groupBoxNeuronParams.Name = "groupBoxNeuronParams";
-            this.groupBoxNeuronParams.Size = new System.Drawing.Size(292, 206);
+            this.groupBoxNeuronParams.Size = new System.Drawing.Size(292, 104);
             this.groupBoxNeuronParams.TabIndex = 13;
             this.groupBoxNeuronParams.TabStop = false;
             this.groupBoxNeuronParams.Text = "Parameters";
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(10, 22);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(52, 13);
+            this.label12.TabIndex = 14;
+            this.label12.Text = "Data Set:";
+            // 
+            // comboBoxNeuronDataSet
+            // 
+            this.comboBoxNeuronDataSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxNeuronDataSet.FormattingEnabled = true;
+            this.comboBoxNeuronDataSet.Location = new System.Drawing.Point(98, 19);
+            this.comboBoxNeuronDataSet.Name = "comboBoxNeuronDataSet";
+            this.comboBoxNeuronDataSet.Size = new System.Drawing.Size(184, 21);
+            this.comboBoxNeuronDataSet.TabIndex = 13;
+            // 
             // numericUpDownNeuronSampleCount
             // 
             this.numericUpDownNeuronSampleCount.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDownNeuronSampleCount.Location = new System.Drawing.Point(98, 19);
+            this.numericUpDownNeuronSampleCount.Location = new System.Drawing.Point(98, 46);
             this.numericUpDownNeuronSampleCount.Maximum = new decimal(new int[] {
             0,
             1,
@@ -421,16 +478,16 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(10, 20);
+            this.label16.Location = new System.Drawing.Point(10, 47);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(73, 13);
+            this.label16.Size = new System.Drawing.Size(68, 13);
             this.label16.TabIndex = 7;
-            this.label16.Text = "Days to Train:";
+            this.label16.Text = "Sample Size:";
             // 
             // numericUpDownNeuronIterations
             // 
             this.numericUpDownNeuronIterations.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDownNeuronIterations.Location = new System.Drawing.Point(98, 45);
+            this.numericUpDownNeuronIterations.Location = new System.Drawing.Point(98, 72);
             this.numericUpDownNeuronIterations.Maximum = new decimal(new int[] {
             0,
             1,
@@ -454,7 +511,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(10, 46);
+            this.label18.Location = new System.Drawing.Point(10, 73);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(53, 13);
             this.label18.TabIndex = 3;
@@ -475,12 +532,27 @@
             // 
             this.buttonLearnNeuron.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonLearnNeuron.Location = new System.Drawing.Point(227, 408);
+            this.buttonLearnNeuron.Menu = this.contextMenuStripNeuron;
             this.buttonLearnNeuron.Name = "buttonLearnNeuron";
             this.buttonLearnNeuron.Size = new System.Drawing.Size(75, 23);
             this.buttonLearnNeuron.TabIndex = 0;
             this.buttonLearnNeuron.Text = "Learn";
             this.buttonLearnNeuron.UseVisualStyleBackColor = true;
             this.buttonLearnNeuron.Click += new System.EventHandler(this.buttonLearnNeuron_Click);
+            // 
+            // contextMenuStripNeuron
+            // 
+            this.contextMenuStripNeuron.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearToolStripMenuItemNeuron});
+            this.contextMenuStripNeuron.Name = "contextMenuStripNeuron";
+            this.contextMenuStripNeuron.Size = new System.Drawing.Size(102, 26);
+            // 
+            // clearToolStripMenuItemNeuron
+            // 
+            this.clearToolStripMenuItemNeuron.Name = "clearToolStripMenuItemNeuron";
+            this.clearToolStripMenuItemNeuron.Size = new System.Drawing.Size(101, 22);
+            this.clearToolStripMenuItemNeuron.Text = "Clear";
+            this.clearToolStripMenuItemNeuron.Click += new System.EventHandler(this.clearToolStripMenuItemNeuron_Click);
             // 
             // tabPageGenetic
             // 
@@ -506,7 +578,7 @@
             this.groupBoxGeneticSolution.Controls.Add(this.label2);
             this.groupBoxGeneticSolution.Controls.Add(this.label1);
             this.groupBoxGeneticSolution.Controls.Add(this.textBoxGeneticSolution);
-            this.groupBoxGeneticSolution.Location = new System.Drawing.Point(10, 222);
+            this.groupBoxGeneticSolution.Location = new System.Drawing.Point(10, 254);
             this.groupBoxGeneticSolution.Name = "groupBoxGeneticSolution";
             this.groupBoxGeneticSolution.Size = new System.Drawing.Size(292, 148);
             this.groupBoxGeneticSolution.TabIndex = 12;
@@ -570,6 +642,8 @@
             // 
             // groupBoxGeneticParams
             // 
+            this.groupBoxGeneticParams.Controls.Add(this.label13);
+            this.groupBoxGeneticParams.Controls.Add(this.comboBoxGeneticDataSet);
             this.groupBoxGeneticParams.Controls.Add(this.label9);
             this.groupBoxGeneticParams.Controls.Add(this.label8);
             this.groupBoxGeneticParams.Controls.Add(this.label7);
@@ -585,15 +659,33 @@
             this.groupBoxGeneticParams.Controls.Add(this.label4);
             this.groupBoxGeneticParams.Location = new System.Drawing.Point(10, 10);
             this.groupBoxGeneticParams.Name = "groupBoxGeneticParams";
-            this.groupBoxGeneticParams.Size = new System.Drawing.Size(292, 206);
+            this.groupBoxGeneticParams.Size = new System.Drawing.Size(292, 238);
             this.groupBoxGeneticParams.TabIndex = 11;
             this.groupBoxGeneticParams.TabStop = false;
             this.groupBoxGeneticParams.Text = "Parameters";
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(10, 22);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(52, 13);
+            this.label13.TabIndex = 16;
+            this.label13.Text = "Data Set:";
+            // 
+            // comboBoxGeneticDataSet
+            // 
+            this.comboBoxGeneticDataSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxGeneticDataSet.FormattingEnabled = true;
+            this.comboBoxGeneticDataSet.Location = new System.Drawing.Point(98, 19);
+            this.comboBoxGeneticDataSet.Name = "comboBoxGeneticDataSet";
+            this.comboBoxGeneticDataSet.Size = new System.Drawing.Size(184, 21);
+            this.comboBoxGeneticDataSet.TabIndex = 15;
+            // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(10, 154);
+            this.label9.Location = new System.Drawing.Point(10, 181);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(54, 13);
             this.label9.TabIndex = 14;
@@ -602,7 +694,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(10, 127);
+            this.label8.Location = new System.Drawing.Point(10, 154);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(71, 13);
             this.label8.TabIndex = 13;
@@ -611,7 +703,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(10, 100);
+            this.label7.Location = new System.Drawing.Point(10, 127);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(85, 13);
             this.label7.TabIndex = 12;
@@ -625,7 +717,7 @@
             "Elite",
             "Rank",
             "Roulette"});
-            this.comboBoxGeneticSelection.Location = new System.Drawing.Point(98, 151);
+            this.comboBoxGeneticSelection.Location = new System.Drawing.Point(98, 178);
             this.comboBoxGeneticSelection.Name = "comboBoxGeneticSelection";
             this.comboBoxGeneticSelection.Size = new System.Drawing.Size(184, 21);
             this.comboBoxGeneticSelection.TabIndex = 11;
@@ -637,7 +729,7 @@
             this.comboBoxGeneticChromosome.Items.AddRange(new object[] {
             "Gene Tree",
             "Gene Expression"});
-            this.comboBoxGeneticChromosome.Location = new System.Drawing.Point(98, 124);
+            this.comboBoxGeneticChromosome.Location = new System.Drawing.Point(98, 151);
             this.comboBoxGeneticChromosome.Name = "comboBoxGeneticChromosome";
             this.comboBoxGeneticChromosome.Size = new System.Drawing.Size(184, 21);
             this.comboBoxGeneticChromosome.TabIndex = 10;
@@ -649,7 +741,7 @@
             this.comboBoxGeneticFuncs.Items.AddRange(new object[] {
             "Simple Arithmetics",
             "Arithmetics and Functions"});
-            this.comboBoxGeneticFuncs.Location = new System.Drawing.Point(98, 97);
+            this.comboBoxGeneticFuncs.Location = new System.Drawing.Point(98, 124);
             this.comboBoxGeneticFuncs.Name = "comboBoxGeneticFuncs";
             this.comboBoxGeneticFuncs.Size = new System.Drawing.Size(184, 21);
             this.comboBoxGeneticFuncs.TabIndex = 5;
@@ -657,7 +749,7 @@
             // checkBoxGeneticShuffle
             // 
             this.checkBoxGeneticShuffle.AutoSize = true;
-            this.checkBoxGeneticShuffle.Location = new System.Drawing.Point(13, 179);
+            this.checkBoxGeneticShuffle.Location = new System.Drawing.Point(13, 209);
             this.checkBoxGeneticShuffle.Name = "checkBoxGeneticShuffle";
             this.checkBoxGeneticShuffle.Size = new System.Drawing.Size(136, 17);
             this.checkBoxGeneticShuffle.TabIndex = 9;
@@ -667,7 +759,7 @@
             // numericUpDownGeneticSampleCount
             // 
             this.numericUpDownGeneticSampleCount.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDownGeneticSampleCount.Location = new System.Drawing.Point(98, 19);
+            this.numericUpDownGeneticSampleCount.Location = new System.Drawing.Point(98, 46);
             this.numericUpDownGeneticSampleCount.Maximum = new decimal(new int[] {
             0,
             1,
@@ -686,16 +778,16 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(10, 20);
+            this.label6.Location = new System.Drawing.Point(10, 47);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(73, 13);
+            this.label6.Size = new System.Drawing.Size(68, 13);
             this.label6.TabIndex = 7;
-            this.label6.Text = "Days to Train:";
+            this.label6.Text = "Sample Size:";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(10, 72);
+            this.label5.Location = new System.Drawing.Point(10, 99);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(60, 13);
             this.label5.TabIndex = 6;
@@ -704,7 +796,7 @@
             // numericUpDownGeneticPopulation
             // 
             this.numericUpDownGeneticPopulation.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDownGeneticPopulation.Location = new System.Drawing.Point(98, 71);
+            this.numericUpDownGeneticPopulation.Location = new System.Drawing.Point(98, 98);
             this.numericUpDownGeneticPopulation.Maximum = new decimal(new int[] {
             0,
             1,
@@ -728,7 +820,7 @@
             // numericUpDownGeneticIterations
             // 
             this.numericUpDownGeneticIterations.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDownGeneticIterations.Location = new System.Drawing.Point(98, 45);
+            this.numericUpDownGeneticIterations.Location = new System.Drawing.Point(98, 72);
             this.numericUpDownGeneticIterations.Maximum = new decimal(new int[] {
             0,
             1,
@@ -752,7 +844,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(10, 46);
+            this.label4.Location = new System.Drawing.Point(10, 73);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 13);
             this.label4.TabIndex = 3;
@@ -773,12 +865,27 @@
             // 
             this.buttonLearnGenetic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonLearnGenetic.Location = new System.Drawing.Point(227, 408);
+            this.buttonLearnGenetic.Menu = this.contextMenuStripGenetic;
             this.buttonLearnGenetic.Name = "buttonLearnGenetic";
             this.buttonLearnGenetic.Size = new System.Drawing.Size(75, 23);
             this.buttonLearnGenetic.TabIndex = 2;
             this.buttonLearnGenetic.Text = "Learn";
             this.buttonLearnGenetic.UseVisualStyleBackColor = true;
             this.buttonLearnGenetic.Click += new System.EventHandler(this.buttonLearnGenetic_Click);
+            // 
+            // contextMenuStripGenetic
+            // 
+            this.contextMenuStripGenetic.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearToolStripMenuItemGenetic});
+            this.contextMenuStripGenetic.Name = "contextMenuStripGenetic";
+            this.contextMenuStripGenetic.Size = new System.Drawing.Size(102, 26);
+            // 
+            // clearToolStripMenuItemGenetic
+            // 
+            this.clearToolStripMenuItemGenetic.Name = "clearToolStripMenuItemGenetic";
+            this.clearToolStripMenuItemGenetic.Size = new System.Drawing.Size(101, 22);
+            this.clearToolStripMenuItemGenetic.Text = "Clear";
+            this.clearToolStripMenuItemGenetic.Click += new System.EventHandler(this.clearToolStripMenuItemGenetic_Click);
             // 
             // MainForm
             // 
@@ -794,6 +901,7 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chart)).EndInit();
             this.panelChart.ResumeLayout(false);
+            this.contextMenuStripChart.ResumeLayout(false);
             this.tabControl.ResumeLayout(false);
             this.tabPageData.ResumeLayout(false);
             this.groupBoxPlot.ResumeLayout(false);
@@ -810,6 +918,7 @@
             this.groupBoxNeuronParams.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronSampleCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronIterations)).EndInit();
+            this.contextMenuStripNeuron.ResumeLayout(false);
             this.tabPageGenetic.ResumeLayout(false);
             this.groupBoxGeneticSolution.ResumeLayout(false);
             this.groupBoxGeneticSolution.PerformLayout();
@@ -818,6 +927,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticSampleCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticPopulation)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticIterations)).EndInit();
+            this.contextMenuStripGenetic.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -842,11 +952,11 @@
         private System.Windows.Forms.GroupBox groupBoxIndicators;
         private System.Windows.Forms.GroupBox groupBoxCurrency;
         private System.Windows.Forms.CheckBox checkBoxEma;
-        private System.Windows.Forms.Button buttonLearnNeuron;
+        private MenuButton buttonLearnNeuron;
         private System.Windows.Forms.ProgressBar progressBarNeuronLearn;
         private System.Windows.Forms.TabPage tabPageGenetic;
         private System.Windows.Forms.ProgressBar progressBarGeneticLearn;
-        private System.Windows.Forms.Button buttonLearnGenetic;
+        private MenuButton buttonLearnGenetic;
         private System.Windows.Forms.GroupBox groupBoxGeneticSolution;
         private System.Windows.Forms.TextBox textBoxGeneticSolution;
         private System.Windows.Forms.GroupBox groupBoxGeneticParams;
@@ -878,6 +988,17 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.NumericUpDown numericUpDownNeuronIterations;
         private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripNeuron;
+        private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItemNeuron;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripGenetic;
+        private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItemGenetic;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.ComboBox comboBoxNeuronDataSet;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.ComboBox comboBoxGeneticDataSet;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripChart;
+        private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
     }
 }
 
