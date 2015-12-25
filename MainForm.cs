@@ -321,14 +321,19 @@
             {
                 size = data.Values.Count;
             }
-
-            foreach (var index in data.Skip(offset).Take(size))
+            
+            foreach (var index in data.Skip(offset))
             {
                 transform.AddIndex(index.Value);
 
                 if (transform.IsReady())
                 {
                     series.Points.AddXY(index.Key, transform.GetValue());
+                    
+                    if (series.Points.Count >= size)
+                    {
+                        break;
+                    }
                 }
             }
 
@@ -422,15 +427,16 @@
         /// </summary>
         /// <param name="sampleSize"><c>Value</c> of one of the "Sample Size" numericUpDowns.</param>
         /// <param name="sampleOffset"><c>Value</c> of one of the "Sample Offset" (or "Ofs.") numericUpDowns.</param>
+        /// <param name="inputCount"><c>Value</c> of one of the "Network Inputs" numericUpDowns.</param>
         /// <param name="dataSet"><c>SelectedItem</c> of one of the "Data Set" comboBoxes.</param>
         /// <returns>Tuple of the starting date of the data and the points themselves.</returns>
-        private Tuple<DateTime, double[]> PrepareData(decimal sampleSize, decimal sampleOffset, object dataSet)
+        private Tuple<DateTime, double[]> PrepareData(decimal sampleSize, decimal sampleOffset, decimal inputCount, object dataSet)
         {
             double[] data;
             DateTime? dataStartDate = null;
 
             var dataSetVal = (Tuple<string, KeyValuePair<string, SortedDictionary<DateTime, decimal>>, string>)dataSet;
-            var sampleSizeVal = sampleSize != 0 ? (int)sampleSize : dataSetVal.Item2.Value.Values.Count;
+            var sampleSizeVal = (sampleSize != 0 ? (int)sampleSize : dataSetVal.Item2.Value.Values.Count) + (int)inputCount;
 
             if (dataSetVal.Item3 != null)
             {
@@ -497,15 +503,17 @@
             var learningRate = (double)numericUpDownNeuronLearnRate.Value;
             var momentum     = (double)numericUpDownNeuronMomentum.Value;
             var inputCount   = (int)numericUpDownNeuronInputs.Value;
+            var predCount    = (int)numericUpDownNeuronPredictions.Value;
             var hiddenCount  = (int)numericUpDownNeuronHidden.Value;
             var iterations   = (int)numericUpDownNeuronIterations.Value;
             var sigmoidAlpha = 2.0;
 
-            var data = PrepareData(numericUpDownNeuronSampleCount.Value, numericUpDownNeuronSampleOffset.Value, comboBoxNeuronDataSet.SelectedItem);
+            var data = PrepareData(numericUpDownNeuronSampleCount.Value, numericUpDownNeuronSampleOffset.Value, numericUpDownNeuronInputs.Value, comboBoxNeuronDataSet.SelectedItem);
 
-            var solution   = new double[data.Item2.Length - inputCount];
-            var errorLearn = 0.0;
-            var trainRes   = false;
+            var solution    = new double[data.Item2.Length - inputCount];
+            var predictions = new double[predCount != 0 ? predCount + inputCount : 0];
+            var errorLearn  = 0.0;
+            var trainRes    = false;
 
             progressBarNeuronLearn.Value = 0;
             progressBarNeuronLearn.Maximum = iterations;
@@ -514,7 +522,7 @@
                 {
                     try
                     { 
-                        trainRes = NeuralNetwork.TrainAndEval(data.Item2, ref solution, ref errorLearn, iterations, inputCount, hiddenCount, learningRate, momentum, sigmoidAlpha, _neuronCts.Token, p => Invoke(new Action<int>(pi => progressBarNeuronLearn.Value = pi), p));
+                        trainRes = NeuralNetwork.TrainAndEval(data.Item2, ref solution, ref errorLearn, ref predictions, iterations, inputCount, hiddenCount, learningRate, momentum, sigmoidAlpha, _neuronCts.Token, p => Invoke(new Action<int>(pi => progressBarNeuronLearn.Value = pi), p));
                     }
                     catch
                     {
@@ -536,6 +544,11 @@
             //textBoxNeuronPredError.Text  = errorPred.ToString();
 
             AddToChart("NN", data.Item1, solution);
+
+            if (predCount != 0)
+            {
+                AddToChart("NN (Pred.)", data.Item1.AddDays(solution.Length - 1), predictions.Skip(inputCount - 1));
+            }
         }
 
         /// <summary>
@@ -556,6 +569,7 @@
                 textBoxNeuronPredError.Clear();
                 progressBarNeuronLearn.Value = 0;
                 chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == "NN"));
+                chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == "NN (Pred.)"));
             }
             catch { }
         }
@@ -589,15 +603,17 @@
             var iterations     = (int)numericUpDownGeneticIterations.Value;
             var population     = (int)numericUpDownGeneticPopulation.Value;
             var inputCount     = (int)numericUpDownGeneticInputs.Value;
+            var predCount      = (int)numericUpDownGeneticPredictions.Value;
             var shuffle        = checkBoxGeneticShuffle.Checked;
             var geneType       = (GeneticAlgorithm.GeneFunctions)comboBoxGeneticFuncs.SelectedIndex;
             var selectionType  = (GeneticAlgorithm.Selections)comboBoxGeneticSelection.SelectedIndex;
             var chromosomeType = (GeneticAlgorithm.Chromosomes)comboBoxGeneticChromosome.SelectedIndex;
 
-            var data = PrepareData(numericUpDownGeneticSampleCount.Value, numericUpDownGeneticSampleOffset.Value, comboBoxGeneticDataSet.SelectedItem);
+            var data = PrepareData(numericUpDownGeneticSampleCount.Value, numericUpDownGeneticSampleOffset.Value, numericUpDownGeneticInputs.Value, comboBoxGeneticDataSet.SelectedItem);
 
             var constants      = new[] { data.Item2.Min(), data.Item2.Average(), data.Item2.Max() };
             var solution       = new double[data.Item2.Length - inputCount];
+            var predictions    = new double[predCount != 0 ? predCount + inputCount : 0];
             var bestChromosome = "";
             var errorLearn     = 0.0;
             var trainRes       = false;
@@ -609,7 +625,7 @@
                 {
                     try
                     { 
-                        trainRes = GeneticAlgorithm.TrainAndEval(data.Item2, ref solution, ref bestChromosome, ref errorLearn, iterations, population, inputCount, shuffle, constants, geneType, chromosomeType, selectionType, _geneticCts.Token, p => Invoke(new Action<int>(pi => progressBarGeneticLearn.Value = pi), p));
+                        trainRes = GeneticAlgorithm.TrainAndEval(data.Item2, ref solution, ref bestChromosome, ref errorLearn, ref predictions, iterations, population, inputCount, shuffle, constants, geneType, chromosomeType, selectionType, _geneticCts.Token, p => Invoke(new Action<int>(pi => progressBarGeneticLearn.Value = pi), p));
                     }
                     catch
                     {
@@ -632,6 +648,11 @@
             textBoxGeneticSolution.Text   = Utils.ResolveChromosome(bestChromosome);
 
             AddToChart("GA", data.Item1.AddDays(inputCount - 1), solution);
+
+            if (predCount != 0)
+            {
+                AddToChart("GA (Pred.)", data.Item1.AddDays(inputCount - 1).AddDays(solution.Length - 1), predictions.Skip(inputCount - 1));
+            }
         }
 
         /// <summary>
@@ -653,6 +674,7 @@
                 textBoxGeneticSolution.Clear();
                 progressBarGeneticLearn.Value = 0;
                 chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == "GA"));
+                chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == "GA (Pred.)"));
             }
             catch { }
         }

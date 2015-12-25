@@ -19,6 +19,7 @@
         /// <param name="data">The data to be used for training.</param>
         /// <param name="solution">The reference to where the solution will be stored.</param>
         /// <param name="error">The reference where error rate will be stored.</param>
+        /// <param name="predictions">The reference to where the predictions will be stored.</param>
         /// <param name="iterations">The number of iterations to perform.</param>
         /// <param name="inputCount">The number of inputs on the neural network.</param>
         /// <param name="hiddenCount">The number of hidden layers on the neural network.</param>
@@ -30,7 +31,7 @@
         /// <returns>
         ///   <c>true</c> if the training and evaluation was successful, <c>false</c> otherwise.</returns>
         /// <exception cref="ArgumentException">Array should be size of data minus number of inputs.</exception>
-        public static bool TrainAndEval(double[] data, ref double[] solution, ref double error, int iterations, int inputCount, int hiddenCount, double learningRate, double momentum, double sigmoidAlpha, CancellationToken cancelToken, Action<int> progressCallback = null)
+        public static bool TrainAndEval(double[] data, ref double[] solution, ref double error, ref double[] predictions, int iterations, int inputCount, int hiddenCount, double learningRate, double momentum, double sigmoidAlpha, CancellationToken cancelToken, Action<int> progressCallback = null)
         {
             var min     = data.Min();
             var samples = data.Length - inputCount;
@@ -90,6 +91,23 @@
                 error += Math.Abs(solution[i] - data[inputCount + i]);
 
                 cancelToken.ThrowIfCancellationRequested();
+            }
+
+            if (predictions.Length != 0)
+            {
+                Array.Copy(solution, solution.Length - inputCount, predictions, 0, inputCount);
+
+                for (var i = inputCount; i < predictions.Length; i++)
+                {
+                    for (int j = 0; j < inputCount; j++)
+                    {
+                        test[j] = predictions[(i - inputCount) + j] - min;
+                    }
+
+                    predictions[i] = nn.Compute(test)[0] + min;
+
+                    cancelToken.ThrowIfCancellationRequested();
+                }
             }
 
             return true;

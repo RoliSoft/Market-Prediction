@@ -71,6 +71,7 @@
         /// <param name="solution">The reference to where the solution will be stored.</param>
         /// <param name="bestChromosome">The best chromosome.</param>
         /// <param name="error">The reference where error rate will be stored.</param>
+        /// <param name="predictions">The reference to where the predictions will be stored.</param>
         /// <param name="iterations">The number of iterations to perform.</param>
         /// <param name="population">The size of the population.</param>
         /// <param name="inputCount">The number of inputs.</param>
@@ -84,7 +85,7 @@
         /// <returns>
         ///   <c>true</c> if the training and evaluation was successful, <c>false</c> otherwise.</returns>
         /// <exception cref="ArgumentException">Array should be size of data minus number of inputs.</exception>
-        public static bool TrainAndEval(double[] data, ref double[] solution, ref string bestChromosome, ref double error, int iterations, int population, int inputCount, bool shuffle, double[] constants, GeneFunctions geneType, Chromosomes chromosomeType, Selections selectionType, CancellationToken cancelToken, Action<int> progressCallback = null)
+        public static bool TrainAndEval(double[] data, ref double[] solution, ref string bestChromosome, ref double error, ref double[] predictions, int iterations, int population, int inputCount, bool shuffle, double[] constants, GeneFunctions geneType, Chromosomes chromosomeType, Selections selectionType, CancellationToken cancelToken, Action<int> progressCallback = null)
         {
             IGPGene gene;
 
@@ -187,6 +188,23 @@
                 cancelToken.ThrowIfCancellationRequested();
             }
 
+            if (predictions.Length != 0)
+            {
+                Array.Copy(solution, solution.Length - inputCount, predictions, 0, inputCount);
+
+                for (var i = inputCount; i < predictions.Length; i++)
+                {
+                    for (int j = 0; j < inputCount; j++)
+                    {
+                        input[j] = predictions[(i - inputCount) + j];
+                    }
+                    
+                    predictions[i] = PolishExpression.Evaluate(bestChromosome, input);
+
+                    cancelToken.ThrowIfCancellationRequested();
+                }
+            }
+            
             return true;
         }
     }
