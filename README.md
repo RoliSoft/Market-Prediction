@@ -18,4 +18,6 @@ Data can be loaded from CSV files. Included are:
  
 The underlying components behind the prediction experiments are implemented using the neural and genetic features of the [AForge.NET Framework](http://www.aforgenet.com/framework/).
 
-Instructions on how to use the application and the results of the prediction experiments will soon be available in the form ofa written report in LaTeX within this repository.
+Instructions on how to use the application and the results of the prediction experiments will soon be available in the form of a written report in LaTeX within this repository.
+
+![Screenshot](https://i.imgur.com/drBIDJM.png)
