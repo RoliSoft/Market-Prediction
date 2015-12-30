@@ -1,0 +1,125 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[english]{babel}
+\usepackage[margin=1in,includefoot]{geometry}
+
+\usepackage{pgfplots}
+\pgfplotsset{width=15cm,compat=1.12}
+
+\usepackage{indentfirst}
+
+\usepackage[backref=false,pagebackref=true,citecolor=blue]{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue,pdfborder={0 0 0}}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{1em}
+
+%\renewcommand{\arraystretch}{2}
+
+\newcommand{\refspace}{\vspace{-2mm}}
+\newcommand{\redarrow}{\textcolor{blue}{$\mathbf{\Rightarrow}$}}
+\makeatletter
+\def\BR@@bibitem#1#2\par{
+	\let\backrefprint\BR@backrefprint
+	\def\@linkcolor{black}
+	\BRorg@bibitem{#1}#2\redarrow \thinspace \BR@backref{#1}
+}
+\makeatother
+
+\author{Roland Bogosi}
+\title{Market Prediction}
+
+\begin{document}
+\thispagestyle{empty}
+	 
+	\begin{center}
+		\vspace{3.1in}
+		
+		{\huge Market Prediction using Neural Networks}
+		
+		\vspace{0.4in}
+		
+		\textbf{\LARGE Assignment Report}
+		
+		\vspace{0.3in}
+		
+		{\Large January 4th, 2016}
+		
+		\vspace{3.2in}
+	\end{center}
+	
+	\begin{flushright}
+		{\Large \textit{Roland Bogosi}}
+	\end{flushright}
+
+\newpage
+\thispagestyle{empty}
+\section*{Table of Contents}
+
+	\begingroup
+	\renewcommand{\section}[2]{}
+	\hypersetup{linkcolor=blue}
+	\setlength{\parskip}{0em}
+	\tableofcontents
+	\endgroup
+
+\newpage
+\section{Introduction}
+
+	\begin{figure}[!htbp]
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[
+			xlabel={Days},
+			ylabel={Index},
+			legend pos=north west,
+			ymajorgrids=true,
+			grid style=dashed,
+			legend entries={Actual Rates,Estimate,Prediction}
+		]
+			\addplot[blue,mark=*]  table {eur_usd_august_30.txt};
+			\addplot[red,mark=*]   table {eur_usd_august_30_neuron.txt};
+			\addplot[green,mark=*] table {eur_usd_august_30_neuron_pred.txt};
+		\end{axis}
+		\end{tikzpicture}
+		\caption{EUR/USD Rates for August 2015}
+		\label{eurusd2015}
+	\end{figure}
+	
+	\begin{figure}[!htbp]
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[
+			xlabel={Days},
+			ylabel={Index},
+			legend pos=north west,
+			ymajorgrids=true,
+			grid style=dashed,
+			legend entries={Actual Rates,Estimate,Prediction}
+		]
+			\addplot[blue,mark=*]  table {eur_usd_august_30.txt};
+			\addplot[red,mark=*]   table {eur_usd_august_30_genetic.txt};
+			\addplot[green,mark=*] table {eur_usd_august_30_genetic_pred.txt};
+		\end{axis}
+		\end{tikzpicture}
+		\caption{EUR/USD Rates for August 2015}
+		\label{eurusd2015}
+	\end{figure}
+	
+	The output of the genetic algorithm, meaning the fittest chromosome, after $1,000$ iterations is to following equation:\\
+	$$ (b*(b*(c/b))/((c*b)/b))*(a/((b*c)*(c/d)/b)) $$
+	
+	Which can be simplified to:\\
+	$$ (a*b*c)/2 $$
+	
+\newpage
+\section{Bibliography}
+
+	\begingroup
+	\renewcommand{\section}[2]{}
+		\bibliography{report} 
+		\bibliographystyle{ieeetr}
+	\endgroup
+
+\end{document}
