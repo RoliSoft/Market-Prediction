@@ -6,6 +6,7 @@
 
 \usepackage{pgfplots}
 \pgfplotsset{width=15cm,compat=1.12}
+\usetikzlibrary{arrows}
 
 \usepackage{indentfirst}
 
@@ -67,6 +68,52 @@
 \newpage
 \section{Introduction}
 
+	\tikzstyle{es} = [-triangle 60]
+	\begin{figure}[!htbp]
+		\centering
+		\begin{tikzpicture}[x=1.5cm,y=1.5cm]
+			\draw [] (0,0) ellipse (0.5 and 0.5);
+			\draw [] (0,1.5) ellipse (0.5 and 0.5);
+			\draw [] (0,-1.5) ellipse (0.5 and 0.5);
+			\draw [] (2.5,0) ellipse (0.5 and 0.5);
+			\draw [] (-2.5,0) ellipse (0.5 and 0.5);
+			\node (v1) at (-2,0) {};
+			\node (v2) at (-0.5,1.5) {};
+			\node (v3) at (-0.5,0) {};
+			\node (v4) at (-0.5,-1.5) {};
+			\node (v5) at (0.5,1.5) {};
+			\node (v7) at (0.5,0) {};
+			\node (v8) at (0.5,-1.5) {};
+			\node (v6) at (2,0) {};
+			\draw [es] (v1) edge (v2);
+			\draw [es] (v1) edge (v3);
+			\draw [es] (v1) edge (v4);
+			\draw [es] (v5) edge (v6);
+			\draw [es] (v7) edge (v6);
+			\draw [es] (v8) edge (v6);
+			\node (v9) at (-4.5,0) {};
+			\node (v12) at (4.5,0) {};
+			\node (v10) at (-3,0) {};
+			\draw [es] (v9) edge (v10);
+			\node (v11) at (3,0) {};
+			\draw [es] (v11) edge (v12);
+			\node at (-2.5,2.5) {\shortstack{Input\\layer}};
+			\node at (0,2.5) {\shortstack{Hidden\\layers}};
+			\node at (2.5,2.5) {\shortstack{Output\\layer}};
+			\node at (0.5,2) {$w_1$};
+			\node at (0.5,0.5) {$w_2$};
+			\node at (0.5,-1) {$w_3$};
+			\node at (3,0.5) {$y_1$};
+			\node at (-2,0.5) {$x_1$};
+		\end{tikzpicture}
+		\caption{Structure of the Neural Network}
+		\label{neurnet}
+	\end{figure}
+
+	The neural network has a single input, $x_1$, which is the rate of the currency for that day. The output of the network, $y_1$, is the predicted value for the \textit{next} day.
+	
+	The number of hidden layers in the network varies based on how many days we train and would like to predict. While the general rule is to have $input\_count*2$ hidden layers, I evaluated this during several trial and error runs and it did not seem to work well with this application: even with a high momentum learning parameter, the neural network was not able to accurately fit the data, it only generated an approximate oscillation. I concluded that the number of hidden layers in order to accurately fit the data within $1,000$ iterations, is roughly equal to the number of days taught.
+
 	\begin{figure}[!htbp]
 		\centering
 		\begin{tikzpicture}
@@ -107,11 +154,11 @@
 		\label{eurusd2015}
 	\end{figure}
 	
-	The output of the genetic algorithm, meaning the fittest chromosome, after $1,000$ iterations is to following equation:\\
-	$$ (b*(b*(c/b))/((c*b)/b))*(a/((b*c)*(c/d)/b)) $$
+	The output of the genetic algorithm, meaning the fittest chromosome, after $1,000$ iterations is the following equation:\\
+	$$ (b \cdot \frac{b \cdot \frac{c}{b}}{\frac{c \cdot b}{b}}) \cdot \frac{a}{(b \cdot c) \cdot \frac{\frac{c}{d}}{b}} $$
 	
 	Which can be simplified to:\\
-	$$ (a*b*c)/2 $$
+	$$ \frac{a \cdot b \cdot c}{2} $$
 	
 \newpage
 \section{Bibliography}
