@@ -17,6 +17,7 @@
 \setlength{\parskip}{1em}
 
 %\renewcommand{\arraystretch}{2}
+%\renewcommand{\familydefault}{\sfdefault}
 
 \newcommand{\refspace}{\vspace{-2mm}}
 \newcommand{\redarrow}{\textcolor{blue}{$\mathbf{\Rightarrow}$}}
@@ -37,21 +38,21 @@
 	\begin{center}
 		\vspace{3.1in}
 		
-		{\huge Market Prediction using Neural Networks}
+		{\sffamily\huge Market Prediction using Neural Networks}
 		
 		\vspace{0.4in}
 		
-		\textbf{\LARGE Assignment Report}
+		{\sffamily\LARGE Assignment Report}
 		
 		\vspace{0.3in}
 		
-		{\Large January 4th, 2016}
+		{\sffamily\Large January 4th, 2016}
 		
 		\vspace{3.2in}
 	\end{center}
 	
 	\begin{flushright}
-		{\Large \textit{Roland Bogosi}}
+		{\sffamily\itshape\Large Roland Bogosi}
 	\end{flushright}
 
 \newpage
@@ -67,6 +68,19 @@
 
 \newpage
 \section{Introduction}
+
+	The purpose of this classroom assignment is to use neural networks in order to predict stock market or currency fluctuations. There are many ways to tackle this time-series prediction problem, each of them having their own pros and cons:
+	
+	\textbf{Index Prediction} -- Try to teach the individual values of a series. This way the neural network will receive an input which in some form indicates the day we would like to evaluate it/predict for and as the output of the network, we get the prediction.
+	
+	\textbf{Indicator Prediction} -- Transform the dataset into indicators used during stock analysis, and teach the neural network the pattern of these. This way, the neural network will not be able to predict the index itself, but it should be able to predict the trend within the indicator that is used to make the actual decision if a stock should be purchased or not.
+		
+	In both cases, as described in \cite{op1997stock}, one of the main challenges was to decide what inputs and outputs should the neural network be trained for. My initial thought was to feed the date as input, and get the predicted index as the output. However, upon experimentation I learned that this model would not work, and after further researching, the winner method seemed to be having one or more input variables which are the index values of the previous days.
+	
+	For the purposes of this classroom assignment, I decided focusing on using currency rates, since stock data has way too many outside factors influencing it. I would have had to analyze these outside factors for each stock individually and encode it as an input to the neural network in some form, in order to create an accurate model. For example, the stock of a car manufacturing company might go up when they hold a press release and announce a model, and might suddenly go down if the new model gets a bad review from a reputable source or an issue arises with it, possibly needing call-backs.
+
+\newpage
+\section{Structure}
 
 	\tikzstyle{es} = [-triangle 60]
 	\begin{figure}[!htbp]
@@ -110,9 +124,15 @@
 		\label{neurnet}
 	\end{figure}
 
-	The neural network has a single input, $x_1$, which is the rate of the currency for that day. The output of the network, $y_1$, is the predicted value for the \textit{next} day.
+	The neural network shown in figure \ref{neurnet} has a single input, $x_1$, which is the index of the stock or currency for that day. The output of the network, $y_1$, is the predicted value for the \textit{next} day.
 	
-	The number of hidden layers in the network varies based on how many days we train and would like to predict. While the general rule is to have $input\_count*2$ hidden layers, I evaluated this during several trial and error runs and it did not seem to work well with this application: even with a high momentum learning parameter, the neural network was not able to accurately fit the data, it only generated an approximate oscillation. I concluded that the number of hidden layers in order to accurately fit the data within $1,000$ iterations, is roughly equal to the number of days taught.
+	The number of hidden layers in the network varies based on how many training samples (days) we would like to train the network on, and also on how many days we would like to predict beyond the training samples. While the general rule is to have $x_n \cdot 2$ hidden layers, I evaluated this during several trial and error runs and it did not seem to work well with this application. Even with the momentum learning parameter ($m$) set to a high value, $0.9 < m < 1$, the neural network was not able to accurately fit the data, it only generated an approximate oscillation.
+	
+	The neural network is trained with backpropagation, which is a supervised learning method. The network weights are randomly initialized to values between the range of $[0.25..0.35]$, which was determined to yield the best results after a few trial and error runs. The activation function used with the trainer is sigmoid: $f(x) = \frac{1}{e^{-\alpha \cdot x} + 1}$
+	
+	After some experimentation, I found the number of hidden layers in order to accurately fit the data as a result of $1,000$ iterations of the backpropagation teacher algorithm, to be roughly equal to the size of the training samples.
+
+\section{Experiments}
 
 	\begin{figure}[!htbp]
 		\centering
