@@ -88,10 +88,12 @@
 
                 solution[i] = nn.Compute(test)[0] + min;
 
-                error += Math.Abs(solution[i] - data[inputCount + i]);
+                error += Math.Abs((solution[i] - data[inputCount + i]) / data[inputCount + i]);
 
                 cancelToken.ThrowIfCancellationRequested();
             }
+
+            error = error / (data.Length - inputCount) * 100;
 
             if (predictions.Length != 0)
             {

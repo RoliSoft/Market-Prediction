@@ -474,6 +474,59 @@
             return Tuple.Create(dataStartDate.Value, data);
         }
 
+        /// <summary>
+        /// Calculates the error in percentages between the predicted data and actual data.
+        /// </summary>
+        /// <param name="dataSet"><c>SelectedItem</c> of one of the "Data Set" comboBoxes.</param>
+        /// <param name="start">The starting date.</param>
+        /// <param name="data">The data.</param>
+        /// <returns>MAPE value.</returns>
+        private double CalculateError(object dataSet, DateTime start, IEnumerable<double> data)
+        {
+            var predicted = data.ToArray();
+            List<double> actual;
+
+            var dataSetVal = (Tuple<string, KeyValuePair<string, SortedDictionary<DateTime, decimal>>, string>)dataSet;
+
+            if (dataSetVal.Item3 != null)
+            {
+                var ts = start.AddDays(-60);
+                actual = new List<double>();
+
+                var transformer = (ISeriesTransform)Activator.CreateInstance(Type.GetType(dataSetVal.Item3));
+
+                foreach (var val in dataSetVal.Item2.Value.SkipWhile(x => x.Key < ts))
+                {
+                    transformer.AddIndex(val.Value);
+
+                    if (!transformer.IsReady() || val.Key < start)
+                    {
+                        continue;
+                    }
+
+                    actual.Add((double)transformer.GetValue());
+
+                    if (actual.Count >= predicted.Length)
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                actual = dataSetVal.Item2.Value.SkipWhile(x => x.Key < start).Take(predicted.Length).Select(x => (double)x.Value).ToList();
+            }
+
+            var error = 0.0;
+
+            for (int i = 0; i < Math.Min(actual.Count, predicted.Length); i++)
+            {
+                error += Math.Abs((predicted[i] - actual[i]) / actual[i]);
+            }
+
+            return error / Math.Min(actual.Count, predicted.Length) * 100;
+        }
+
         #endregion
 
         #region Neural Network
@@ -540,13 +593,14 @@
                 return;
             }
 
-            textBoxNeuronLearnError.Text = errorLearn.ToString();
-            //textBoxNeuronPredError.Text  = errorPred.ToString();
+            textBoxNeuronLearnError.Text = errorLearn.ToString("0.0000") + "%";
 
             AddToChart("NN", data.Item1, solution);
 
             if (predCount != 0)
             {
+                textBoxNeuronPredError.Text = CalculateError(comboBoxNeuronDataSet.SelectedItem, data.Item1.AddDays(solution.Length - 1), predictions.Skip(inputCount - 1)).ToString("0.0000") + "%";
+
                 AddToChart("NN (Pred.)", data.Item1.AddDays(solution.Length - 1), predictions.Skip(inputCount - 1));
             }
         }
@@ -570,6 +624,7 @@
                 progressBarNeuronLearn.Value = 0;
                 chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == "NN"));
                 chart.Series.Remove(chart.Series.FirstOrDefault(x => x.Name == "NN (Pred.)"));
+                chart.ResetAutoValues();
             }
             catch { }
         }
@@ -643,14 +698,15 @@
                 return;
             }
 
-            textBoxGeneticLearnError.Text = errorLearn.ToString();
-            //textBoxGeneticPredError.Text  = errorPred.ToString();
+            textBoxGeneticLearnError.Text = errorLearn.ToString("0.0000") + "%";
             textBoxGeneticSolution.Text   = Utils.ResolveChromosome(bestChromosome);
 
             AddToChart("GA", data.Item1.AddDays(inputCount - 1), solution);
 
             if (predCount != 0)
             {
+                textBoxGeneticPredError.Text = CalculateError(comboBoxGeneticDataSet.SelectedItem, data.Item1.AddDays(solution.Length - 1), predictions.Skip(inputCount - 1)).ToString("0.0000") + "%";
+
                 AddToChart("GA (Pred.)", data.Item1.AddDays(inputCount - 1).AddDays(solution.Length - 1), predictions.Skip(inputCount - 1));
             }
         }

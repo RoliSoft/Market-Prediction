@@ -182,11 +182,13 @@
                 }
 
                 solution[j] = PolishExpression.Evaluate(bestChromosome, input);
-
-                error += Math.Abs(solution[j] - data[inputCount + j]);
+                
+                error += Math.Abs((solution[j] - data[inputCount + j]) / data[inputCount + j]);
 
                 cancelToken.ThrowIfCancellationRequested();
             }
+
+            error = error / (data.Length - inputCount) * 100;
 
             if (predictions.Length != 0)
             {
