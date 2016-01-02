@@ -519,7 +519,7 @@
 
             var error = 0.0;
 
-            for (int i = 0; i < Math.Min(actual.Count, predicted.Length); i++)
+            for (int i = 1; i < Math.Min(actual.Count, predicted.Length); i++)
             {
                 error += Math.Abs((predicted[i] - actual[i]) / actual[i]);
             }

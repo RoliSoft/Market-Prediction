@@ -63,6 +63,8 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.groupBoxNeuronParams = new System.Windows.Forms.GroupBox();
+            this.numericUpDownNeuronPredictions = new System.Windows.Forms.NumericUpDown();
+            this.label26 = new System.Windows.Forms.Label();
             this.numericUpDownNeuronSampleOffset = new System.Windows.Forms.NumericUpDown();
             this.label22 = new System.Windows.Forms.Label();
             this.numericUpDownNeuronMomentum = new System.Windows.Forms.NumericUpDown();
@@ -92,6 +94,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxGeneticSolution = new System.Windows.Forms.TextBox();
             this.groupBoxGeneticParams = new System.Windows.Forms.GroupBox();
+            this.numericUpDownGeneticPredictions = new System.Windows.Forms.NumericUpDown();
+            this.label27 = new System.Windows.Forms.Label();
             this.numericUpDownGeneticSampleOffset = new System.Windows.Forms.NumericUpDown();
             this.label21 = new System.Windows.Forms.Label();
             this.numericUpDownGeneticInputs = new System.Windows.Forms.NumericUpDown();
@@ -115,10 +119,6 @@
             this.buttonLearnGenetic = new MarketPrediction.MenuButton();
             this.contextMenuStripGenetic = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.clearToolStripMenuItemGenetic = new System.Windows.Forms.ToolStripMenuItem();
-            this.numericUpDownNeuronPredictions = new System.Windows.Forms.NumericUpDown();
-            this.label26 = new System.Windows.Forms.Label();
-            this.numericUpDownGeneticPredictions = new System.Windows.Forms.NumericUpDown();
-            this.label27 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.panelChart.SuspendLayout();
             this.contextMenuStripChart.SuspendLayout();
@@ -133,6 +133,7 @@
             this.tabPageNeuron.SuspendLayout();
             this.groupBoxNeuronSolution.SuspendLayout();
             this.groupBoxNeuronParams.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronPredictions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronSampleOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronMomentum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronLearnRate)).BeginInit();
@@ -144,14 +145,13 @@
             this.tabPageGenetic.SuspendLayout();
             this.groupBoxGeneticSolution.SuspendLayout();
             this.groupBoxGeneticParams.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticPredictions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticSampleOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticInputs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticSampleCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticPopulation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticIterations)).BeginInit();
             this.contextMenuStripGenetic.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronPredictions)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticPredictions)).BeginInit();
             this.SuspendLayout();
             // 
             // chart
@@ -438,6 +438,11 @@
             this.numericUpDownDataSampleCount.Size = new System.Drawing.Size(71, 20);
             this.numericUpDownDataSampleCount.TabIndex = 26;
             this.numericUpDownDataSampleCount.ThousandsSeparator = true;
+            this.numericUpDownDataSampleCount.Value = new decimal(new int[] {
+            19,
+            0,
+            0,
+            0});
             // 
             // label25
             // 
@@ -549,6 +554,34 @@
             this.groupBoxNeuronParams.TabStop = false;
             this.groupBoxNeuronParams.Text = "Parameters";
             // 
+            // numericUpDownNeuronPredictions
+            // 
+            this.numericUpDownNeuronPredictions.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownNeuronPredictions.Location = new System.Drawing.Point(98, 72);
+            this.numericUpDownNeuronPredictions.Maximum = new decimal(new int[] {
+            0,
+            1,
+            0,
+            0});
+            this.numericUpDownNeuronPredictions.Name = "numericUpDownNeuronPredictions";
+            this.numericUpDownNeuronPredictions.Size = new System.Drawing.Size(184, 20);
+            this.numericUpDownNeuronPredictions.TabIndex = 26;
+            this.numericUpDownNeuronPredictions.ThousandsSeparator = true;
+            this.numericUpDownNeuronPredictions.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(10, 73);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(62, 13);
+            this.label26.TabIndex = 25;
+            this.label26.Text = "Predictions:";
+            // 
             // numericUpDownNeuronSampleOffset
             // 
             this.numericUpDownNeuronSampleOffset.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -657,7 +690,7 @@
             this.numericUpDownNeuronHidden.TabIndex = 18;
             this.numericUpDownNeuronHidden.ThousandsSeparator = true;
             this.numericUpDownNeuronHidden.Value = new decimal(new int[] {
-            2,
+            25,
             0,
             0,
             0});
@@ -736,6 +769,11 @@
             this.numericUpDownNeuronSampleCount.Size = new System.Drawing.Size(71, 20);
             this.numericUpDownNeuronSampleCount.TabIndex = 8;
             this.numericUpDownNeuronSampleCount.ThousandsSeparator = true;
+            this.numericUpDownNeuronSampleCount.Value = new decimal(new int[] {
+            14,
+            0,
+            0,
+            0});
             // 
             // label16
             // 
@@ -931,6 +969,34 @@
             this.groupBoxGeneticParams.TabIndex = 11;
             this.groupBoxGeneticParams.TabStop = false;
             this.groupBoxGeneticParams.Text = "Parameters";
+            // 
+            // numericUpDownGeneticPredictions
+            // 
+            this.numericUpDownGeneticPredictions.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownGeneticPredictions.Location = new System.Drawing.Point(98, 72);
+            this.numericUpDownGeneticPredictions.Maximum = new decimal(new int[] {
+            0,
+            1,
+            0,
+            0});
+            this.numericUpDownGeneticPredictions.Name = "numericUpDownGeneticPredictions";
+            this.numericUpDownGeneticPredictions.Size = new System.Drawing.Size(184, 20);
+            this.numericUpDownGeneticPredictions.TabIndex = 28;
+            this.numericUpDownGeneticPredictions.ThousandsSeparator = true;
+            this.numericUpDownGeneticPredictions.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(10, 73);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(62, 13);
+            this.label27.TabIndex = 27;
+            this.label27.Text = "Predictions:";
             // 
             // numericUpDownGeneticSampleOffset
             // 
@@ -1212,62 +1278,6 @@
             this.clearToolStripMenuItemGenetic.Text = "Clear";
             this.clearToolStripMenuItemGenetic.Click += new System.EventHandler(this.clearToolStripMenuItemGenetic_Click);
             // 
-            // numericUpDownNeuronPredictions
-            // 
-            this.numericUpDownNeuronPredictions.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDownNeuronPredictions.Location = new System.Drawing.Point(98, 72);
-            this.numericUpDownNeuronPredictions.Maximum = new decimal(new int[] {
-            0,
-            1,
-            0,
-            0});
-            this.numericUpDownNeuronPredictions.Name = "numericUpDownNeuronPredictions";
-            this.numericUpDownNeuronPredictions.Size = new System.Drawing.Size(184, 20);
-            this.numericUpDownNeuronPredictions.TabIndex = 26;
-            this.numericUpDownNeuronPredictions.ThousandsSeparator = true;
-            this.numericUpDownNeuronPredictions.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(10, 73);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(62, 13);
-            this.label26.TabIndex = 25;
-            this.label26.Text = "Predictions:";
-            // 
-            // numericUpDownGeneticPredictions
-            // 
-            this.numericUpDownGeneticPredictions.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDownGeneticPredictions.Location = new System.Drawing.Point(98, 72);
-            this.numericUpDownGeneticPredictions.Maximum = new decimal(new int[] {
-            0,
-            1,
-            0,
-            0});
-            this.numericUpDownGeneticPredictions.Name = "numericUpDownGeneticPredictions";
-            this.numericUpDownGeneticPredictions.Size = new System.Drawing.Size(184, 20);
-            this.numericUpDownGeneticPredictions.TabIndex = 28;
-            this.numericUpDownGeneticPredictions.ThousandsSeparator = true;
-            this.numericUpDownGeneticPredictions.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(10, 73);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(62, 13);
-            this.label27.TabIndex = 27;
-            this.label27.Text = "Predictions:";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1300,6 +1310,7 @@
             this.groupBoxNeuronSolution.PerformLayout();
             this.groupBoxNeuronParams.ResumeLayout(false);
             this.groupBoxNeuronParams.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronPredictions)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronSampleOffset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronMomentum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronLearnRate)).EndInit();
@@ -1313,14 +1324,13 @@
             this.groupBoxGeneticSolution.PerformLayout();
             this.groupBoxGeneticParams.ResumeLayout(false);
             this.groupBoxGeneticParams.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticPredictions)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticSampleOffset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticInputs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticSampleCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticPopulation)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticIterations)).EndInit();
             this.contextMenuStripGenetic.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeuronPredictions)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeneticPredictions)).EndInit();
             this.ResumeLayout(false);
 
         }
