@@ -5,7 +5,7 @@
 \usepackage[margin=1in,includefoot]{geometry}
 
 \usepackage{pgfplots}
-\pgfplotsset{width=10cm,compat=1.12}
+\pgfplotsset{width=11cm,compat=1.12}
 \usetikzlibrary{arrows}
 \usepackage{amsmath}
 
@@ -206,20 +206,18 @@
 	
 	After some experimentation, I found the number of hidden layers in order to accurately fit the data as a result of $1,000$ iterations of the backpropagation teacher algorithm, to be an approximation of the size of training samples. As such, the network configuration will vary for each experiment individually.
 
-\section{Experiments}
-\subsection{Error Calculation}
+\section{Usage Intricacies}
+\subsection{Error Calculation} \label{mape}
 
-	I conducted a multitude of experiments in order to try and find a configuration with the lowest learning and prediction error for each common training size and prediction requirement. In order to quantify the error, I had to look up the methods available for determining the accuracy of trend estimation and found a comparison between the common methods in paper \cite{armstrong1992error}.
+	As shown later on, I conducted a multitude of experiments in order to try and find a configuration with the lowest learning and prediction error for each common training size and prediction requirement. However, in order to quantify the error, I had to look up the methods available for determining the accuracy of trend estimation and found a comparison between the common methods in paper \cite{armstrong1992error}.
 	
 	\textit{MAPE} (\textit{Mean Absolute Percentage Error}) ended up as being the winning method, since it has been used in many other papers, such as \cite{majhi2009efficient}, which allows me to have a baseline comparison for my results. \textit{MAPE} is defined as:\\
-	$$ \epsilon = (\frac{1}{n} \sum_{i=1}^{n} \frac{x_i - x_i'}{x_i}) \cdot 100 \label{mape} $$\\
+	$$ \epsilon = (\frac{1}{n} \sum_{i=1}^{n} \frac{x_i - x_i'}{x_i}) \cdot 100 $$\\
 	where $n$ is the number of predictions, $x_i$ is the actual value, and $x_i'$ is the predicted value.
 	
-\subsection{Case Study: 7-day prediction for 30-day EUR/USD data}
+\subsection{Parameter Optimization} \label{paramopt}
 	
-	In this experiment, I focused my efforts on tuning a neural network to predict as accurately as possible a full week's exchange rates in advance for the currency pair EUR/USD.
-	
-	In order to do this, I set up a script to find the best possible parameters for the given dataset by training and evaluating neural networks with varying parameters using the \mintinline{csharp}{MarketPrediction.NeuralNetwork.TrainAndEval()} API. A snippet of this script can be observed in listing \ref{bruteforce}.
+	In order to find the best possible parameters for any given dataset and any requested prediction size, I set up a script to find the most optimal parameters for the given dataset by training and evaluating neural networks with varying parameters using the \mintinline{csharp}{MarketPrediction.NeuralNetwork.TrainAndEval()} API. A snippet of this script can be observed in listing \ref{bruteforce}.
 	
 	\begin{listing}[!htbp]
 		\begin{minted}{csharp}
@@ -242,7 +240,17 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 		\label{bruteforce}
 	\end{listing}
 	
-	Since the aforementioned script can be easily parallelized by asynchronously running one or more of the loops, it is a fast and easy method to find the best configuration for any data set. The error value the search is optimizing for is the equation described in section \ref{mape}.
+\newpage
+	The complexity of finding the most optimal parameters for any given input is:\\
+	$$ \mathcal{O}(\prod_{i=1}^{P_n} \sum_{j=1}^{P_{i,m}} P_{i,j}) $$\\
+	where $P_n$ is the number of parameters being optimized for, $P_{i,m}$ is the number of possible options within that parameter, and $P_{i,j}$ is the number of neural networks that need to be trained in order to determine the error accurately. This number is usually $1$, however for parameters where there are random factors, this number can be higher, and then the error can be the average of all runs with that parameter.
+	
+	Since this optimization problem is composed of a multitude of independent loops, it can easily be parallelized by asynchronously running one or more of the loops. As such, it becomes a fast and easy method to find the best configuration for any data set. The error value the search is optimizing for is the \textit{MAPE} value, as described in section \ref{mape}.
+	
+\section{Experiments}
+\subsection{7-day Prediction for any 30-day EUR/USD Data}
+	
+	In this experiment, I focused my efforts on tuning a neural network to predict as accurately as possible a full week's exchange rates in advance for the currency pair EUR/USD.
 	
 	\begin{figure}[!htbp]
 		\centering
@@ -255,12 +263,12 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 			grid style=dashed,
 			legend entries={Actual Rates,Estimate,Prediction}
 		]
-			\addplot[blue,mark=*]  table {eur_usd_august_30.txt};
-			\addplot[red,mark=*]   table {eur_usd_august_30_neuron.txt};
-			\addplot[green,mark=*] table {eur_usd_august_30_neuron_pred.txt};
+			\addplot[blue,smooth,mark=*]  table {eur_usd_august_30.txt};
+			\addplot[red,smooth,mark=*]   table {eur_usd_august_30_neuron.txt};
+			\addplot[green,smooth,mark=*] table {eur_usd_august_30_neuron_pred.txt};
 		\end{axis}
 		\end{tikzpicture}
-		\caption{EUR/USD Rates for August 2015}
+		\caption{EUR/USD Rates for August 2015 using Neural Networks}
 		\label{eur_usd_august_30_neuron}
 	\end{figure}
 	
@@ -279,38 +287,115 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 			grid style=dashed,
 			legend entries={Actual Rates,Estimate,Prediction}
 		]
-			\addplot[blue,mark=*]  table {eur_usd_august_30.txt};
-			\addplot[red,mark=*]   table {eur_usd_august_30_genetic.txt};
-			\addplot[green,mark=*] table {eur_usd_august_30_genetic_pred.txt};
+			\addplot[blue,smooth,mark=*]  table {eur_usd_august_30.txt};
+			\addplot[red,smooth,mark=*]   table {eur_usd_august_30_genetic.txt};
+			\addplot[green,smooth,mark=*] table {eur_usd_august_30_genetic_pred.txt};
 		\end{axis}
 		\end{tikzpicture}
-		\caption{EUR/USD Rates for August 2015}
+		\caption{EUR/USD Rates for August 2015 using Genetic Algorithms}
 		\label{eur_usd_august_30_genetic}
 	\end{figure}
 	
 	As a comparison, in figure \ref{eur_usd_august_30_genetic}, the same dataset is taught with a genetic algorithm. The algorithm ran for $1,000$ iterations, while having a population size of $100$ and using a selection method which selects the chromosomes with the highest fitness value. The configuration had 1 variable input and 3 constants, as explained in table \ref{geninput}.
-	
-	The output of the genetic algorithm, meaning the fittest chromosome, after $1,000$ iterations is the following equation:\\
-	$$ (b \cdot \frac{b \cdot \frac{c}{b}}{\frac{c \cdot b}{b}}) \cdot \frac{a}{(b \cdot c) \cdot \frac{\frac{c}{d}}{b}} $$\\
-	which can be simplified to:\\
-	$$ \frac{a \cdot b \cdot c}{2} $$\\
-	where variables are as shown in table \ref{geninput}.
-		
+			
 	\begin{table}[!htbp]
 		\centering
-		\begin{tabular}{@{}rcl@{}}
+		\begin{tabular}{@{}lclr@{}}
 			\toprule
-			\multicolumn{1}{c}{\textbf{\$}} & \textbf{Value} & \multicolumn{1}{c}{\textbf{Explanation}} \\ \midrule
-			a & $1.0875$ & variable input 1: index value of current day \\
-			b & $1.0830$ & minimum of training set \\
-			c & $1.0977$ & arithmetic average of training set \\
-			d & $1.1143$ & maximum of training set \\ \bottomrule
+			\textbf{\$} & \textbf{Value} & \multicolumn{1}{c}{\textbf{Explanation}} & \textbf{Type} \\ \midrule
+			a & $1.0875$ & Moving value from set. & Variable \\
+			\midrule
+			b & $1.0830$ & Minimum of the training set. & Constant \\
+			c & $1.0977$ & Arithmetic average of the training set. & Constant \\
+			d & $1.1143$ & Maximum of the training set. & Constant \\ \bottomrule
 		\end{tabular}
 		\caption{Genetic Algorithm Inputs: Variables and Constants}
 		\label{geninput}
 	\end{table}
-		
+	
 	The final fittest chromosome has a mean absolute percentage error of $0.2507\%$ against the training set, and a prediction error of $0.6872\%$ for the next 7 days.
+
+\newpage
+
+	The output of the genetic algorithm, meaning the fittest chromosome, is the following equation:\\
+	$$ (b \cdot \frac{b \cdot \frac{c}{b}}{\frac{c \cdot b}{b}}) \cdot \frac{a}{(b \cdot c) \cdot \frac{\frac{c}{d}}{b}} $$\\
+	which can be simplified to:\\
+	$$ \frac{a \cdot b \cdot c}{2} $$
+	
+\subsection{Prediction Accuracy Across Various Sliding Windows}
+	
+	In this experiment, I set out to measure the accuracy of predictions in regards to the number of days trained and requested for prediction.
+	
+	The foreign exchange data form 2013 to 2015 for the currency pairs EUR/USD, EUR/GBP and EUR/RON were split into 180-day chunks, resulting in a total of 5 subsets per pair. The resulting $15$ subsets were processed as described in section \ref{paramopt} in order to determine the best parameters when training with a training set of size 14, 30, 90 and 180. Errors were calculated, as described in section \ref{mape}, for prediction windows of 1, 2, 3, 5, 7 and 14 days.
+		
+	\begin{figure}[!htbp]
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[
+			xlabel={Number of Days Predicted},
+			ylabel={Mean Absolute Percentage Error},
+			xtick={1,2,3,5,7,14,30},
+			ytick={0.0033,0.0214,0.0630,0.0923,0.2092,0.2217},
+			yticklabel style={
+				/pgf/number format/fixed,
+				/pgf/number format/precision=3
+			},
+			legend pos=north west,
+			ymajorgrids=true,
+			xmajorgrids=true,
+			grid style=dashed
+		]
+			\addplot[blue,smooth,mark=*] table {prediction_slope.txt};
+		\end{axis}
+		\end{tikzpicture}
+		\caption{Average Error Increase per Days Predicted}
+		\label{eur_usd_august_30_genetic}
+	\end{figure}
+	
+	\begin{table}[]
+		\centering
+		\begin{tabular}{@{}cc|cc|c@{}}
+			\toprule
+			\textbf{Days} & \textbf{Predictions} & \textbf{Inputs} & \textbf{Hiddens} & \textbf{MAPE} \\ \midrule
+			14 & 1 & 1 & 23 & 0.0115 \\
+			14 & 2 & 1 & 23 & 0.0174 \\
+			14 & 3 & 1 & 23 & 0.0520 \\
+			14 & 5 & 1 & 24 & 0.0791 \\
+			14 & 7 & 1 & 24 & 0.1108 \\
+			14 & 14 & 1 & 24 & 0.2156 \\ \midrule
+			30 & 1 & 1 & 16 & 0.0006 \\
+			30 & 2 & 1 & 17 & 0.0029 \\
+			30 & 3 & 1 & 17 & 0.0096 \\
+			30 & 5 & 1 & 29 & 0.0981 \\
+			30 & 7 & 2 & 13 & 0.1100 \\
+			30 & 14 & 4 & 3 & 0.4088 \\ \midrule
+			90 & 1 & 2 & 1 & 0.0006 \\
+			90 & 2 & 1 & 26 & 0.0077 \\
+			90 & 3 & 2 & 11 & 0.0198 \\
+			90 & 5 & 2 & 11 & 0.0392 \\
+			90 & 7 & 2 & 11 & 0.0903 \\
+			90 & 14 & 4 & 5 & 0.1732 \\ \midrule
+			180 & 1 & 3 & 1 & 0.0006 \\
+			180 & 2 & 2 & 12 & 0.0020 \\
+			180 & 3 & 2 & 12 & 0.0040 \\
+			180 & 5 & 1 & 28 & 0.0354 \\
+			180 & 7 & 1 & 28 & 0.0579 \\
+			180 & 14 & 1 & 28 & 0.0891 \\
+			180 & 30 & 1 & 29 & 0.2092 \\ \bottomrule
+		\end{tabular}
+		\caption{Best-Performing Neural Configurations Across Various Data Sets}
+		\label{predslope}
+	\end{table}
+	
+\newpage
+\subsection{Comparison of Local Results against Results in Literature}
+	
+	After having definitive results for most data sets, see table \ref{predslope}, I decided to compare my \textit{MAPE} values with those published in relevant research papers.
+	
+	In paper \cite{majhi2009efficient}, various S\&P 500 stock indices are evaluated with various methods. The best result obtained in that paper has a mean absolute percentage error of $0.6747$ when predicting 1 day into the future, as seen in table 2, using \textit{ABFO} (\textit{Adaptive Bacterial Foraging
+	Optimization}). The local mean absolute percentage error obtained in this assignment when predicting 1 day into the future ranges between $0.0006$ to $0.0115$, depending on the size of the training set.
+	
+	In paper \cite{hadavandi2010integration}, IBM, Dell, British Airlines and Ryanair Airlines stocks are being evaluated using several methods, such as stock market forecasting through \textit{HMM}\cite{hassan2005stock} (\textit{Hidden Markov Model}), fusion of \textit{HMM and ANN}\cite{hassan2007fusion} (\textit{Artificial Neural Network}), combination of \textit{HMM and fuzzy logic}\cite{hassan2009combination}, and last but not least, the proposed method within the paper, \textit{CGFS} (\textit{Clustering-Genetic Fuzzy System}). The training set used within consists of 287 data points spreading between 2003 and 2004. The lowest mean absolute percentage error value is $0.5340$ when forecasting a span of 88 days of Dell stocks. The local results presented in table \ref{predslope} do not go as far as 88 days, however the mean absolute percentage error for 30 days is $0.2092$ when trained on a data set consisting of 180 data points. Re-running the algorithm presented in section \ref{paramopt} for a training data set of 287 days of EUR/GBP data and predicting a span of 88 days results in a mean absolute percentage error of $0.7206$.
 	
 \newpage
 \section{Bibliography}
