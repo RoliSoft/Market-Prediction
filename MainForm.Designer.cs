@@ -119,6 +119,7 @@
             this.buttonLearnGenetic = new MarketPrediction.MenuButton();
             this.contextMenuStripGenetic = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.clearToolStripMenuItemGenetic = new System.Windows.Forms.ToolStripMenuItem();
+            this.bruteforceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.panelChart.SuspendLayout();
             this.contextMenuStripChart.SuspendLayout();
@@ -843,14 +844,15 @@
             // contextMenuStripNeuron
             // 
             this.contextMenuStripNeuron.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.bruteforceToolStripMenuItem,
             this.clearToolStripMenuItemNeuron});
             this.contextMenuStripNeuron.Name = "contextMenuStripNeuron";
-            this.contextMenuStripNeuron.Size = new System.Drawing.Size(102, 26);
+            this.contextMenuStripNeuron.Size = new System.Drawing.Size(153, 70);
             // 
             // clearToolStripMenuItemNeuron
             // 
             this.clearToolStripMenuItemNeuron.Name = "clearToolStripMenuItemNeuron";
-            this.clearToolStripMenuItemNeuron.Size = new System.Drawing.Size(101, 22);
+            this.clearToolStripMenuItemNeuron.Size = new System.Drawing.Size(152, 22);
             this.clearToolStripMenuItemNeuron.Text = "Clear";
             this.clearToolStripMenuItemNeuron.Click += new System.EventHandler(this.clearToolStripMenuItemNeuron_Click);
             // 
@@ -1278,6 +1280,13 @@
             this.clearToolStripMenuItemGenetic.Text = "Clear";
             this.clearToolStripMenuItemGenetic.Click += new System.EventHandler(this.clearToolStripMenuItemGenetic_Click);
             // 
+            // bruteforceToolStripMenuItem
+            // 
+            this.bruteforceToolStripMenuItem.Name = "bruteforceToolStripMenuItem";
+            this.bruteforceToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.bruteforceToolStripMenuItem.Text = "Bruteforce";
+            this.bruteforceToolStripMenuItem.Click += new System.EventHandler(this.bruteforceToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1425,6 +1434,7 @@
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.NumericUpDown numericUpDownGeneticPredictions;
         private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.ToolStripMenuItem bruteforceToolStripMenuItem;
     }
 }
 

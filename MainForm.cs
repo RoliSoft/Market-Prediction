@@ -570,12 +570,147 @@
 
             progressBarNeuronLearn.Value = 0;
             progressBarNeuronLearn.Maximum = iterations;
-
+            
             await Task.Run(() =>
                 {
                     try
-                    { 
+                    {
                         trainRes = NeuralNetwork.TrainAndEval(data.Item2, ref solution, ref errorLearn, ref predictions, iterations, inputCount, hiddenCount, learningRate, momentum, sigmoidAlpha, _neuronCts.Token, p => Invoke(new Action<int>(pi => progressBarNeuronLearn.Value = pi), p));
+                    }
+                    catch
+                    {
+                        trainRes = false;
+                    }
+                });
+
+            _neuronCts = null;
+
+            buttonLearnNeuron.Text = "Learn";
+            groupBoxNeuronParams.Enabled = groupBoxNeuronSolution.Enabled = buttonLearnNeuron.Enabled = true;
+
+            if (!trainRes)
+            {
+                return;
+            }
+
+            textBoxNeuronLearnError.Text = errorLearn.ToString("0.0000") + "%";
+
+            AddToChart("NN", data.Item1, solution);
+
+            if (predCount != 0)
+            {
+                textBoxNeuronPredError.Text = CalculateError(comboBoxNeuronDataSet.SelectedItem, data.Item1.AddDays(solution.Length - 1), predictions.Skip(inputCount - 1)).ToString("0.0000") + "%";
+
+                AddToChart("NN (Pred.)", data.Item1.AddDays(solution.Length - 1), predictions.Skip(inputCount - 1));
+            }
+        }
+
+        /// <summary>
+        /// Occurs when the Bruteforce menu item is clicked on the Learn button.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs" /> instance containing the event data.</param>
+        private async void bruteforceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_neuronCts != null)
+            {
+                buttonLearnNeuron.Enabled = false;
+                buttonLearnNeuron.Text = "Stopping";
+
+                _neuronCts.Cancel();
+
+                return;
+            }
+
+            _neuronCts = new CancellationTokenSource();
+            
+            groupBoxNeuronParams.Enabled = groupBoxNeuronSolution.Enabled = false;
+            buttonLearnNeuron.Text = "Stop";
+
+            var learningRate = (double)numericUpDownNeuronLearnRate.Value;
+            var momentum     = (double)numericUpDownNeuronMomentum.Value;
+            var inputCount   = (int)numericUpDownNeuronInputs.Value;
+            var predCount    = (int)numericUpDownNeuronPredictions.Value;
+            var hiddenCount  = (int)numericUpDownNeuronHidden.Value;
+            var iterations   = (int)numericUpDownNeuronIterations.Value;
+            var sigmoidAlpha = 2.0;
+
+            var data = PrepareData(numericUpDownNeuronSampleCount.Value, numericUpDownNeuronSampleOffset.Value, numericUpDownNeuronInputs.Value, comboBoxNeuronDataSet.SelectedItem);
+
+            var solution    = new double[data.Item2.Length - inputCount];
+            var predictions = new double[predCount != 0 ? predCount + inputCount : 0];
+            var errorLearn  = 0.0;
+            var trainRes    = false;
+            var origDataSet = comboBoxNeuronDataSet.SelectedItem;
+
+            var inputMax  = 5;
+            var hiddenMax = 30;
+
+            progressBarNeuronLearn.Value = 0;
+            progressBarNeuronLearn.Maximum = inputMax * hiddenMax;
+
+            await Task.Run(() =>
+                {
+                    var smallestError   = double.MaxValue;
+                    var bestInputCount  = inputCount;
+                    var bestHiddenCount = hiddenCount;
+
+                    for (int i = 1; i < inputMax; i++)
+                    {
+                        solution    = new double[data.Item2.Length - i];
+                        predictions = new double[predCount != 0 ? predCount + i : 0];
+
+                        Invoke(new Action<int>(ic => numericUpDownNeuronInputs.Value = ic), i);
+
+                        for (int j = 1; j < hiddenMax; j++)
+                        {
+                            Invoke(new Action<int, int>((ic, hc) =>
+                                {
+                                    numericUpDownNeuronHidden.Value = hc;
+                                    progressBarNeuronLearn.Value = (ic * hiddenMax) + hc;
+                                }),
+                                i, j);
+
+                            try
+                            {
+                                trainRes = NeuralNetwork.TrainAndEval(data.Item2, ref solution, ref errorLearn, ref predictions, iterations, i, j, learningRate, momentum, sigmoidAlpha, _neuronCts.Token);
+                            }
+                            catch
+                            {
+                                trainRes = false;
+                                continue;
+                            }
+
+                            var err = CalculateError(origDataSet, data.Item1.AddDays(solution.Length - 1), predictions.Skip(inputCount - 1));
+
+                            if (err < smallestError)
+                            {
+                                smallestError   = err;
+                                bestInputCount  = i;
+                                bestHiddenCount = j;
+                            }
+
+                            if (_neuronCts.IsCancellationRequested)
+                            {
+                                trainRes = false;
+                                return;
+                            }
+                        }
+                    }
+
+                    Invoke(new Action<int, int>((ic, hc) =>
+                        {
+                            numericUpDownNeuronInputs.Value = ic;
+                            numericUpDownNeuronHidden.Value = hc;
+                        }),
+                        bestInputCount, bestHiddenCount);
+
+                    solution    = new double[data.Item2.Length - bestInputCount];
+                    predictions = new double[predCount != 0 ? predCount + bestInputCount : 0];
+
+                    try
+                    {
+                        trainRes = NeuralNetwork.TrainAndEval(data.Item2, ref solution, ref errorLearn, ref predictions, iterations, bestInputCount, bestHiddenCount, learningRate, momentum, sigmoidAlpha, _neuronCts.Token);
                     }
                     catch
                     {
