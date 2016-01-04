@@ -261,11 +261,12 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 			legend pos=north west,
 			ymajorgrids=true,
 			grid style=dashed,
+			every axis plot/.append style={line width=1pt},
 			legend entries={Actual Rates,Estimate,Prediction}
 		]
-			\addplot[blue,smooth,mark=*]  table {eur_usd_august_30.txt};
-			\addplot[red,smooth,mark=*]   table {eur_usd_august_30_neuron.txt};
-			\addplot[green,smooth,mark=*] table {eur_usd_august_30_neuron_pred.txt};
+			\addplot[blue,smooth]  table {eur_usd_august_30.txt};
+			\addplot[red,smooth]   table {eur_usd_august_30_neuron.txt};
+			\addplot[green,smooth] table {eur_usd_august_30_neuron_pred.txt};
 		\end{axis}
 		\end{tikzpicture}
 		\caption{EUR/USD Rates for August 2015 using Neural Networks}
@@ -285,11 +286,12 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 			legend pos=north west,
 			ymajorgrids=true,
 			grid style=dashed,
+			every axis plot/.append style={line width=1pt},
 			legend entries={Actual Rates,Estimate,Prediction}
 		]
-			\addplot[blue,smooth,mark=*]  table {eur_usd_august_30.txt};
-			\addplot[red,smooth,mark=*]   table {eur_usd_august_30_genetic.txt};
-			\addplot[green,smooth,mark=*] table {eur_usd_august_30_genetic_pred.txt};
+			\addplot[blue,smooth]  table {eur_usd_august_30.txt};
+			\addplot[red,smooth]   table {eur_usd_august_30_genetic.txt};
+			\addplot[green,smooth] table {eur_usd_august_30_genetic_pred.txt};
 		\end{axis}
 		\end{tikzpicture}
 		\caption{EUR/USD Rates for August 2015 using Genetic Algorithms}
@@ -388,7 +390,41 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 	\end{table}
 	
 \newpage
-\subsection{Comparison of Local Results against Results in Literature}
+\subsection{Prediction Accuracy for Moving Averages}
+
+	Since the actual rates, as fed into the neural network previously, contains extensive oscillations, I decided to try and use a moving average as the input, and try to predict that.
+	
+	In figure \ref{eur_usd_sma_january_90}, 90 days of EUR/USD data is displayed, with a 30-day \textit{SMA} (\textit{Simple Moving Average}) overlapped on top of it. As it can be observed, the moving average line resembles the trend of the actual rates, with the oscillations taken out of it.
+	
+	The configuration of the neural network used to train this dataset had 1 inputs and 24 hidden layers, closely resembling the configuration of previous experiments. However, it should be noted that the \textit{learning momentum} parameter of the back-propagation teacher, while set as close as possible to maximum in previous experiments, this time it was set to $0.0$, as oscillations are not part of this dataset.
+
+	The mean absolute percentage error was $0.0663\%$ for the training set and $0.0985\%$ for the 30 days of predictions. This is a significantly lower error value than what is presented in table \ref{predslope}, however those are actual index predictions, not moving average estimations.
+
+	This is not a useless feat, however. Most technical indicators, such as \textit{RSI} and \textit{MACD} do use moving averages such as \textit{SMA} or \textit{EMA} as their basis, so accurate estimation of the moving average lines can be an important factor in larger decision-maker systems.
+
+	\begin{figure}[!htbp]
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[
+			xlabel={Days},
+			ylabel={Index},
+			legend pos=north west,
+			ymajorgrids=true,
+			grid style=dashed,
+			every axis plot/.append style={line width=1pt},
+			legend entries={Actual Rates,Moving Average,Estimate,Prediction}
+		]
+			\addplot[blue,smooth]  table {eur_usd_january_90.txt};
+			\addplot[green,smooth] table {eur_usd_sma_january_90.txt};
+			\addplot[red,smooth]   table {eur_usd_sma_january_90_neuron.txt};
+			\addplot[brown,smooth] table {eur_usd_sma_january_90_neuron_pred.txt};
+		\end{axis}
+		\end{tikzpicture}
+		\caption{SMA of EUR/USD Rates for January 2014 using Neural Networks}
+		\label{eur_usd_sma_january_90}
+	\end{figure}
+
+\subsection{Comparison of Local Results against Results in Literature} \label{comp}
 	
 	After having definitive results for most data sets, see table \ref{predslope}, I decided to compare my \textit{MAPE} values with those published in relevant research papers.
 	
@@ -402,7 +438,7 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 
 	\begingroup
 	\renewcommand{\section}[2]{}
-		\bibliography{report} 
+		\bibliography{report}
 		\bibliographystyle{ieeetr}
 	\endgroup
 
