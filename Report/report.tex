@@ -76,7 +76,7 @@
 	\endgroup
 
 \newpage
-\section{Introduction}
+\section{Introduction} \label{intro}
 
 	The purpose of this classroom assignment is to use neural networks in order to predict stock market or currency fluctuations. There are many ways to tackle this time-series prediction problem, each of them having their own pros and cons:
 	
@@ -248,7 +248,7 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 	Since this optimization problem is composed of a multitude of independent loops, it can easily be parallelized by asynchronously running one or more of the loops. As such, it becomes a fast and easy method to find the best configuration for any data set. The error value the search is optimizing for is the \textit{MAPE} value, as described in section \ref{mape}.
 	
 \section{Experiments}
-\subsection{7-day Prediction for any 30-day EUR/USD Data}
+\subsection{7-day Prediction for any 30-day EUR/USD Data} \label{pred730nn}
 	
 	In this experiment, I focused my efforts on tuning a neural network to predict as accurately as possible a full week's exchange rates in advance for the currency pair EUR/USD.
 	
@@ -351,7 +351,7 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 		\end{axis}
 		\end{tikzpicture}
 		\caption{Average Error Increase per Days Predicted}
-		\label{eur_usd_august_30_genetic}
+		\label{prediction_slope}
 	\end{figure}
 	
 	\begin{table}[]
@@ -424,7 +424,92 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 		\label{eur_usd_sma_january_90}
 	\end{figure}
 
-\subsection{Comparison of Local Results against Results in Literature} \label{comp}
+\subsection{Technical Indicators via Genetic Algorithms}
+\subsubsection{Relative Strength Index}
+
+	\textit{RSI}\cite{wilder1978new} (\textit{Relative Strength Index}) is a technical momentum indicator, which indicates overselling and overbuying by comparing the recent gains and losses averages. In order to calculate it, two 15 or 30-day moving averages are required to track gains and losses:\\
+	$$ RSI = 100 - \frac{100}{1 + \frac{EMA_{gains}}{EMA_{losses}}} $$
+
+	If the RSI approaches 30\%, the asset is being oversold and therefore its price is approaching its peak. On the other hand, if the RSI approaches 70\%, the asset is overvalued, and therefore its price is bound to drop.
+
+	For the results shown in figure \ref{xbt_usd_rsi_february_90}, the mean absolute percentage error was $5.6955\%$ for the training set and $13.4531\%$ for the 30 days of predictions. The parameters and input variables were set-up the same as described in section \ref{pred730nn}. The equation of the final fittest chromosome was:\\
+	$$ \frac{5 \cdot d^2}{a^3} + a + \frac{1}{b} $$
+	
+	\begin{figure}[!htbp]
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[
+			xlabel={Days},
+			ylabel={Indicator},
+			legend pos=north east,
+			ymajorgrids=true,
+			grid style=dashed,
+			every axis plot/.append style={line width=1pt},
+			legend entries={Indicator,Estimate,Prediction}
+		]
+			\addplot[blue,smooth]  table {xbt_usd_rsi_february_90.txt};
+			\addplot[green,smooth] table {xbt_usd_rsi_february_90_genetic.txt};
+			\addplot[red,smooth]   table {xbt_usd_rsi_february_90_genetic_pred.txt};
+			
+			\addplot[gray,dashed,line legend,sharp plot,update limits=false]
+				coordinates {(-10,65) (100,65)}
+				node[above] at (45,65) {Overvalued};
+			\addplot[gray,dashed,line legend,sharp plot,update limits=false]
+				coordinates {(-10,35) (100,35)}
+				node[above] at (20,35) {Oversold};
+		\end{axis}
+		\end{tikzpicture}
+		\caption{RSI of XBT/USD Rates for February 2015 using Genetic Algorithms}
+		\label{xbt_usd_rsi_february_90}
+	\end{figure}
+
+\subsubsection{Moving Average Convergence/Divergence Oscillator}
+
+	\textit{MACD}\cite{appel1985moving} (\textit{Moving Average Convergence/Divergence}) is another industry-standard technical indicator. This indicator can be computer by subtracting the shorter moving average line (e.g. 12-day \textit{EMA}) from the longer moving average line (e.g. 26-day \textit{EMA}) thus revealing the trend following tendencies:\\
+	$$ MACD = EMA_{short} - EMA_{long} $$
+
+	The \textit{MACD} line is fluctuates around the zero line, however the same information is conveyed in related indicators\cite{appel2011technical}, such as \textit{PPO} (\textit{Price Percentage Oscillator}) and \textit{DPO} (\textit{Detreneded Price Oscillator}) in a percentage form. For the purposes of this experiment, only \textit{MACD} will be demonstrated, since \textit{PPO} is just scaled to a different range, and \textit{DPO} is just delayed for detrending purposes.
+
+	For the results shown in figure \ref{eur_gbp_macd_december_30}, the mean absolute percentage error was $8.1986\%$ for the training set and $6.2930\%$ for the 30 days of predictions. The parameters and input variables were set-up the same as in the previous section. The fittest chromosome was:\\
+	$$ 7a (3a - b) + (3a + d)^2 + a - b^2 - 2d $$
+
+	\begin{figure}[!htbp]
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[
+			xlabel={Days},
+			ylabel={Indicator},
+			legend pos=north east,
+			ymajorgrids=true,
+			grid style=dashed,
+			every axis plot/.append style={line width=1pt},
+			legend entries={Indicator,Estimate,Prediction}
+		]
+			\addplot[blue,smooth]  table {eur_gbp_macd_december_30.txt};
+			\addplot[green,smooth] table {eur_gbp_macd_december_30_genetic.txt};
+			\addplot[red,smooth]   table {eur_gbp_macd_december_30_genetic_pred.txt};
+			
+			\addplot[gray,dashed,line legend,sharp plot,update limits=false]
+				coordinates {(8.3,0.00038) (8.3,-0.00308)};
+			\addplot[gray,dashed,line legend,sharp plot,update limits=false]
+				coordinates {(10,0.00038) (10,-0.00308)};
+			\addplot[gray,dashed,line legend,sharp plot,update limits=false]
+				coordinates {(12.7,0.00038) (12.7,-0.00308)};
+			\addplot[gray,dashed,line legend,sharp plot,update limits=false]
+				coordinates {(19.5,0.00038) (19.5,-0.00308)};
+			\addplot[gray,dashed,line legend,sharp plot,update limits=false]
+				coordinates {(26,0.00038) (26,-0.00308)};
+			\addplot[gray,dashed,line legend,sharp plot,update limits=false]
+				coordinates {(30,0.00038) (30,-0.00308)};
+			\addplot[gray,dashed,line legend,sharp plot,update limits=false]
+				coordinates {(36,0.00038) (36,-0.00308)};
+		\end{axis}
+		\end{tikzpicture}
+		\caption{MACD of EUR/GBP Rates for December 2013 using Genetic Algorithms}
+		\label{eur_gbp_macd_december_30}
+	\end{figure}
+
+\section{Comparison of Local Results against Literature} \label{comp}
 	
 	After having definitive results for most data sets, see table \ref{predslope}, I decided to compare my \textit{MAPE} values with those published in relevant research papers.
 	
@@ -432,7 +517,13 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 	Optimization}). The local mean absolute percentage error obtained in this assignment when predicting 1 day into the future ranges between $0.0006$ to $0.0115$, depending on the size of the training set.
 	
 	In paper \cite{hadavandi2010integration}, IBM, Dell, British Airlines and Ryanair Airlines stocks are being evaluated using several methods, such as stock market forecasting through \textit{HMM}\cite{hassan2005stock} (\textit{Hidden Markov Model}), fusion of \textit{HMM and ANN}\cite{hassan2007fusion} (\textit{Artificial Neural Network}), combination of \textit{HMM and fuzzy logic}\cite{hassan2009combination}, and last but not least, the proposed method within the paper, \textit{CGFS} (\textit{Clustering-Genetic Fuzzy System}). The training set used within consists of 287 data points spreading between 2003 and 2004. The lowest mean absolute percentage error value is $0.5340$ when forecasting a span of 88 days of Dell stocks. The local results presented in table \ref{predslope} do not go as far as 88 days, however the mean absolute percentage error for 30 days is $0.2092$ when trained on a data set consisting of 180 data points. Re-running the algorithm presented in section \ref{paramopt} for a training data set of 287 days of EUR/GBP data and predicting a span of 88 days results in a mean absolute percentage error of $0.7206$.
+
+\section{Future Work}
+
+	As noted in section \ref{intro}, one of the main challenges of prediction is the fact that many outside factors may disrupt the natural oscillation of a stock or foreign exchange rate. Further avenues that can be explored are, similar to what paper \cite{zhai2007combining} experimented with, the correlation of news events with the data points.
 	
+	For example, the news headlines can be fetched from reputable sources for a given stock's parent company or a currency's central bank (e.g. \textit{ECB} for \textit{EUR}). The news snippets can then be individually analyzed using entity-oriented sentiment analysis in order to determine whether the observed body has had a positive or negative impact described in the news article.
+
 \newpage
 \section{Bibliography}
 
