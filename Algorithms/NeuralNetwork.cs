@@ -13,6 +13,25 @@
     /// </summary>
     public static class NeuralNetwork
     {
+        public class HyperbolicTangentFunction : IActivationFunction
+        {
+            public double Function(double x)
+            {
+                return Math.Tanh(x);
+            }
+            
+            public double Derivative(double x)
+            {
+                return Derivative2(Function(x));
+            }
+            
+            public double Derivative2(double y)
+            {
+                //return (1 + y) * (1 - y);
+                return Math.Pow(2.0 / (Math.Pow(Math.E, y) + Math.Pow(Math.E, -y)), 2);
+            }
+        }
+
         /// <summary>
         /// Trains and evaluates a neural network with the specified parameters.
         /// </summary>
@@ -55,7 +74,7 @@
 
             Neuron.RandRange = new Range(0.3f, 0.3f);
 
-            var nn = new ActivationNetwork(new BipolarSigmoidFunction(sigmoidAlpha), inputCount, hiddenCount, 1);
+            var nn = new ActivationNetwork(new HyperbolicTangentFunction(), inputCount, hiddenCount, 1);
             var bp = new BackPropagationLearning(nn)
                 {
                     LearningRate = learningRate,
