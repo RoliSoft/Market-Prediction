@@ -640,10 +640,10 @@
             var origDataSet = comboBoxNeuronDataSet.SelectedItem;
 
             var inputStart = 3;
-            var inputMax   = 10;
+            var inputMax   = 7;
             var hiddenMax  = 15;
-            var momentums  = new[] { 0, /*0.01,*/ 0.05, /*0.1, 0.25,*/ 0.5, /*0.75, 0.8,*/ 0.988 };
-            var learnRates = new[] { /*0.01,*/ 0.05, /*0.1, 0.25,*/ 0.5, /*0.75, 0.8,*/ 0.988 };
+            var momentums  = new[] { 0, 0.05, 0.5, 0.988 };
+            var learnRates = new[] { 0.05, 0.5, 1 };
 
             progressBarNeuronLearn.Value = 0;
             progressBarNeuronLearn.Maximum = (inputMax - inputStart) * hiddenMax * momentums.Length * learnRates.Length;
@@ -725,7 +725,7 @@
 
                     try
                     {
-                        trainRes = NeuralNetwork.TrainAndEval(data.Item2, ref solution, ref errorLearn, ref predictions, iterations, bestInputCount, bestHiddenCount, learnRates[bestLearnRate], momentums[bestMomentum], sigmoidAlpha, _neuronCts.Token);
+                        trainRes = NeuralNetwork.TrainAndEval(data.Item2, ref solution, ref errorLearn, ref predictions, iterations, bestInputCount, bestHiddenCount, learnRates[bestLearnRate], momentums[bestMomentum], _neuronCts.Token);
                     }
                     catch
                     {

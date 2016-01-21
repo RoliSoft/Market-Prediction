@@ -192,13 +192,29 @@
 			\node at (0.5,0.5) {$w_2$};
 			\node at (0.5,-1) {$w_3$};
 			\node at (3,0.5) {$y_1$};
-			\node at (-2,0.5) {$x_1$};
+			\node at (-2,0.5) {$x_2$};
+			\draw  (-2.5,1.5) ellipse (0.5 and 0.5);
+			\draw  (-2.5,-1.5) ellipse (0.5 and 0.5);
+			\node (v13) at (-3,1.5) {};
+			\node (v15) at (-2,1.5) {};
+			\node (v14) at (-3,-1.5) {};
+			\node (v16) at (-2,-1.5) {};
+			\node at (-2,2) {$x_1$};
+			\node at (-2,-1) {$x_3$};
+			\draw [es] (v9) edge (v13);
+			\draw [es] (v9) edge (v14);
+			\draw [es] (v15) edge (v2);
+			\draw [es] (v15) edge (v3);
+			\draw [es] (v15) edge (v4);
+			\draw [es] (v16) edge (v4);
+			\draw [es] (v16) edge (v3);
+			\draw [es] (v16) edge (v2);
 		\end{tikzpicture}
 		\caption{Structure of the Neural Network}
 		\label{neurnet}
 	\end{figure}
 
-	The neural network shown in figure \ref{neurnet} is a multilayer perceptron network, whose purpose generally is to map a set of inputs onto a set of outputs, as such its application is popular for solving time-series prediction problems. It has a single input, $x_1$, which is the index of the stock or currency for that day. The output of the network, $y_1$, is the predicted value for the \textit{next} day.
+	The neural network shown in figure \ref{neurnet} is a multilayer perceptron network, whose purpose generally is to map a set of inputs onto a set of outputs, as such its application is popular for solving time-series prediction problems. It has a variable number of inputs, $x_1$ through $x_n$, which are the indices of the stock or currency for those days. The output of the network, $y_1$, is the predicted value for the \textit{next} day.
 	
 	The number of hidden layers in the network varies based on how many training samples (days) we would like to train the network on, and also on how many days we would like to predict beyond the training samples. While the general rule is to have $x_n \cdot 2$ hidden layers, I evaluated this during several trial and error runs and it did not seem to work well with this application. Even with the momentum learning parameter ($m$) set to a high value, $0.9 < m < 1$, the neural network was not able to accurately fit the data, it only generated an approximate oscillation.
 	
@@ -212,7 +228,7 @@
 	As shown later on, I conducted a multitude of experiments in order to try and find a configuration with the lowest learning and prediction error for each common training size and prediction requirement. However, in order to quantify the error, I had to look up the methods available for determining the accuracy of trend estimation and found a comparison between the common methods in paper \cite{armstrong1992error}.
 	
 	\textit{MAPE} (\textit{Mean Absolute Percentage Error}) ended up as being the winning method, since it has been used in many other papers, such as \cite{majhi2009efficient}, which allows me to have a baseline comparison for my results. \textit{MAPE} is defined as:\\
-	$$ \epsilon = (\frac{1}{n} \sum_{i=1}^{n} \frac{x_i - x_i'}{x_i}) \cdot 100 $$\\
+	$$ \epsilon = (\frac{1}{n} \sum_{i=1}^{n} \frac{| x_i - x_i' |}{x_i}) \cdot 100 $$\\
 	where $n$ is the number of predictions, $x_i$ is the actual value, and $x_i'$ is the predicted value.
 	
 \subsection{Parameter Optimization} \label{paramopt}
@@ -299,7 +315,7 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 	\end{figure}
 	
 	As a comparison, in figure \ref{eur_usd_august_30_genetic}, the same dataset is taught with a genetic algorithm. The algorithm ran for $10,000$ iterations, while having a population size of $100$ and using a selection method which selects the chromosomes with the highest fitness value. The configuration had 10 variable inputs and 3 constants, as explained in table \ref{geninput}.
-			
+
 	\begin{table}[!htbp]
 		\centering
 		\begin{tabular}{@{}lclr@{}}
@@ -328,7 +344,7 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 	
 	In this experiment, I set out to measure the accuracy of predictions in regards to the number of days trained and requested for prediction.
 	
-	The foreign exchange data form 2013 to 2015 for the currency pairs EUR/USD, EUR/GBP and EUR/RON were split into 180-day chunks, resulting in a total of 5 subsets per pair. The resulting $15$ subsets were processed as described in section \ref{paramopt} in order to determine the best parameters when training with a training set of size 14, 30, 90 and 180. Errors were calculated, as described in section \ref{mape}, for prediction windows of 1, 2, 3, 5, 7 and 14 days.
+	The foreign exchange data form 2013 to 2015 for the currency pairs EUR/USD, EUR/GBP and EUR/RON were split into 180-day chunks, resulting in a total of 5 subsets per pair. The resulting $15$ subsets were processed as described in section \ref{paramopt} in order to determine the best parameters when training with a training set of size 14, 30, 90 and 180. Errors were calculated, as described in section \ref{mape}, for prediction windows of 1, 5, 7, 14 and 30 days.
 		
 	\begin{figure}[!htbp]
 		\centering
@@ -336,8 +352,8 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 		\begin{axis}[
 			xlabel={Number of Days Predicted},
 			ylabel={Mean Absolute Percentage Error},
-			xtick={1,2,3,5,7,14,30},
-			ytick={0.0033,0.0214,0.0630,0.0923,0.2092,0.2217},
+			xtick={1,5,7,14,30},
+			ytick={0.0133,0.1022,0.1530,0.2106,0.9826},
 			yticklabel style={
 				/pgf/number format/fixed,
 				/pgf/number format/precision=3
@@ -392,7 +408,7 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 	
 	In figure \ref{eur_usd_sma_january_90}, 90 days of EUR/USD data is displayed, with a 30-day \textit{SMA} (\textit{Simple Moving Average}) overlapped on top of it. As it can be observed, the moving average line resembles the trend of the actual rates, with the oscillations taken out of it.
 	
-	The configuration of the neural network used to train this dataset had 1 inputs and 24 hidden layers, closely resembling the configuration of previous experiments. However, it should be noted that the \textit{learning momentum} parameter of the back-propagation teacher, while set as close as possible to maximum in previous experiments, this time it was set to $0.0$, as oscillations are not part of this dataset.
+	The configuration of the neural network used to train this dataset had 3 inputs and 12 hidden layers, closely resembling the configuration of previous experiments. However, it should be noted that the \textit{learning momentum} parameter of the back-propagation teacher, while set as close as possible to maximum in previous experiments, this time it was set to $0.0$, as oscillations are not part of this dataset.
 
 	The mean absolute percentage error was $0.0663\%$ for the training set and $0.0985\%$ for the 30 days of predictions. This is a significantly lower error value than what is presented in table \ref{predslope}, however those are actual index predictions, not moving average estimations.
 
@@ -510,9 +526,9 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 	After having definitive results for most data sets, see table \ref{predslope}, I decided to compare my \textit{MAPE} values with those published in relevant research papers.
 	
 	In paper \cite{majhi2009efficient}, various S\&P 500 stock indices are evaluated with various methods. The best result obtained in that paper has a mean absolute percentage error of $0.6747$ when predicting 1 day into the future, as seen in table 2, using \textit{ABFO} (\textit{Adaptive Bacterial Foraging
-	Optimization}). The local mean absolute percentage error obtained in this assignment when predicting 1 day into the future ranges between $0.0006$ to $0.0115$, depending on the size of the training set.
+	Optimization}). The local mean absolute percentage error obtained in this assignment when predicting 1 day into the future ranges between $0.0133$ to $0.0540$, depending on the size of the training set.
 	
-	In paper \cite{hadavandi2010integration}, IBM, Dell, British Airlines and Ryanair Airlines stocks are being evaluated using several methods, such as stock market forecasting through \textit{HMM}\cite{hassan2005stock} (\textit{Hidden Markov Model}), fusion of \textit{HMM and ANN}\cite{hassan2007fusion} (\textit{Artificial Neural Network}), combination of \textit{HMM and fuzzy logic}\cite{hassan2009combination}, and last but not least, the proposed method within the paper, \textit{CGFS} (\textit{Clustering-Genetic Fuzzy System}). The training set used within consists of 287 data points spreading between 2003 and 2004. The lowest mean absolute percentage error value is $0.5340$ when forecasting a span of 88 days of Dell stocks. The local results presented in table \ref{predslope} do not go as far as 88 days, however the mean absolute percentage error for 30 days is $0.2092$ when trained on a data set consisting of 180 data points. Re-running the algorithm presented in section \ref{paramopt} for a training data set of 287 days of EUR/GBP data and predicting a span of 88 days results in a mean absolute percentage error of $0.7206$.
+	In paper \cite{hadavandi2010integration}, IBM, Dell, British Airlines and Ryanair Airlines stocks are being evaluated using several methods, such as stock market forecasting through \textit{HMM}\cite{hassan2005stock} (\textit{Hidden Markov Model}), fusion of \textit{HMM and ANN}\cite{hassan2007fusion} (\textit{Artificial Neural Network}), combination of \textit{HMM and fuzzy logic}\cite{hassan2009combination}, and last but not least, the proposed method within the paper, \textit{CGFS} (\textit{Clustering-Genetic Fuzzy System}). The training set used within consists of 287 data points spreading between 2003 and 2004. The lowest mean absolute percentage error value is $0.5340$ when forecasting a span of 88 days of Dell stocks. The local results presented in table \ref{predslope} do not go as far as 88 days, however the mean absolute percentage error for 30 days is $0.9826$ when trained on a data set consisting of 180 data points. Re-running the algorithm presented in section \ref{paramopt} for a training data set of 287 days of EUR/GBP data and predicting a span of 88 days results in a mean absolute percentage error of $0.7206$.
 
 \section{Future Work}
 
