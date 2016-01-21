@@ -273,9 +273,9 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 		\label{eur_usd_august_30_neuron}
 	\end{figure}
 	
-	The network shown in figure \ref{eur_usd_august_30_neuron} was trained for $1,000$ iterations, with a \textit{learning rate} of $0.05$ and a \textit{momentum learning coefficient} of $0.988$. It has $1$ input and $30$ hidden layers.
+	The network shown in figure \ref{eur_usd_august_30_neuron} was trained for $1,000$ iterations, with a \textit{learning rate} of $0.05$ and a \textit{momentum learning coefficient} of $0$. It has $3$ inputs and $8$ hidden layers.
 	
-	Its mean absolute percentage error for the training set is $0.2682\%$, while the prediction error for the next 7 days is $0.7129\%$.
+	Its mean absolute percentage error for the training set is $0.4825\%$, while the prediction error for the next 7 days is $0.2790\%$.
 	
 	\begin{figure}[!htbp]
 		\centering
@@ -298,31 +298,31 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 		\label{eur_usd_august_30_genetic}
 	\end{figure}
 	
-	As a comparison, in figure \ref{eur_usd_august_30_genetic}, the same dataset is taught with a genetic algorithm. The algorithm ran for $1,000$ iterations, while having a population size of $100$ and using a selection method which selects the chromosomes with the highest fitness value. The configuration had 1 variable input and 3 constants, as explained in table \ref{geninput}.
+	As a comparison, in figure \ref{eur_usd_august_30_genetic}, the same dataset is taught with a genetic algorithm. The algorithm ran for $10,000$ iterations, while having a population size of $100$ and using a selection method which selects the chromosomes with the highest fitness value. The configuration had 10 variable inputs and 3 constants, as explained in table \ref{geninput}.
 			
 	\begin{table}[!htbp]
 		\centering
 		\begin{tabular}{@{}lclr@{}}
 			\toprule
 			\textbf{\$} & \textbf{Value} & \multicolumn{1}{c}{\textbf{Explanation}} & \textbf{Type} \\ \midrule
-			a & $1.0875$ & Moving value from set. & Variable \\
+			a..j & $1.0875$ & Moving values from set. & Variable \\
 			\midrule
-			b & $1.0830$ & Minimum of the training set. & Constant \\
-			c & $1.0977$ & Arithmetic average of the training set. & Constant \\
-			d & $1.1143$ & Maximum of the training set. & Constant \\ \bottomrule
+			k & $1.0830$ & Minimum of the training set. & Constant \\
+			l & $1.0977$ & Arithmetic average of the training set. & Constant \\
+			m & $1.1143$ & Maximum of the training set. & Constant \\ \bottomrule
 		\end{tabular}
 		\caption{Genetic Algorithm Inputs: Variables and Constants}
 		\label{geninput}
 	\end{table}
 	
-	The final fittest chromosome has a mean absolute percentage error of $0.2507\%$ against the training set, and a prediction error of $0.6872\%$ for the next 7 days.
+	The final fittest chromosome has a mean absolute percentage error of $0.1821\%$ against the training set, and a prediction error of $0.1415\%$ for the next 7 days.
 
 \newpage
 
 	The output of the genetic algorithm, meaning the fittest chromosome, is the following equation:\\
-	$$ (b \cdot \frac{b \cdot \frac{c}{b}}{\frac{c \cdot b}{b}}) \cdot \frac{a}{(b \cdot c) \cdot \frac{\frac{c}{d}}{b}} $$\\
+	$$ \frac{a \cdot d + b \cdot d \cdot g \cdot g - b \cdot k + d \cdot f \cdot g \cdot g - f \cdot k}{d} $$\\
 	which can be simplified to:\\
-	$$ \frac{a \cdot b \cdot c}{2} $$
+	$$ a + (b + f) \cdot (g^2 - \frac{k}{d}) $$
 	
 \subsection{Prediction Accuracy Across Various Sliding Windows}
 	
@@ -353,42 +353,38 @@ for (int inputLayers = 1; inputLayers < min(10, dataSetSize); inputLayers++) {
 		\caption{Average Error Increase per Days Predicted}
 		\label{prediction_slope}
 	\end{figure}
-	
+
+\clearpage
+\newpage
+
 	\begin{table}[]
 		\centering
-		\begin{tabular}{@{}cc|cc|c@{}}
+		\begin{tabular}{@{}cc|cccc|c@{}}
 			\toprule
-			\textbf{Days} & \textbf{Predictions} & \textbf{Inputs} & \textbf{Hiddens} & \textbf{MAPE} \\ \midrule
-			14 & 1 & 1 & 23 & 0.0115 \\
-			14 & 2 & 1 & 23 & 0.0174 \\
-			14 & 3 & 1 & 23 & 0.0520 \\
-			14 & 5 & 1 & 24 & 0.0791 \\
-			14 & 7 & 1 & 24 & 0.1108 \\
-			14 & 14 & 1 & 24 & 0.2156 \\ \midrule
-			30 & 1 & 1 & 16 & 0.0006 \\
-			30 & 2 & 1 & 17 & 0.0029 \\
-			30 & 3 & 1 & 17 & 0.0096 \\
-			30 & 5 & 1 & 29 & 0.0981 \\
-			30 & 7 & 2 & 13 & 0.1100 \\
-			30 & 14 & 4 & 3 & 0.4088 \\ \midrule
-			90 & 1 & 2 & 1 & 0.0006 \\
-			90 & 2 & 1 & 26 & 0.0077 \\
-			90 & 3 & 2 & 11 & 0.0198 \\
-			90 & 5 & 2 & 11 & 0.0392 \\
-			90 & 7 & 2 & 11 & 0.0903 \\
-			90 & 14 & 4 & 5 & 0.1732 \\ \midrule
-			180 & 1 & 3 & 1 & 0.0006 \\
-			180 & 2 & 2 & 12 & 0.0020 \\
-			180 & 3 & 2 & 12 & 0.0040 \\
-			180 & 5 & 1 & 28 & 0.0354 \\
-			180 & 7 & 1 & 28 & 0.0579 \\
-			180 & 14 & 1 & 28 & 0.0891 \\
-			180 & 30 & 1 & 29 & 0.2092 \\ \bottomrule
+			{\fontseries{b}\selectfont Days} & {\fontseries{b}\selectfont Predictions} & {\fontseries{b}\selectfont Inputs} & {\fontseries{b}\selectfont Hiddens} & {\fontseries{b}\selectfont Learn Rate} & {\fontseries{b}\selectfont Momentum} & {\fontseries{b}\selectfont MAPE} \\ \midrule
+			14 & 1 & 3 & 5 & 0.05 & 0.05 & 0.0133 \\
+			14 & 5 & 3 & 8 & 0.5 & 0.5 & 0.1654 \\
+			14 & 7 & 3 & 5 & 0.05 & 0.05 & 0.2804 \\
+			14 & 14 & 3 & 5 & 0.05 & 0.05 & 0.3006 \\ \midrule
+			30 & 1 & 3 & 6 & 0.05 & 0.05 & 0.0128 \\
+			30 & 5 & 3 & 2 & 1 & 0.988 & 0.1475 \\
+			30 & 7 & 3 & 8 & 0.05 & 0 & 0.2790 \\
+			30 & 14 & 3 & 9 & 0.05 & 0.988 & 0.4808 \\ \midrule
+			90 & 1 & 3 & 4 & 1 & 0.988 & 0.0175 \\
+			90 & 5 & 3 & 4 & 1 & 0.988 & 0.1022 \\
+			90 & 7 & 3 & 4 & 1 & 0.988 & 0.1530 \\
+			90 & 14 & 4 & 6 & 1 & 0.988 & 0.2106 \\ \midrule
+			180 & 1 & 4 & 6 & 0.05 & 0.988 & 0.0540 \\
+			180 & 5 & 3 & 7 & 0.05 & 0.988 & 0.4458 \\
+			180 & 7 & 3 & 7 & 0.05 & 0.988 & 0.6074 \\
+			180 & 14 & 3 & 7 & 0.05 & 0.988 & 0.7265 \\
+			180 & 30 & 5 & 3 & 0.05 & 0.988 & 0.9826 \\ \bottomrule
 		\end{tabular}
 		\caption{Best-Performing Neural Configurations Across Various Data Sets}
 		\label{predslope}
 	\end{table}
 	
+\clearpage
 \newpage
 \subsection{Prediction Accuracy for Moving Averages}
 
