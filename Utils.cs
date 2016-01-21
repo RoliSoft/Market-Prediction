@@ -62,7 +62,7 @@
         /// <returns>Scaled value.</returns>
         public static double Scale(double value, double min, double max, double newMin = 0, double newMax = 1)
         {
-            return (value - min) * (newMax - newMin) / (max - min) + newMin;
+            return value - min;//(value - min) * (newMax - newMin) / (max - min) + newMin;
         }
 
         /// <summary>
@@ -76,7 +76,7 @@
         /// <returns>Scaled value.</returns>
         public static double ScaleBack(double value, double min, double max, double newMin = 0, double newMax = 1)
         {
-            return value / ((newMax - newMin) / (max - min) + newMin) + min;
+            return value + min;//value / ((newMax - newMin) / (max - min) + newMin) + min;
         }
     }
 }

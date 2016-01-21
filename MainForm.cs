@@ -559,7 +559,6 @@
             var predCount    = (int)numericUpDownNeuronPredictions.Value;
             var hiddenCount  = (int)numericUpDownNeuronHidden.Value;
             var iterations   = (int)numericUpDownNeuronIterations.Value;
-            var sigmoidAlpha = 2.0;
 
             var data = PrepareData(numericUpDownNeuronSampleCount.Value, numericUpDownNeuronSampleOffset.Value, numericUpDownNeuronInputs.Value, comboBoxNeuronDataSet.SelectedItem);
 
@@ -575,7 +574,7 @@
                 {
                     try
                     {
-                        trainRes = NeuralNetwork.TrainAndEval(data.Item2, ref solution, ref errorLearn, ref predictions, iterations, inputCount, hiddenCount, learningRate, momentum, sigmoidAlpha, _neuronCts.Token, p => Invoke(new Action<int>(pi => progressBarNeuronLearn.Value = pi), p));
+                        trainRes = NeuralNetwork.TrainAndEval(data.Item2, ref solution, ref errorLearn, ref predictions, iterations, inputCount, hiddenCount, learningRate, momentum, _neuronCts.Token, p => Invoke(new Action<int>(pi => progressBarNeuronLearn.Value = pi), p));
                     }
                     catch
                     {
@@ -631,7 +630,6 @@
             var predCount    = (int)numericUpDownNeuronPredictions.Value;
             var hiddenCount  = (int)numericUpDownNeuronHidden.Value;
             var iterations   = (int)numericUpDownNeuronIterations.Value;
-            var sigmoidAlpha = 2.0;
 
             var data = PrepareData(numericUpDownNeuronSampleCount.Value, numericUpDownNeuronSampleOffset.Value, numericUpDownNeuronInputs.Value, comboBoxNeuronDataSet.SelectedItem);
 
@@ -644,25 +642,22 @@
             var inputStart = 3;
             var inputMax   = 10;
             var hiddenMax  = 15;
-            var momentums  = new[] { 0, 0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.8, 0.988 };
-            var learnRates = new[] { 0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.8, 0.988 };
+            var momentums  = new[] { 0, /*0.01,*/ 0.05, /*0.1, 0.25,*/ 0.5, /*0.75, 0.8,*/ 0.988 };
+            var learnRates = new[] { /*0.01,*/ 0.05, /*0.1, 0.25,*/ 0.5, /*0.75, 0.8,*/ 0.988 };
 
             progressBarNeuronLearn.Value = 0;
             progressBarNeuronLearn.Maximum = (inputMax - inputStart) * hiddenMax * momentums.Length * learnRates.Length;
+            
+            var smallestError   = double.MaxValue;
+            var bestInputCount  = inputCount;
+            var bestHiddenCount = hiddenCount;
+            var bestMomentum    = 0;
+            var bestLearnRate   = 0;
 
             await Task.Run(() =>
                 {
-                    var smallestError   = double.MaxValue;
-                    var bestInputCount  = inputCount;
-                    var bestHiddenCount = hiddenCount;
-                    var bestMomentum    = 0;
-                    var bestLearnRate   = 0;
-
                     for (int i = inputStart; i < inputMax; i++)
                     {
-                        solution    = new double[data.Item2.Length - i];
-                        predictions = new double[predCount != 0 ? predCount + i : 0];
-
                         Invoke(new Action<int>(ic => numericUpDownNeuronInputs.Value = ic), i);
 
                         for (int j = 1; j < hiddenMax; j++)
@@ -682,9 +677,12 @@
                                     }),
                                     i, j, k, l);
 
+                                    solution    = new double[data.Item2.Length - i];
+                                    predictions = new double[predCount != 0 ? predCount + i : 0];
+
                                     try
                                     {
-                                        trainRes = NeuralNetwork.TrainAndEval(data.Item2, ref solution, ref errorLearn, ref predictions, iterations, i, j, learnRates[l], momentums[k], sigmoidAlpha, _neuronCts.Token);
+                                        trainRes = NeuralNetwork.TrainAndEval(data.Item2, ref solution, ref errorLearn, ref predictions, iterations, i, j, learnRates[l], momentums[k], _neuronCts.Token);
                                     }
                                     catch
                                     {
@@ -692,8 +690,8 @@
                                         continue;
                                     }
 
-                                    var err = CalculateError(origDataSet, data.Item1.AddDays(solution.Length - 1), predictions.Skip(inputCount - 1));
-
+                                    var err = CalculateError(origDataSet, data.Item1.AddDays(solution.Length - 1), predictions.Skip(i - 1)) + errorLearn;
+                                    
                                     if (err < smallestError)
                                     {
                                         smallestError   = err;
@@ -751,9 +749,9 @@
 
             if (predCount != 0)
             {
-                textBoxNeuronPredError.Text = CalculateError(comboBoxNeuronDataSet.SelectedItem, data.Item1.AddDays(solution.Length - 1), predictions.Skip(inputCount - 1)).ToString("0.0000") + "%";
+                textBoxNeuronPredError.Text = CalculateError(comboBoxNeuronDataSet.SelectedItem, data.Item1.AddDays(solution.Length - 1), predictions.Skip(bestInputCount - 1)).ToString("0.0000") + "%";
 
-                AddToChart("NN (Pred.)", data.Item1.AddDays(solution.Length - 1), predictions.Skip(inputCount - 1));
+                AddToChart("NN (Pred.)", data.Item1.AddDays(solution.Length - 1), predictions.Skip(bestInputCount - 1));
             }
         }
 

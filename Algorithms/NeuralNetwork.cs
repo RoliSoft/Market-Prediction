@@ -25,13 +25,12 @@
         /// <param name="hiddenCount">The number of hidden layers on the neural network.</param>
         /// <param name="learningRate">The learning rate parameter of the back propagation learning algorithm.</param>
         /// <param name="momentum">The momentum parameter of the back propagation learning algorithm</param>
-        /// <param name="sigmoidAlpha">The sigmoid alpha parameter of the activation function.</param>
         /// <param name="cancelToken">The cancellation token for the async operation.</param>
         /// <param name="progressCallback">The progress callback: current iteration.</param>
         /// <returns>
         ///   <c>true</c> if the training and evaluation was successful, <c>false</c> otherwise.</returns>
         /// <exception cref="ArgumentException">Array should be size of data minus number of inputs.</exception>
-        public static bool TrainAndEval(double[] data, ref double[] solution, ref double error, ref double[] predictions, int iterations, int inputCount, int hiddenCount, double learningRate, double momentum, double sigmoidAlpha, CancellationToken cancelToken, Action<int> progressCallback = null)
+        public static bool TrainAndEval(double[] data, ref double[] solution, ref double error, ref double[] predictions, int iterations, int inputCount, int hiddenCount, double learningRate, double momentum, CancellationToken cancelToken, Action<int> progressCallback = null)
         {
             var min     = data.Min();
             var max     = data.Max();
