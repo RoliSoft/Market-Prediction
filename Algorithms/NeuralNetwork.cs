@@ -13,25 +13,6 @@
     /// </summary>
     public static class NeuralNetwork
     {
-        public class HyperbolicTangentFunction : IActivationFunction
-        {
-            public double Function(double x)
-            {
-                return Math.Tanh(x);
-            }
-            
-            public double Derivative(double x)
-            {
-                return Derivative2(Function(x));
-            }
-            
-            public double Derivative2(double y)
-            {
-                //return (1 + y) * (1 - y);
-                return Math.Pow(2.0 / (Math.Pow(Math.E, y) + Math.Pow(Math.E, -y)), 2);
-            }
-        }
-
         /// <summary>
         /// Trains and evaluates a neural network with the specified parameters.
         /// </summary>
@@ -53,6 +34,7 @@
         public static bool TrainAndEval(double[] data, ref double[] solution, ref double error, ref double[] predictions, int iterations, int inputCount, int hiddenCount, double learningRate, double momentum, double sigmoidAlpha, CancellationToken cancelToken, Action<int> progressCallback = null)
         {
             var min     = data.Min();
+            var max     = data.Max();
             var samples = data.Length - inputCount;
             var input   = new double[samples][];
             var output  = new double[samples][];
@@ -64,17 +46,17 @@
 
                 for (var j = 0; j < inputCount; j++)
                 {
-                    input[i][j] = data[i + j] - min;
+                    input[i][j] = Utils.Scale(data[i + j], min, max);
                 }
 
-                output[i][0] = data[i + inputCount] - min;
+                output[i][0] = Utils.Scale(data[i + inputCount], min, max);
             }
 
             cancelToken.ThrowIfCancellationRequested();
 
             Neuron.RandRange = new Range(0.3f, 0.3f);
 
-            var nn = new ActivationNetwork(new HyperbolicTangentFunction(), inputCount, hiddenCount, 1);
+            var nn = new ActivationNetwork(new BipolarSigmoidFunction(), inputCount, hiddenCount, 1);
             var bp = new BackPropagationLearning(nn)
                 {
                     LearningRate = learningRate,
@@ -102,10 +84,10 @@
             {
                 for (int j = 0; j < inputCount; j++)
                 {
-                    test[j] = data[i + j] - min;
+                    test[j] = Utils.Scale(data[i + j], min, max);
                 }
 
-                solution[i] = nn.Compute(test)[0] + min;
+                solution[i] = Utils.ScaleBack(nn.Compute(test)[0], min, max);
 
                 error += Math.Abs((solution[i] - data[inputCount + i]) / data[inputCount + i]);
 
@@ -122,10 +104,10 @@
                 {
                     for (int j = 0; j < inputCount; j++)
                     {
-                        test[j] = predictions[(i - inputCount) + j] - min;
+                        test[j] = Utils.Scale(predictions[(i - inputCount) + j], min, max);
                     }
 
-                    predictions[i] = nn.Compute(test)[0] + min;
+                    predictions[i] = Utils.ScaleBack(nn.Compute(test)[0], min, max);
 
                     cancelToken.ThrowIfCancellationRequested();
                 }

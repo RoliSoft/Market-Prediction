@@ -50,5 +50,33 @@
 
             return stack.Last();
         }
+        
+        /// <summary>
+        /// Scales the specified value from a range to another.
+        /// </summary>
+        /// <param name="value">The value to scale.</param>
+        /// <param name="min">The minimum of the current range.</param>
+        /// <param name="max">The maximum of the current range.</param>
+        /// <param name="newMin">The minimum of the new range.</param>
+        /// <param name="newMax">The maximum of the new range.</param>
+        /// <returns>Scaled value.</returns>
+        public static double Scale(double value, double min, double max, double newMin = 0, double newMax = 1)
+        {
+            return (value - min) * (newMax - newMin) / (max - min) + newMin;
+        }
+
+        /// <summary>
+        /// Scales back a previously scaled value.
+        /// </summary>
+        /// <param name="value">The value to scale.</param>
+        /// <param name="min">The minimum of the current range.</param>
+        /// <param name="max">The maximum of the current range.</param>
+        /// <param name="newMin">The minimum of the new range.</param>
+        /// <param name="newMax">The maximum of the new range.</param>
+        /// <returns>Scaled value.</returns>
+        public static double ScaleBack(double value, double min, double max, double newMin = 0, double newMax = 1)
+        {
+            return value / ((newMax - newMin) / (max - min) + newMin) + min;
+        }
     }
 }
